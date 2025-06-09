@@ -76,7 +76,9 @@ public class JobController : ControllerBase
                         };
                         _context.JobSkills.Add(jobSkill);
                         await _context.SaveChangesAsync();
-                    }else{
+                    }
+                    else
+                    {
                         return BadRequest("Such skill is not present");
                     }
                 }
@@ -91,5 +93,142 @@ public class JobController : ControllerBase
         }
     }
 
-    
+    [HttpGet("get/jobs")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Candidate, Admin")]
+    public IActionResult GetJobs()
+    {
+        try
+        {
+            var jobs = _context.Jobs
+                .Include(j => j.Employer)
+                .Include(j => j.JobSkills)
+                .ThenInclude(js => js.Skill)
+                .Where(j => (bool)!j.IsDeleted && (bool)j.IsActive)
+                .Select(j => new JobDto
+                {
+                    Title = j.Title,
+                    Description = j.Description,
+                    Location = j.Location,
+                    ExperienceRequired = j.ExperienceRequired,
+                    OpenFrom = j.OpenFrom,
+                    skillsRequiredList = j.JobSkills.Select(js => new SkillDto
+                    {
+                        Id = js.Skill.Id,
+                        Name = js.Skill.Name
+                    }).ToList()
+                }).ToList();
+
+            return Ok(jobs);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+        }
+    }
+
+    [HttpGet("get/created-jobs")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Employer")]
+    public IActionResult GetCreatedJobs()
+    {
+
+        try
+        {
+            var email = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            if (string.IsNullOrEmpty(email))
+            {
+                return Unauthorized("User is not authenticated.");
+            }
+            var employer = _context.Employers
+                .Include(e => e.User)
+                .FirstOrDefault(e => e.User.Email == email);
+            if (employer == null)
+            {
+                return NotFound("Employer not found.");
+            }
+
+            var jobs = _context.Jobs
+                .Include(j => j.Employer)
+                .Include(j => j.JobSkills)
+                .ThenInclude(js => js.Skill)
+                .Where(j => (bool)!j.IsDeleted && (bool)j.IsActive && j.EmployerId == employer.Id)
+                .Select(j => new JobDto
+                {
+                    Title = j.Title,
+                    Description = j.Description,
+                    Location = j.Location,
+                    ExperienceRequired = j.ExperienceRequired,
+                    OpenFrom = j.OpenFrom,
+                    skillsRequiredList = j.JobSkills.Select(js => new SkillDto
+                    {
+                        Id = js.Skill.Id,
+                        Name = js.Skill.Name
+                    }).ToList()
+                }).ToList();
+
+            return Ok(jobs);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+        }
+    }
+
+
+    [HttpPut("delete/job")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Employer")]
+    public async Task<IActionResult> DeleteJob(int jobId)
+    {
+        try
+        {
+            var email = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+            if (string.IsNullOrEmpty(email))
+            {
+                return Unauthorized("User is not authenticated.");
+            }
+
+            var employer = _context.Employers
+                .Include(e => e.User)
+                .FirstOrDefault(e => e.User.Email == email);
+
+            if(employer == null)
+            {
+                return BadRequest("Employer not found.");
+            }
+
+            var jobIdCheck = _context.Jobs.FirstOrDefault(j => j.Id == jobId);
+            if(jobIdCheck == null){
+                return BadRequest("Job not found.");
+            }
+
+            if (_context.Jobs.Any(j => j.Id == jobId && j.EmployerId != employer.Id))
+            {
+                return BadRequest("Job is not created by the employer.");
+            }
+
+            if (_context.Jobs.Any(j => j.Id == jobId && j.EmployerId == employer.Id && (bool)j.IsDeleted))
+            {
+                return BadRequest("Job already deleted.");
+            }
+
+            var job = _context.Jobs.FirstOrDefault(j => j.Id == jobId && j.EmployerId == employer.Id);
+            job.IsDeleted = true;
+
+            _context.Jobs.Update(job);
+            await _context.SaveChangesAsync();
+
+            return StatusCode(StatusCodes.Status201Created, "Job Deleted successfully.");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+        }
+    }
 }

@@ -12,11 +12,11 @@ API'S
 
 ✔ 5)Create Job (api/create/job)(POST)(Employer)
 
-6)Read All Job(GET)(Admin, Candidate)
+✔ 6)Read All Job (api/get/job)(GET)(Admin, Candidate)
 
-7)Read Own Created Jobs(GET)(Employer)
+✔ 7)Read Own Created Jobs (api/get/created-jobs)(GET)(Employer)
 
-8)soft Delete Job(PUT)(Employer)
+✔ 8)soft Delete Job(PUT)(Employer)
 
 9)Apply Job(POST)(Candidates)
 
@@ -29,3 +29,6 @@ API'S
 13)jobs by employer(GET)(Admin)
 
 14)Update status of applied applications on job(PUT)(Employer)
+
+git repo:-
+https://github.com/naman-tatvasoft/JobApplicationPortal/
