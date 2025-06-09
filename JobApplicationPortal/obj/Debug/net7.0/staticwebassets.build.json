@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "EQs+lFkDudi9uiTyzTR992yd9t/yBun5iNv8CUG3sRo=",
+  "Source": "JobApplicationPortal",
+  "BasePath": "_content/JobApplicationPortal",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
