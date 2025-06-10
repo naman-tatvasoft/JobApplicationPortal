@@ -21,6 +21,8 @@ public partial class Application
 
     public int StatusId { get; set; }
 
+    public string Resume { get; set; } = null!;
+
     public virtual Candidate Candidate { get; set; } = null!;
 
     public virtual Job Job { get; set; } = null!;

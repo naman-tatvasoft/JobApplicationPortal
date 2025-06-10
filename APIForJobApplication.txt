@@ -20,15 +20,16 @@ API'S
 
 ✔ 9)Apply Job(POST)(Candidates)
 
-10)View own Job Application History(GET)(Candidate)
+✔ 10)View own Job Application History (api/get/applications-by-candidate)(GET)(Candidate)
 
-11)Read All Application(GET)(Admin)
+✔ 11)Read All Application (api/get/applications)(GET)(Admin)
 
-12)view all applied candidates in particular job(GET)(Employer)
+12)view all applied candidates in particular job (GET)(Employer)
 
 ✔ 13)jobs by employer (api/get/jobs-by-employer)(GET)(Admin)
 
-14)Update status of applied applications on job(PUT)(Employer)
+14)Update status of applied applications on job (PUT)(Employer)
+
 
 git repo:-
 https://github.com/naman-tatvasoft/JobApplicationPortal/
