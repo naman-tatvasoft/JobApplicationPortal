@@ -11,6 +11,8 @@ public class ApplicationInfoDto
     public string CandidateEmail { get; set; }
     public int Experience { get; set; }
     public string NoteForEmployer { get; set; }
+    public string CoverLetterName { get; set; }
+    public string ResumeName { get; set; }
     public string Status {get; set;}
     public DateTime ApplicationDate { get; set; }
 }

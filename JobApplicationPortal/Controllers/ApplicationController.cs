@@ -110,6 +110,7 @@ public class ApplicationController : ControllerBase
 
     [HttpGet("get/applications")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Admin")]
     public IActionResult GetApplicaions()
@@ -132,6 +133,8 @@ public class ApplicationController : ControllerBase
                     CandidateEmail = j.Candidate.User.Email,
                     Experience = j.Experience,
                     NoteForEmployer = j.NoteForEmployer,
+                    ResumeName = j.Resume,
+                    CoverLetterName = j.CoverLetter,
                     Status = _context.Statuses.FirstOrDefault(s => s.Id == j.StatusId).Name,
                     ApplicationDate = (DateTime)j.AppliedDate
                 }).ToList();
@@ -158,9 +161,10 @@ public class ApplicationController : ControllerBase
 
     [HttpGet("get/applications-by-candidate")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Candidate")]
-    public IActionResult GetApplicaionsByCandidate()
+    public IActionResult GetApplicationsByCandidate()
     {
         try
         {
@@ -169,7 +173,7 @@ public class ApplicationController : ControllerBase
             var candidate = _context.Candidates
                 .Include(e => e.User)
                 .FirstOrDefault(e => e.User.Email == email);
-            if (candidate == null) 
+            if (candidate == null)
             {
                 return BadRequest("Candidate not found.");
             }
@@ -186,6 +190,8 @@ public class ApplicationController : ControllerBase
                     jobLocation = j.Job.Location,
                     Experience = j.Experience,
                     NoteForEmployer = j.NoteForEmployer,
+                    ResumeName = j.Resume,
+                    CoverLetterName = j.CoverLetter,
                     Status = _context.Statuses.FirstOrDefault(s => s.Id == j.StatusId).Name,
                     ApplicationDate = (DateTime)j.AppliedDate
                 }).ToList();
@@ -198,5 +204,105 @@ public class ApplicationController : ControllerBase
         }
     }
 
+    [HttpGet("get/applications-by-job")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Employer")]
+    public IActionResult GetApplicationsByJob(int jobId)
+    {
+        try
+        {
+            var email = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
+            var employer = _context.Employers
+                .Include(e => e.User)
+                .FirstOrDefault(e => e.User.Email == email);
+            if (employer == null)
+            {
+                return BadRequest("Employer not found.");
+            }
+
+            var jobIdCheck = _context.Jobs.FirstOrDefault(j => j.Id == jobId);
+            if (jobIdCheck == null)
+            {
+                return BadRequest("Job not found.");
+            }
+
+            if (_context.Jobs.Any(j => j.Id == jobId && j.EmployerId != employer.Id))
+            {
+                return BadRequest("Job is not created by the employer.");
+            }
+
+            var applicationInfo = _context.Applications
+                .Include(j => j.Job)
+                .ThenInclude(js => js.Employer)
+                .Include(j => j.Candidate)
+                .ThenInclude(c => c.User)
+                .Where(j => j.JobId == jobId)
+                .Select(j => new ApplicationInfoDto
+                {
+                    Id = j.Id,
+                    CandidateId = j.Candidate.Id,
+                    CandidateName = j.Candidate.Name,
+                    CandidateEmail = j.Candidate.User.Email,
+                    Experience = j.Experience,
+                    NoteForEmployer = j.NoteForEmployer,
+                    ResumeName = j.Resume,
+                    CoverLetterName = j.CoverLetter,
+                    Status = _context.Statuses.FirstOrDefault(s => s.Id == j.StatusId).Name,
+                    ApplicationDate = (DateTime)j.AppliedDate
+                }).ToList();
+
+            return Ok(applicationInfo);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+        }
+    }
+
+    [HttpPut("application/change-status")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Employer")]
+    public async Task<IActionResult> UpdateStatus(int applicationId, int statusId)
+    {
+        try
+        {
+            var email = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+            var employer = _context.Employers
+                .Include(e => e.User)
+                .FirstOrDefault(e => e.User.Email == email);
+            if (employer == null)
+            {
+                return BadRequest("Employer not found.");
+            }
+
+            var applicationIdCheck = _context.Applications.FirstOrDefault(a => a.Id == applicationId);
+            if (applicationIdCheck == null)
+            {
+                return BadRequest("application not found.");
+            }
+
+            if (_context.Applications.Include(a => a.Job).Any(a => a.Id == applicationId && a.Job.EmployerId != employer.Id))
+            {
+                return BadRequest("Application is not created for a job created by the employer.");
+            }
+
+            var application = _context.Applications.FirstOrDefault(a => a.Id == applicationId);
+            application.StatusId = statusId;
+
+            _context.Applications.Update(application);
+            await _context.SaveChangesAsync();
+
+            return Ok("Application status updated successfully.");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+        }
+    }
 }

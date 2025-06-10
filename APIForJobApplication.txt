@@ -12,23 +12,33 @@ API'S
 
 ✔ 5)Create Job (api/create/job)(POST)(Employer)
 
-✔ 6)Read All Job (api/get/job)(GET)(Admin, Candidate)
+✔ 6)Read Own Created Jobs (api/get/created-jobs)(GET)(Employer)
 
-✔ 7)Read Own Created Jobs (api/get/created-jobs)(GET)(Employer)
+✔ 7)soft Delete Job (api/delete/job)(PUT)(Employer)
 
-✔ 8)soft Delete Job (api/delete/job)(PUT)(Employer)
+✔ 8)jobs by employer (api/get/jobs-by-employer)(GET)(Admin)
 
-✔ 9)Apply Job(POST)(Candidates)
+✔ 9)Read All Jobs (api/get/job)(GET)(Admin, Candidate)
 
-✔ 10)View own Job Application History (api/get/applications-by-candidate)(GET)(Candidate)
+✔ 10)Apply Job (api/job/application)(POST)(Candidates)
 
-✔ 11)Read All Application (api/get/applications)(GET)(Admin)
+✔ 11)View own Job Application History (api/get/applications-by-candidate)(GET)(Candidate)
 
-12)view all applied candidates in particular job (GET)(Employer)
+✔ 12)Read All Application (api/get/applications)(GET)(Admin)
 
-✔ 13)jobs by employer (api/get/jobs-by-employer)(GET)(Admin)
+✔ 13)view Applications in particular job (api/get/applications-by-job)(GET)(Employer)
 
-14)Update status of applied applications on job (PUT)(Employer)
+✔ 14)Update status of applied applications on job (api/application/change-status)(PUT)(Employer)
+
+15)Total applications per job (Get)(Admin, Employer)
+
+16)Search and pagination for job listings (Get)(Admin, Candidate)
+
+17)job filtering by Skill, Location, Experience (Get)(Admin, Candidate)
+
+18)get all status (Get)(Employer)
+
+19)get all skills (Get)(Employer)
 
 
 git repo:-
