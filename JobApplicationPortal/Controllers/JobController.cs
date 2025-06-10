@@ -282,5 +282,22 @@ public class JobController : ControllerBase
         }
     }
 
-   
+    [HttpGet("get/skills")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Admin, Employer")]
+    public IActionResult GetSkills(){
+        try{
+            var skills = _context.Skills
+                .Select(s => new SkillDto
+                {
+                    Id = s.Id,
+                    Name = s.Name
+                }).ToList();
+
+            return Ok(skills);
+        }catch(Exception ex){
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+        }
+    }
 }

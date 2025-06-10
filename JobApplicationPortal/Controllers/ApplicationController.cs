@@ -113,7 +113,7 @@ public class ApplicationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Admin")]
-    public IActionResult GetApplicaions()
+    public IActionResult GetApplications()
     {
         try
         {
@@ -302,6 +302,25 @@ public class ApplicationController : ControllerBase
         }
         catch (Exception ex)
         {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+        }
+    }
+
+    [HttpGet("get/statuses")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Admin, Employer")]
+    public IActionResult GetStatuses(){
+        try{
+            var statuses = _context.Statuses
+                .Select(s => new StatusDto
+                {
+                    Id = s.Id,
+                    Name = s.Name
+                }).ToList();
+
+            return Ok(statuses);
+        }catch(Exception ex){
             return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
         }
     }
