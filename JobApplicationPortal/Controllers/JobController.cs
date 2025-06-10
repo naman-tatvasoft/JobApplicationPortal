@@ -120,6 +120,16 @@ public class JobController : ControllerBase
                     }).ToList()
                 }).ToList();
 
+                
+            var email = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            var candidate = _context.Candidates
+                .Include(e => e.User)
+                .FirstOrDefault(e => e.User.Email == email);
+            
+            if(candidate != null){
+                jobs = jobs.Where(j => j.OpenFrom <= DateOnly.FromDateTime(DateTime.Now)).ToList();
+            }
+
             return Ok(jobs);
         }
         catch (Exception ex)
@@ -178,6 +188,46 @@ public class JobController : ControllerBase
     }
 
 
+    [HttpGet("get/jobs-by-employer")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Admin")]
+    public IActionResult GetJobsByEmployer(int employerId)
+    {
+        if (!_context.Employers.Any(e => e.Id == employerId))
+        {
+            return BadRequest("Employer not found.");
+        }
+
+        try
+        {
+            var jobs = _context.Jobs
+                .Include(j => j.Employer)
+                .Include(j => j.JobSkills)
+                .ThenInclude(js => js.Skill)
+                .Where(j => (bool)!j.IsDeleted && (bool)j.IsActive && j.EmployerId == employerId)
+                .Select(j => new JobDto
+                {
+                    Title = j.Title,
+                    Description = j.Description,
+                    Location = j.Location,
+                    ExperienceRequired = j.ExperienceRequired,
+                    OpenFrom = j.OpenFrom,
+                    skillsRequiredList = j.JobSkills.Select(js => new SkillDto
+                    {
+                        Id = js.Skill.Id,
+                        Name = js.Skill.Name
+                    }).ToList()
+                }).ToList();
+
+            return Ok(jobs);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+        }
+    }
+
     [HttpPut("delete/job")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -225,6 +275,77 @@ public class JobController : ControllerBase
             await _context.SaveChangesAsync();
 
             return StatusCode(StatusCodes.Status201Created, "Job Deleted successfully.");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+        }
+    }
+
+    [HttpPost("apply/job")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Candidate")]
+    public async Task<IActionResult> ApplyJob([FromForm]ApplicationDto applicationDto)
+    {
+        try
+        {
+            var email = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            if (string.IsNullOrEmpty(email))
+            {
+                return Unauthorized("User is not authenticated.");
+            }
+
+            var candidate = _context.Candidates
+                .Include(e => e.User)
+                .FirstOrDefault(e => e.User.Email == email);
+            if(candidate == null)
+            {
+                return BadRequest("Candidate not found.");
+            }
+
+            var jobIdCheck = _context.Jobs.FirstOrDefault(j => j.Id == applicationDto.JobId && (bool)j.IsActive && (bool)!j.IsDeleted );
+            if(jobIdCheck == null){
+                return BadRequest("Job not found or not active or deleted or not still open to apply.");
+            }
+
+            var isAlreadyApplied = _context.Applications.FirstOrDefault(a => a.JobId == applicationDto.JobId && a.CandidateId == candidate.Id);
+            if(isAlreadyApplied != null){
+                return BadRequest("You have already applied for this job");
+            }
+
+            var coverLetterFileName = string.Empty;
+            if (applicationDto.CoverLetter != null && applicationDto.CoverLetter.Length > 0)
+            {
+                var coverLetterPath = Path.Combine("uploads", "CoverLetters");
+                if (!Directory.Exists(coverLetterPath))
+                {
+                    Directory.CreateDirectory(coverLetterPath);
+                }
+
+                coverLetterFileName = $"{Guid.NewGuid()}_{applicationDto.CoverLetter.FileName}";
+                var filePath = Path.Combine(coverLetterPath, coverLetterFileName);
+                
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await applicationDto.CoverLetter.CopyToAsync(stream);
+                }
+            }
+
+            var application = new Application
+            {
+                CandidateId = candidate.Id,
+                JobId = applicationDto.JobId,
+                Experience = applicationDto.Experience,
+                NoteForEmployer = applicationDto.NoteForEmployer,
+                CoverLetter = coverLetterFileName,
+                StatusId = _context.Statuses.FirstOrDefault(s => s.Name == "Applied")?.Id ?? 4
+            };
+            _context.Applications.Add(application);
+            await _context.SaveChangesAsync();
+
+            return StatusCode(StatusCodes.Status201Created, "Job Applied successfully.");
         }
         catch (Exception ex)
         {

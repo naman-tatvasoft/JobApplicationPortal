@@ -16,9 +16,9 @@ API'S
 
 ✔ 7)Read Own Created Jobs (api/get/created-jobs)(GET)(Employer)
 
-✔ 8)soft Delete Job(PUT)(Employer)
+✔ 8)soft Delete Job (api/delete/job)(PUT)(Employer)
 
-9)Apply Job(POST)(Candidates)
+✔ 9)Apply Job(POST)(Candidates)
 
 10)View own Job Application History(GET)(Candidate)
 
@@ -26,7 +26,7 @@ API'S
 
 12)view all applied candidates in particular job(GET)(Employer)
 
-13)jobs by employer(GET)(Admin)
+✔ 13)jobs by employer (api/get/jobs-by-employer)(GET)(Admin)
 
 14)Update status of applied applications on job(PUT)(Employer)
 
