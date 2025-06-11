@@ -1,6 +1,8 @@
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
+namespace JobApplicationPortal.Service.Helper;
+
 public static class PasswordHasher
 {
     public static string Hash(string password)

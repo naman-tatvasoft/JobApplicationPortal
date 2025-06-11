@@ -30,3 +30,12 @@ id candidatesId jobId experience noteForEmployer coverLetter appliedDate statusI
 
 scaffold command:-
 dotnet ef dbcontext scaffold "Name=ConnectionStrings:JobPortalConnection" Npgsql.EntityFrameworkCore.PostgreSQL -o Models -f
+
+packages:-
+microsoft.aspnetcore.authentication.jwtbearer
+microsoft.aspnetcore.jsonpatch
+microsoft.aspnetcore.mvc.newtonsoftjson
+microsoft.aspnetcore.openapi
+microsoft.entityframeworkcore.design
+npgsql.entityframeworkcore.postgresql
+npgsql.entityframeworkcore.postgresql.design

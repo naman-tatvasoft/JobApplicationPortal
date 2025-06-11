@@ -1,8 +1,7 @@
-using JobApplicationPortal.Dto;
-using JobApplicationPortal.Helper;
-using JobApplicationPortal.Models;
+using JobApplicationPortal.DataModels.Dtos.RequestDtos;
+using JobApplicationPortal.DataModels.Dtos.ResponseDtos;
+using JobApplicationPortal.Service.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace JobApplicationPortal.Controllers;
 
@@ -11,62 +10,32 @@ namespace JobApplicationPortal.Controllers;
 public class AuthController : ControllerBase
 {
 
-    private readonly JobApplicationPortalContext _context;
-    private readonly JwtService _jwtService;
 
-    public AuthController(JobApplicationPortalContext context, JwtService jwtService)
+    private readonly IAuthService _authService;
+
+    public AuthController(IAuthService authService)
     {
-        _context = context;
-        _jwtService = jwtService;
+        _authService = authService;
     }
 
-    
+
     [HttpPost("register/employer")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RegisterEmployer([FromBody] RegisterEmployerDto registerEmployerDto)
     {
-        if (registerEmployerDto == null || !ModelState.IsValid)
+        var result = await _authService.RegisterEmployer(registerEmployerDto);
+
+        if (result.StatusCode == 201)
         {
-            return BadRequest("Invalid registration data.");
+            return StatusCode(StatusCodes.Status201Created, result.Message);
         }
-        if (_context.Users.Any(u => u.Email == registerEmployerDto.Email))
+        else
         {
-            return BadRequest("Email already exists.");
+            return BadRequest(result.Message);
         }
 
-        using var transaction = await _context.Database.BeginTransactionAsync();
-        try
-        {
-            var hashedPassword = PasswordHasher.Hash(registerEmployerDto.Password);
-
-            var user = new User
-            {
-                Email = registerEmployerDto.Email,
-                Password = hashedPassword,
-                RoleId = _context.Roles.FirstOrDefault(r => r.Name == "Employer")?.Id ?? 2
-            };
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            var employer = new Employer
-            {
-                Name = registerEmployerDto.Name,
-                CompanyName = registerEmployerDto.CompanyName,
-                UserId = user.Id
-            };
-            _context.Employers.Add(employer);
-            await _context.SaveChangesAsync();
-
-            await transaction.CommitAsync();
-            return StatusCode(StatusCodes.Status201Created);
-        }
-        catch (Exception ex)
-        {
-            await transaction.RollbackAsync();
-            return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
-        }
     }
 
     [HttpPost("register/candidate")]
@@ -75,44 +44,15 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> RegisterCandidate([FromBody] RegisterCandidateDto registerCandidateDto)
     {
-        if (registerCandidateDto == null || !ModelState.IsValid)
+        var result = await _authService.RegisterCandidate(registerCandidateDto);
+
+        if (result.StatusCode == 201)
         {
-            return BadRequest("Invalid registration data.");
+            return StatusCode(StatusCodes.Status201Created, result.Message);
         }
-        if (_context.Users.Any(u => u.Email == registerCandidateDto.Email))
+        else
         {
-            return BadRequest("Email already exists.");
-        }
-
-        using var transaction = await _context.Database.BeginTransactionAsync();
-        try
-        {
-            var hashedPassword = PasswordHasher.Hash(registerCandidateDto.Password);
-
-            var user = new User
-            {
-                Email = registerCandidateDto.Email,
-                Password = hashedPassword,
-                RoleId =  _context.Roles.FirstOrDefault(r => r.Name == "Candidate")?.Id ?? 3
-            };
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            var candidate = new Candidate
-            {
-                Name = registerCandidateDto.Name,
-                UserId = user.Id
-            };
-            _context.Candidates.Add(candidate);
-            await _context.SaveChangesAsync();
-
-            await transaction.CommitAsync();
-            return StatusCode(StatusCodes.Status201Created);
-        }
-        catch (Exception ex)
-        {
-            await transaction.RollbackAsync();
-            return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+            return BadRequest(result.Message);
         }
     }
 
@@ -123,34 +63,21 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> Login([FromBody] LoginDTO loginDto)
     {
-        if (loginDto == null || !ModelState.IsValid)
+        var result = await _authService.Login(loginDto);
+
+        if (result.StatusCode == 200)
         {
-            return BadRequest("Invalid registration data.");
+            return Ok(new { token = result.Data });
         }
-
-        try
+        else if (result.StatusCode == 401)
         {
-            var user = _context.Users
-            .Include(u => u.Role)
-            .FirstOrDefault(u => u.Email == loginDto.Email);
-
-            if (user == null)
-            {
-                return BadRequest("Email does not exists.");
-            }
-
-            if (!PasswordHasher.Verify(user.Password, loginDto.Password))
-            {
-                return Unauthorized("Invalid password.");
-            }
-
-            var token = _jwtService.GenerateToken(user.Email, user.Role.Name);
-
-            return Ok(new { token });
+            return Unauthorized(result.Message);
         }
-        catch (Exception ex)
+        else if (result.StatusCode == 400)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+            return BadRequest(result.Message);
+        }else{
+            return StatusCode(StatusCodes.Status500InternalServerError, result.Message);
         }
     }
 

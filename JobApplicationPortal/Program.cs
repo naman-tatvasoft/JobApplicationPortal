@@ -1,7 +1,11 @@
 using System.Security.Claims;
 using System.Text;
-using JobApplicationPortal.Helper;
-using JobApplicationPortal.Models;
+using JobApplicationPortal.DataModels.Models;
+using JobApplicationPortal.Repository.Repository.Implementation;
+using JobApplicationPortal.Repository.Repository.Interface;
+using JobApplicationPortal.Service.Helper;
+using JobApplicationPortal.Service.Service.Implementation;
+using JobApplicationPortal.Service.Service.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -53,6 +57,17 @@ builder.Services.AddSwaggerGen(c =>
     c.AddSecurityRequirement(securityRequirement);
 });
 
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IEmployerRepository, EmployerRepository>();
+builder.Services.AddScoped<ICandidateRepository, CandidateRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IJobService, JobService>();
+builder.Services.AddScoped<IApplicationService, ApplicationService>();
+
+builder.Services.AddScoped<JwtHelper>();
+
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>
     {
@@ -70,18 +85,10 @@ builder.Services.AddAuthentication("Bearer")
         
     }
 );
+
 builder.Services.AddAuthorization();
 
-builder.Services.AddScoped<JwtService>();
-
-
 var app = builder.Build();
-
-app.UseHttpsRedirection();
-
-app.UseAuthentication();
-
-app.UseAuthorization();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -89,6 +96,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.MapControllers();
 

@@ -33,6 +33,12 @@ C:\Users\pca106\Desktop\JobApplicationPortal\JobApplicationPortal\bin\Debug\net7
 C:\Users\pca106\Desktop\JobApplicationPortal\JobApplicationPortal\bin\Debug\net7.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\pca106\Desktop\JobApplicationPortal\JobApplicationPortal\bin\Debug\net7.0\System.CodeDom.dll
 C:\Users\pca106\Desktop\JobApplicationPortal\JobApplicationPortal\bin\Debug\net7.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\pca106\Desktop\JobApplicationPortal\JobApplicationPortal\bin\Debug\net7.0\JobApplicationPortal.DataModels.dll
+C:\Users\pca106\Desktop\JobApplicationPortal\JobApplicationPortal\bin\Debug\net7.0\JobApplicationPortal.Repository.dll
+C:\Users\pca106\Desktop\JobApplicationPortal\JobApplicationPortal\bin\Debug\net7.0\JobApplicationPortal.Service.dll
+C:\Users\pca106\Desktop\JobApplicationPortal\JobApplicationPortal\bin\Debug\net7.0\JobApplicationPortal.Service.pdb
+C:\Users\pca106\Desktop\JobApplicationPortal\JobApplicationPortal\bin\Debug\net7.0\JobApplicationPortal.Repository.pdb
+C:\Users\pca106\Desktop\JobApplicationPortal\JobApplicationPortal\bin\Debug\net7.0\JobApplicationPortal.DataModels.pdb
 C:\Users\pca106\Desktop\JobApplicationPortal\JobApplicationPortal\obj\Debug\net7.0\JobApplicationPortal.csproj.AssemblyReference.cache
 C:\Users\pca106\Desktop\JobApplicationPortal\JobApplicationPortal\obj\Debug\net7.0\JobApplicationPortal.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\pca106\Desktop\JobApplicationPortal\JobApplicationPortal\obj\Debug\net7.0\JobApplicationPortal.AssemblyInfoInputs.cache

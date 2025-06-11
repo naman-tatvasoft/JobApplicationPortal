@@ -1,16 +1,17 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace JobApplicationPortal.Helper;
+namespace JobApplicationPortal.Service.Helper;
 
-public class JwtService
+public class JwtHelper
 {
     private readonly string _secretKey;
     private readonly int _tokenDuration;
 
-    public JwtService(IConfiguration configuration)
+    public JwtHelper(IConfiguration configuration)
     {
         _secretKey = configuration.GetValue<string>("JwtConfig:Key");
         _tokenDuration = configuration.GetValue<int>("JwtConfig:Duration");

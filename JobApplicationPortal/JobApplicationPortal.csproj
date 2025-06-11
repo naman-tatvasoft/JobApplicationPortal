@@ -17,4 +17,9 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JobApplicationPortal.Service\JobApplicationPortal.Service.csproj" />
+    <ProjectReference Include="..\JobApplicationPortal.Repository\JobApplicationPortal.Repository.csproj" />
+    <ProjectReference Include="..\JobApplicationPortal.DataModels\JobApplicationPortal.DataModels.csproj" />
+  </ItemGroup>
 </Project>

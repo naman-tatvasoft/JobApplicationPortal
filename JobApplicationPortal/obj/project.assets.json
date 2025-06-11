@@ -1991,6 +1991,63 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XDocument.dll": {}
         }
+      },
+      "JobApplicationPortal.DataModels/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "7.0.4",
+          "Microsoft.AspNetCore.JsonPatch": "7.0.4",
+          "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "7.0.4",
+          "Microsoft.AspNetCore.OpenApi": "7.0.20",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "7.0.4",
+          "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.1.0"
+        },
+        "compile": {
+          "bin/placeholder/JobApplicationPortal.DataModels.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/JobApplicationPortal.DataModels.dll": {}
+        }
+      },
+      "JobApplicationPortal.Repository/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "JobApplicationPortal.DataModels": "1.0.0",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "7.0.4",
+          "Microsoft.AspNetCore.JsonPatch": "7.0.4",
+          "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "7.0.4",
+          "Microsoft.AspNetCore.OpenApi": "7.0.20",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "7.0.4",
+          "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.1.0"
+        },
+        "compile": {
+          "bin/placeholder/JobApplicationPortal.Repository.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/JobApplicationPortal.Repository.dll": {}
+        }
+      },
+      "JobApplicationPortal.Service/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "JobApplicationPortal.DataModels": "1.0.0",
+          "JobApplicationPortal.Repository": "1.0.0",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "7.0.4",
+          "Microsoft.AspNetCore.JsonPatch": "7.0.4",
+          "Microsoft.AspNetCore.Mvc.NewtonsoftJson": "7.0.4",
+          "Microsoft.AspNetCore.OpenApi": "7.0.20",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "7.0.4",
+          "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.1.0"
+        },
+        "compile": {
+          "bin/placeholder/JobApplicationPortal.Service.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/JobApplicationPortal.Service.dll": {}
+        }
       }
     }
   },
@@ -6546,10 +6603,28 @@
         "system.xml.xdocument.4.3.0.nupkg.sha512",
         "system.xml.xdocument.nuspec"
       ]
+    },
+    "JobApplicationPortal.DataModels/1.0.0": {
+      "type": "project",
+      "path": "../JobApplicationPortal.DataModels/JobApplicationPortal.DataModels.csproj",
+      "msbuildProject": "../JobApplicationPortal.DataModels/JobApplicationPortal.DataModels.csproj"
+    },
+    "JobApplicationPortal.Repository/1.0.0": {
+      "type": "project",
+      "path": "../JobApplicationPortal.Repository/JobApplicationPortal.Repository.csproj",
+      "msbuildProject": "../JobApplicationPortal.Repository/JobApplicationPortal.Repository.csproj"
+    },
+    "JobApplicationPortal.Service/1.0.0": {
+      "type": "project",
+      "path": "../JobApplicationPortal.Service/JobApplicationPortal.Service.csproj",
+      "msbuildProject": "../JobApplicationPortal.Service/JobApplicationPortal.Service.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net7.0": [
+      "JobApplicationPortal.DataModels >= 1.0.0",
+      "JobApplicationPortal.Repository >= 1.0.0",
+      "JobApplicationPortal.Service >= 1.0.0",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 7.0.4",
       "Microsoft.AspNetCore.JsonPatch >= 7.0.4",
       "Microsoft.AspNetCore.Mvc.NewtonsoftJson >= 7.0.4",
@@ -6584,7 +6659,17 @@
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.DataModels\\JobApplicationPortal.DataModels.csproj": {
+              "projectPath": "C:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.DataModels\\JobApplicationPortal.DataModels.csproj"
+            },
+            "C:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.Repository\\JobApplicationPortal.Repository.csproj": {
+              "projectPath": "C:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.Repository\\JobApplicationPortal.Repository.csproj"
+            },
+            "C:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.Service\\JobApplicationPortal.Service.csproj": {
+              "projectPath": "C:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.Service\\JobApplicationPortal.Service.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
