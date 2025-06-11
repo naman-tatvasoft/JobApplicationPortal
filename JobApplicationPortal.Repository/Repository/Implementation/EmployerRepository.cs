@@ -15,4 +15,9 @@ public class EmployerRepository : IEmployerRepository
     {
         return _context.Employers.AsQueryable();
     }
+
+    public bool IsEmployerIdExist(int employerId)
+    {
+        return _context.Employers.Any(e => e.Id == employerId);
+    }
 }

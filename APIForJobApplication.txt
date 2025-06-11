@@ -36,9 +36,9 @@ API'S
 
 17)job filtering by Skill, Location, Experience (Get)(Admin, Candidate)
 
-✔ 18)get all status (Get)(Employer, Admin)
+✔ 18)get all status (api/get/statuses)(Get)(Employer, Admin)
 
-19)get all skills (Get)(Employer)
+✔ 19)get all skills  (api/get/skills)(Get)(Employer)
 
 
 git repo:-
