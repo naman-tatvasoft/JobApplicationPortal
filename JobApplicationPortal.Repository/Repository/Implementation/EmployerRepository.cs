@@ -15,4 +15,9 @@ public class EmployerRepository : IEmployerRepository
         _context.Employers.Add(employer);
         await _context.SaveChangesAsync();
     }
+    
+    public IQueryable<Employer> GetAllEmployers()
+    {
+        return _context.Employers.AsQueryable();
+    }
 }

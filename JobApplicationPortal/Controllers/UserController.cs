@@ -1,8 +1,6 @@
-using JobApplicationPortal.Dto;
-using JobApplicationPortal.Models;
+using JobApplicationPortal.Service.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace JobApplicationPortal.Controllers;
 
@@ -11,26 +9,25 @@ namespace JobApplicationPortal.Controllers;
 public class UserController : ControllerBase
 {
 
-    private readonly JobApplicationPortalContext _context;
+    private readonly IUserService _userService;
 
-    public UserController(JobApplicationPortalContext context){
-        _context = context;
+    public UserController(IUserService userService){
+        _userService = userService;
     }
-
+ 
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [Authorize(Roles = "Admin")]
     [HttpGet("get/employers")]
     public IActionResult GetEmployers(){
-        var employersInfoList = _context.Employers.Include(e => e.User).Select(c => new EmployerInfoDto{
-            Id = c.Id,
-            Name = c.Name,
-            CompanyName = c.CompanyName,
-            Email = c.User.Email
-        }).ToList();
+        var result = _userService.GetEmployers();
 
-        return Ok(employersInfoList);
+        if(result.StatusCode == 200){
+            return Ok(result.Data);
+        }else{
+            return StatusCode(result.StatusCode, new { Message = result.Message });
+        }
     }
 
     
@@ -40,13 +37,13 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [Authorize(Roles = "Admin")]
     public IActionResult GetCandidates(){
-        var candidatesInfoList = _context.Candidates.Include(e => e.User).Select(c => new CandidateInfoDto{
-            Id = c.Id,
-            Name = c.Name,
-            Email = c.User.Email
-        }).ToList();
+        var result = _userService.GetCandidates();
 
-        return Ok(candidatesInfoList);
+        if(result.StatusCode == 200){
+            return Ok(result.Data);
+        }else{
+            return StatusCode(result.StatusCode, new { Message = result.Message });
+        }
     }
 
 }
