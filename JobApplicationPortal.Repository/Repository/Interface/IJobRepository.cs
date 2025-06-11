@@ -8,6 +8,7 @@ public interface IJobRepository
     public IQueryable<Job> GetJobs();
     public IQueryable<Job> GetJobsByEmployer(int employerId);
     public Job GetJobById(int jobId);
+    public Task<Job> UpdateJob(Job job);
     public bool IsJobByEmployer(int jobId, Employer employer);
     public bool IsJobAlreadyDeleted(int jobId);
     public Task DeleteJob(int jobId);

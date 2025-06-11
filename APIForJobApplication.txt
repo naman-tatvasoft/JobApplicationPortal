@@ -14,33 +14,35 @@ API'S
 
 ✔ 6)Read Own Created Jobs (api/get/created-jobs)(GET)(Employer)
 
-7)Update Job (PUT)(Employer)  (before the job open to apply)
+✔ 7) Job By Id (api/get/job-by-id)(GET)(Employer)
 
-✔ 8)soft Delete Job (api/delete/job)(PUT)(Employer)
+✔ 8)Update Job (PUT)(Employer)(before the job open to apply can be edited)
 
-✔ 9)jobs by employer (api/get/jobs-by-employer)(GET)(Admin)
+✔ 9)soft Delete Job (api/delete/job)(PUT)(Employer)
 
-✔ 10)Read All Jobs (api/get/job)(GET)(Admin, Candidate)
+✔ 10)jobs by employer (api/get/jobs-by-employer)(GET)(Admin)
 
-✔ 11)Apply Job (api/job/application)(POST)(Candidates)
+✔ 11)Read All Jobs (api/get/job)(GET)(Admin, Candidate)
 
-✔ 12)View own Job Application History (api/get/applications-by-candidate)(GET)(Candidate)
+✔ 12)Apply Job (api/job/application)(POST)(Candidates)
 
-✔ 13)Read All Application (api/get/applications)(GET)(Admin)
+✔ 13)View own Job Application History (api/get/applications-by-candidate)(GET)(Candidate)
 
-✔ 14)view Applications in particular job (api/get/applications-by-job)(GET)(Employer)
+✔ 14)Read All Application (api/get/applications)(GET)(Admin)
 
-✔ 15)Update status of applied applications on job (api/application/change-status)(PUT)(Employer)
+✔ 15)view Applications in particular job (api/get/applications-by-job)(GET)(Employer)
 
-16)Total applications per job (Get)(Admin, Employer)
+✔ 16)Update status of applied applications on job (api/application/change-status)(PUT)(Employer)
 
-17)Search and pagination for job listings (Get)(Admin, Candidate)
+17)Total applications per job (Get)(Admin, Employer)
 
-18)job filtering by Skill, Location, Experience (Get)(Admin, Candidate)
+18)Search and pagination for job listings (Get)(Admin, Candidate)
 
-✔ 19)get all status (api/get/statuses)(Get)(Employer, Admin)
+19)job filtering by Skill, Location, Experience (Get)(Admin, Candidate)
 
-✔ 20)get all skills  (api/get/skills)(Get)(Employer)
+✔ 20)get all status (api/get/statuses)(Get)(Employer, Admin)
+
+✔ 21)get all skills  (api/get/skills)(Get)(Employer)
 
 
 git repo:-

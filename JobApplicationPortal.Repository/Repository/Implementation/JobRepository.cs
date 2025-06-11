@@ -23,12 +23,28 @@ public class JobRepository : IJobRepository
 
     public Job GetJobById(int jobId)
     {
-        return _context.Jobs.FirstOrDefault(job => job.Id == jobId);
+        return _context.Jobs.FirstOrDefault(job => job.Id == jobId && (bool)!job.IsDeleted);
+    }
+
+    public async Task<Job> UpdateJob(Job job)
+    {
+        var existingJob = GetJobById(job.Id);
+        
+        existingJob.Title = job.Title;
+        existingJob.Description = job.Description;
+        existingJob.Location = job.Location;
+        existingJob.ExperienceRequired = job.ExperienceRequired;
+        existingJob.OpenFrom = job.OpenFrom;
+
+        _context.Jobs.Update(existingJob);
+        await _context.SaveChangesAsync();
+
+        return existingJob;
     }
 
     public bool IsJobByEmployer(int jobId, Employer employer)
     {
-        return _context.Jobs.Any(j => j.Id == jobId && j.EmployerId != employer.Id);
+        return _context.Jobs.Any(j => j.Id == jobId && j.EmployerId == employer.Id);
     }
 
     public bool IsJobAlreadyDeleted(int jobId)

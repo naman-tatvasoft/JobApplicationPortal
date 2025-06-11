@@ -16,4 +16,14 @@ public class JobSkillRepository : IJobSkillRepository
         _context.JobSkills.Add(jobSkill);
         await _context.SaveChangesAsync();
     }
+
+    public async Task DeleteJobSkillByJobId(int jobId)
+    {
+        var jobSkills = _context.JobSkills.Where(js => js.JobId == jobId).ToList();
+        if (jobSkills.Any())
+        {
+            _context.JobSkills.RemoveRange(jobSkills);
+            await _context.SaveChangesAsync();
+        }
+    }
 }

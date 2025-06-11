@@ -113,6 +113,200 @@ public class JobService : IJobService
         };
     }
 
+    public CommonDto<JobDto> GetJobById(int jobId)
+    {
+        var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+        if (string.IsNullOrEmpty(email))
+        {
+            return new CommonDto<JobDto>
+            {
+                StatusCode = 401,
+                Message = "User is not authenticated."
+            };
+        }
+
+        var employer = _employerRepository.GetEmployerByEmail(email);
+
+        if (employer == null)
+        {
+            return new CommonDto<JobDto>
+            {
+                StatusCode = 400,
+                Message = "Employer not found."
+            };
+        }
+
+        var jobIdCheck = _jobRepository.GetJobById(jobId);
+        if (jobIdCheck == null)
+        {
+            return new CommonDto<JobDto>
+            {
+                StatusCode = 400,
+                Message = "Job not found or deleted."
+            };
+        }
+
+        var isJobByEmployer = _jobRepository.IsJobByEmployer(jobId, employer);
+        if (!isJobByEmployer)
+        {
+            return new CommonDto<JobDto>
+            {
+                StatusCode = 400,
+                Message = "Job is not created by the employer."
+            };
+        }
+
+        var job = _jobRepository.GetJobById(jobId);
+
+        var jobDto = new JobDto
+        {
+            Id = job.Id,
+            Title = job.Title,
+            Description = job.Description,
+            Location = job.Location,
+            ExperienceRequired = job.ExperienceRequired,
+            OpenFrom = job.OpenFrom,
+            skillsRequiredList = job.JobSkills.Select(skill => new SkillDto
+            {
+                Id = skill.Id,
+                Name = skill.Skill.Name
+            }).ToList()
+        };
+
+        return new CommonDto<JobDto>
+        {
+            Data = jobDto,
+            StatusCode = 200,
+            Message = "Job retrieved successfully."
+        };
+    }
+
+    public async Task<CommonDto<JobDto>> UpdateJob(JobDto updateJobDto)
+    {
+        if (updateJobDto == null || !updateJobDto.skillsRequiredList.Any())
+        {
+            return new CommonDto<JobDto>
+            {
+                StatusCode = 400,
+                Message = "Invalid job data."
+            };
+        }
+
+        var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+        if (string.IsNullOrEmpty(email))
+        {
+            return new CommonDto<JobDto>
+            {
+                StatusCode = 401,
+                Message = "User is not authenticated."
+            };
+        }
+
+        var employer = _employerRepository.GetEmployerByEmail(email);
+
+        if (employer == null)
+        {
+            return new CommonDto<JobDto>
+            {
+                StatusCode = 400,
+                Message = "Employer not found."
+            };
+        }
+
+        var jobIdCheck = _jobRepository.GetJobById(updateJobDto.Id);
+        if (jobIdCheck == null)
+        {
+            return new CommonDto<JobDto>
+            {
+                StatusCode = 400,
+                Message = "Job not found or deleted."
+            };
+        }
+
+        var isJobByEmployer = _jobRepository.IsJobByEmployer(updateJobDto.Id, employer);
+        if (!isJobByEmployer)
+        {
+            return new CommonDto<JobDto>
+            {
+                StatusCode = 400,
+                Message = "Job is not created by the employer."
+            };
+        }
+
+        var IsJobDateAlreadyActive = _jobRepository.GetJobById(updateJobDto.Id).OpenFrom;
+        if (IsJobDateAlreadyActive <= DateOnly.FromDateTime(DateTime.Now))
+        {
+            return new CommonDto<JobDto>
+            {
+                StatusCode = 400,
+                Message = "Already opened job cannot be updated."
+            };
+        }
+
+        var jobToUpdate = new Job
+        {
+            Id = updateJobDto.Id,
+            Title = updateJobDto.Title,
+            Description = updateJobDto.Description,
+            Location = updateJobDto.Location,
+            ExperienceRequired = updateJobDto.ExperienceRequired,
+            EmployerId = employer.Id,
+            OpenFrom = updateJobDto.OpenFrom
+        };
+
+        await _jobRepository.UpdateJob(jobToUpdate);
+
+        // Clear existing skills for the job
+        await _jobSkillRepository.DeleteJobSkillByJobId(updateJobDto.Id);
+
+        foreach (var skill in updateJobDto.skillsRequiredList)
+        {
+            var existingSkill = _skillRepository.GetSkillByName(skill.Name);
+            if (existingSkill != null)
+            {
+                var jobSkill = new JobSkill
+                {
+                    JobId = jobToUpdate.Id,
+                    SkillId = existingSkill.Id,
+                };
+                await _jobSkillRepository.CreateJobSkill(jobSkill);
+            }
+            else
+            {
+                return new CommonDto<JobDto>
+                {
+                    StatusCode = 400,
+                    Message = "Such skill is not present"
+                };
+            }
+        }
+
+        var updatedJob = _jobRepository.GetJobById(updateJobDto.Id);
+        var jobDto = new JobDto
+        {
+            Id = updatedJob.Id,
+            Title = updatedJob.Title,
+            Description = updatedJob.Description,
+            Location = updatedJob.Location,
+            ExperienceRequired = updatedJob.ExperienceRequired,
+            OpenFrom = updatedJob.OpenFrom,
+            skillsRequiredList = updatedJob.JobSkills.Select(skill => new SkillDto
+            {
+                Id = skill.Id,
+                Name = skill.Skill.Name
+            }).ToList()
+        };
+
+        return new CommonDto<JobDto>
+        {
+            Data = jobDto,
+            StatusCode = 200,
+            Message = "Job updated successfully."
+        };
+
+    }
     public CommonDto<List<JobDto>> GetJobs()
     {
         var jobs = _jobRepository.GetJobs()

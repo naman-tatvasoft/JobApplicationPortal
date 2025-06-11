@@ -6,6 +6,7 @@ namespace JobApplicationPortal.DataModels.Dtos.RequestDtos;
 
 public class JobDto
 {
+    public int Id {get; set;}
     
     [MaxLength(50, ErrorMessage = "Title cannot exceed 50 characters")]
     public string Title { get; set; } = null!;

@@ -6,6 +6,8 @@ namespace JobApplicationPortal.Service.Service.Interface;
 public interface IJobService
 {
     public Task<CommonDto<object>> CreateJob(JobDto registerEmployerDto);
+    public CommonDto<JobDto> GetJobById(int jobId);
+    public Task<CommonDto<JobDto>> UpdateJob(JobDto updateJobDto);
     public CommonDto<List<JobDto>> GetJobs();
     public CommonDto<List<JobDto>> GetCreatedJobs();
     public CommonDto<List<JobDto>> GetJobsByEmployer(int employerId);
