@@ -11,9 +11,54 @@ public class JobRepository : IJobRepository
         _context = context;
     }
 
+    public IQueryable<Job> GetJobs()
+    {
+        return _context.Jobs.Where(job => (bool)!job.IsDeleted).AsQueryable();
+    }
+
     public IQueryable<Job> GetJobsByEmployer(int employerId)
     {
         return _context.Jobs.Where(job => job.EmployerId == employerId).AsQueryable();
     }
 
+    public Job GetJobById(int jobId)
+    {
+        return _context.Jobs.FirstOrDefault(job => job.Id == jobId);
+    }
+
+    public bool IsJobByEmployer(int jobId, Employer employer)
+    {
+        return _context.Jobs.Any(j => j.Id == jobId && j.EmployerId != employer.Id);
+    }
+
+    public bool IsJobAlreadyDeleted(int jobId)
+    {
+        return _context.Jobs.Any(job => job.Id == jobId && (bool)job.IsDeleted);
+    }
+
+    public async Task DeleteJob(int jobId)
+    {
+        var job = GetJobById(jobId);
+
+        job.IsDeleted = true;
+        
+        _context.Jobs.Update(job);
+        await _context.SaveChangesAsync();
+    }
+
+    public bool JobTitleByEmployerAlreadyExists(string title, int employerId){
+        return _context.Jobs.Any(j => j.Title == title && j.EmployerId == employerId && (bool)!j.IsDeleted);
+    }
+
+    public async Task<Job> CreateJob(Job job)
+    {
+        job.CreatedAt = DateTime.Now;
+        job.IsActive = true;
+        job.IsDeleted = false;
+
+        _context.Jobs.Add(job);
+        await _context.SaveChangesAsync();
+
+        return job;
+    }
 }

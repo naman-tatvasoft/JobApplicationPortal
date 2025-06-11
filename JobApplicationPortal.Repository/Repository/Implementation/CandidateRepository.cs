@@ -15,4 +15,9 @@ public class CandidateRepository : ICandidateRepository
     {
         return _context.Candidates.AsQueryable();
     }
+    
+    public Candidate GetCandidateByEmail(string email)
+    {
+        return _context.Candidates.FirstOrDefault(c => c.User.Email == email);
+    }
 }

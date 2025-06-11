@@ -17,4 +17,10 @@ public class SkillRepository : ISkillRepository
         return _context.Skills.AsQueryable();
     }
 
+    public Skill GetSkillByName(string skillName)
+    {
+        return _context.Skills.FirstOrDefault(s =>s.Name.ToLower() == skillName.ToLower());
+    }
+
+
 }

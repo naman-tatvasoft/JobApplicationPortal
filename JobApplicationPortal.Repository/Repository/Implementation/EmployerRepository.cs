@@ -20,4 +20,9 @@ public class EmployerRepository : IEmployerRepository
     {
         return _context.Employers.Any(e => e.Id == employerId);
     }
+
+    public Employer GetEmployerByEmail(string email)
+    {
+        return _context.Employers.FirstOrDefault(e => e.User.Email == email);
+    }
 }

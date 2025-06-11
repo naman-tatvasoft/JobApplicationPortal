@@ -10,4 +10,10 @@ public class JobSkillRepository : IJobSkillRepository
     {
         _context = context;
     }
+
+    public async Task CreateJobSkill(JobSkill jobSkill)
+    {
+        _context.JobSkills.Add(jobSkill);
+        await _context.SaveChangesAsync();
+    }
 }
