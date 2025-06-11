@@ -16,12 +16,11 @@ public class UserRepository : IUserRepository
        return _context.Users.Any(u => u.Email == email);
     }
 
-    public async Task<User> AddUserAsync(User user)
+    public async Task AddUserAsync(User user)
     {
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
-        return user;
     }
 
     public User GetUserByEmail(string email)

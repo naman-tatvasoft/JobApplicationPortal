@@ -17,7 +17,7 @@ public class JobController : ControllerBase
         _context = context;
 
     }
-
+ 
     [HttpPost("create/job")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

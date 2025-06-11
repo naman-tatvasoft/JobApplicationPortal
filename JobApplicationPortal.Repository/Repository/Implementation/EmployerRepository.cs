@@ -10,11 +10,6 @@ public class EmployerRepository : IEmployerRepository
     {
         _context = context;
     }
-    public async Task AddEmployerAsync(Employer employer)
-    {
-        _context.Employers.Add(employer);
-        await _context.SaveChangesAsync();
-    }
     
     public IQueryable<Employer> GetAllEmployers()
     {

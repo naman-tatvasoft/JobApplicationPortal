@@ -11,12 +11,6 @@ public class CandidateRepository : ICandidateRepository
         _context = context;
     }
     
-    public async Task AddCandidateAsync(Candidate candidate)
-    {
-        _context.Candidates.Add(candidate);
-        await _context.SaveChangesAsync();
-    }
-    
     public IQueryable<Candidate> GetAllCandidates()
     {
         return _context.Candidates.AsQueryable();

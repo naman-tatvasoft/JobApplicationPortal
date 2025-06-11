@@ -4,6 +4,7 @@ namespace JobApplicationPortal.Service.Service.Implementation;
 
 public class JobService : IJobService
 {
+    
 //  public JobService(){
 
 //  }

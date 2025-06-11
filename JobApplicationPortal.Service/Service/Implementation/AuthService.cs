@@ -16,10 +16,10 @@ public class AuthService : IAuthService
 
     private readonly JwtHelper _jwtHelper;
 
-    public AuthService(IUserRepository userRepository, 
-        IEmployerRepository employerRepository, 
-        ICandidateRepository candidateRepository, 
-        IRoleRepository roleRepository, 
+    public AuthService(IUserRepository userRepository,
+        IEmployerRepository employerRepository,
+        ICandidateRepository candidateRepository,
+        IRoleRepository roleRepository,
         JwtHelper jwtHelper)
     {
         _employerRepository = employerRepository;
@@ -54,17 +54,14 @@ public class AuthService : IAuthService
         {
             Email = registerEmployerDto.Email,
             Password = hashedPassword,
-            RoleId = _roleRepository.GetRoleIdByName("Employer")
+            RoleId = _roleRepository.GetRoleIdByName("Employer"),
+            Employer = new Employer
+            {
+                Name = registerEmployerDto.Name,
+                CompanyName = registerEmployerDto.CompanyName
+            }
         };
-        var savedUser = await _userRepository.AddUserAsync(user);
-
-        var employer = new Employer
-        {
-            Name = registerEmployerDto.Name,
-            CompanyName = registerEmployerDto.CompanyName,
-            UserId = savedUser.Id
-        };
-        await _employerRepository.AddEmployerAsync(employer);
+        await _userRepository.AddUserAsync(user);
 
         return new CommonDto<object>
         {
@@ -98,16 +95,13 @@ public class AuthService : IAuthService
         {
             Email = registerCandidateDto.Email,
             Password = hashedPassword,
-            RoleId = _roleRepository.GetRoleIdByName("Candidate")
+            RoleId = _roleRepository.GetRoleIdByName("Candidate"),
+            Candidate = new Candidate
+            {
+                Name = registerCandidateDto.Name,
+            }
         };
-        var savedUser = await _userRepository.AddUserAsync(user);
-
-        var candidate = new Candidate
-        {
-            Name = registerCandidateDto.Name,
-            UserId = savedUser.Id
-        };
-        await _candidateRepository.AddCandidateAsync(candidate);
+        await _userRepository.AddUserAsync(user);
 
         return new CommonDto<object>
         {
