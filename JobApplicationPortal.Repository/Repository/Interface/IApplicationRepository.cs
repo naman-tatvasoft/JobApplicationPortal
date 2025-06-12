@@ -5,7 +5,7 @@ namespace JobApplicationPortal.Repository.Repository.Interface;
 
 public interface IApplicationRepository
 {
-    
+
     public Task<bool> CheckAlreadyApplied(int jobId, int candidateId);
     public Task<Application> CreateApplication(Application application);
     public List<ApplicationInfoDto> GetApplications();
@@ -14,4 +14,5 @@ public interface IApplicationRepository
     public Application GetApplicationById(int applicationId);
     public bool JobByEmployer(int jobId, int employerId);
     public Task<Application> UpdateApplicationStatus(int applicationId, int statusId);
+    public string GetCandidateEmailByApplicationId(int applicationId);
 }

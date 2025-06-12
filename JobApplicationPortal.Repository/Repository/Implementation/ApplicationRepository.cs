@@ -128,4 +128,14 @@ public class ApplicationRepository : IApplicationRepository
         }
         return null;
     }
+
+    public string GetCandidateEmailByApplicationId(int applicationId)
+    {
+        var application = _context.Applications
+            .Include(a => a.Candidate)
+            .ThenInclude(c => c.User)
+            .FirstOrDefault(a => a.Id == applicationId);
+
+        return application?.Candidate?.User?.Email;
+    }
 }

@@ -23,4 +23,10 @@ public class StatusRepository : IStatusRepository
         return status?.Id ?? 0; 
     }
 
+    public string GetStatusNameById(int statusId)
+    {
+        var status = _context.Statuses.FirstOrDefault(s => s.Id == statusId);
+        return status?.Name ?? string.Empty; 
+    }
+
 }

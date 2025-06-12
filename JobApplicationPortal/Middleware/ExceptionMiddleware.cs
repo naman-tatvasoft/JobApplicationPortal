@@ -38,6 +38,10 @@ public class ExceptionMiddleware
                 code = HttpStatusCode.BadRequest;
                 message = "Invalid request. Required data is missing.";
                 break;
+            case UnauthorizedAccessException _:
+                 code = HttpStatusCode.Unauthorized;
+                message = "Invalid request. Required data is missing.";
+                break;
             default:
                 code = HttpStatusCode.InternalServerError;
                 message = "Internal server error. Please try again later.";

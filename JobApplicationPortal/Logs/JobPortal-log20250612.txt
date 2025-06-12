@@ -20,3 +20,6 @@ Swashbuckle.AspNetCore.SwaggerGen.SwaggerGeneratorException: Conflicting method/
    at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
 
 
+[2025-06-12 18:08:07 ERR] Status Code: 500, Message: Internal server error. Please try again later.,Exception Details: No authentication handler is registered for the scheme 'You are not authorized to update this application status.'. The registered schemes are: Bearer. Did you forget to call AddAuthentication().Add[SomeAuthHandler]("You are not authorized to update this application status.",...)?
+
+

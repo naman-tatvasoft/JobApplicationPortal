@@ -1,3 +1,5 @@
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 using JobApplicationPortal.DataModels.Dtos.RequestDtos;
 using JobApplicationPortal.DataModels.Dtos.ResponseDtos;
@@ -312,6 +314,45 @@ public class ApplicationService : IApplicationService
             };
         }
 
+        var candidateEmail = _applicationRepository.GetCandidateEmailByApplicationId(applicationId);
+        var statusName = _statusRepository.GetStatusNameById(statusId);
+
+        var senderEmail = new MailAddress("test.dotnet@etatvasoft.com", "test.dotnet@etatvasoft.com");
+        var receiverEmail = new MailAddress(candidateEmail, "Receiver");
+        var password = "P}N^{z-]7Ilp";
+        var sub = "Application status updated";
+        var body = $@"
+            <div style='max-width: 500px; font-family: Arial, sans-serif; border: 1px solid #ddd;'>
+            <div style='background: #006CAC; padding: 10px; text-align: center; height:90px; max-width:100%; display: flex; justify-content: center; align-items: center;'>
+                <span style='color: #fff; font-size: 24px; margin-left: 10px; font-weight: 600;'>Job Portal</span>
+            </div>
+            <div style='padding: 20px 5px; background-color: #e8e8e8;'>
+                <p>Job Portal</p>
+                <p>Your applied application status is updated to {statusName}</p>
+                <p>If you encounter any issues or have any questions, please do not hesitate to contact our support team.</p>
+                <p><strong style='color: orange;'>Important Note:</strong>
+                    If you did not Applied for any job, please ignore this email or contact our support team immediately.
+                </p>
+            </div>
+            </div>";
+
+        var smtp = new SmtpClient
+        {
+            Host = "mail.etatvasoft.com",
+            Port = 587,
+            EnableSsl = true,
+            DeliveryMethod = SmtpDeliveryMethod.Network,
+            UseDefaultCredentials = false,
+            Credentials = new NetworkCredential(senderEmail.Address, password)
+        };
+        using (var mess = new MailMessage(senderEmail, receiverEmail))
+        {
+            mess.Subject = sub;
+            mess.Body = body;
+            mess.IsBodyHtml = true;
+            await smtp.SendMailAsync(mess);
+        }
+
         return new CommonDto<object>
         {
             StatusCode = 200,
@@ -321,69 +362,69 @@ public class ApplicationService : IApplicationService
     }
 
     public CommonDto<List<StatusDto>> GetStatuses()
-    {
-        var status = _statusRepository.GetStatuses()
-                   .Select(status => new StatusDto
-                   {
-                       Id = status.Id,
-                       Name = status.Name
-                   })
-                   .ToList();
+{
+    var status = _statusRepository.GetStatuses()
+               .Select(status => new StatusDto
+               {
+                   Id = status.Id,
+                   Name = status.Name
+               })
+               .ToList();
 
-        return new CommonDto<List<StatusDto>>
+    return new CommonDto<List<StatusDto>>
+    {
+        Data = status,
+        StatusCode = 200,
+        Message = "Status retieved successfully."
+    };
+}
+
+public CommonDto<int> GetTotalApplicationByJob(int jobId)
+{
+    var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+    if (string.IsNullOrEmpty(email))
+    {
+        return new CommonDto<int>
         {
-            Data = status,
-            StatusCode = 200,
-            Message = "Status retieved successfully."
+            StatusCode = 401,
+            Message = "User is not authenticated."
         };
     }
 
-    public CommonDto<int> GetTotalApplicationByJob(int jobId)
+    var jobIdCheck = _jobRepository.GetJobById(jobId);
+    if (jobIdCheck == null)
     {
-        var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-        if (string.IsNullOrEmpty(email))
+        return new CommonDto<int>
         {
-            return new CommonDto<int>
-            {
-                StatusCode = 401,
-                Message = "User is not authenticated."
-            };
-        }
+            StatusCode = 400,
+            Message = "Job not found."
+        };
+    }
 
-        var jobIdCheck = _jobRepository.GetJobById(jobId);
-        if (jobIdCheck == null)
+    var employer = _employerRepository.GetEmployerByEmail(email);
+    if (employer != null)
+    {
+        var isJobByEmployer = _jobRepository.IsJobByEmployer(jobId, employer);
+        if (!isJobByEmployer)
         {
             return new CommonDto<int>
             {
                 StatusCode = 400,
-                Message = "Job not found."
+                Message = "Job is not created by the employer."
             };
         }
 
-        var employer = _employerRepository.GetEmployerByEmail(email);
-        if (employer != null)
-        {
-            var isJobByEmployer = _jobRepository.IsJobByEmployer(jobId, employer);
-            if (!isJobByEmployer)
-            {
-                return new CommonDto<int>
-                {
-                    StatusCode = 400,
-                    Message = "Job is not created by the employer."
-                };
-            }
-
-            var totalApplicationsEmployer = _applicationRepository.GetApplicationsByJob(jobId).Count;
-        }
-
-        var totalApplications = _applicationRepository.GetApplicationsByJob(jobId).Count;
-
-        return new CommonDto<int>
-        {
-            Data = totalApplications,
-            StatusCode = 200,
-            Message = "Total applications retrieved successfully."
-        };
-
+        var totalApplicationsEmployer = _applicationRepository.GetApplicationsByJob(jobId).Count;
     }
+
+    var totalApplications = _applicationRepository.GetApplicationsByJob(jobId).Count;
+
+    return new CommonDto<int>
+    {
+        Data = totalApplications,
+        StatusCode = 200,
+        Message = "Total applications retrieved successfully."
+    };
+
+}
 }

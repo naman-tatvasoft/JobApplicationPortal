@@ -361,7 +361,6 @@ public class JobService : IJobService
             };
         }
 
-
         var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
         if (string.IsNullOrEmpty(email))
