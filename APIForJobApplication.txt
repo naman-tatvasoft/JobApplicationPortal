@@ -16,7 +16,7 @@ API'S
 
 ✔ 7) Job By Id (api/get/job-by-id)(GET)(Employer)
 
-✔ 8)Update Job (PUT)(Employer)(before the job open to apply can be edited)
+✔ 8)Update Job (api/update/job)(PUT)(Employer)(before the job open to apply can be edited)
 
 ✔ 9)soft Delete Job (api/delete/job)(PUT)(Employer)
 

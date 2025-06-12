@@ -1,0 +1,8 @@
+using JobApplicationPortal.DataModels.Models;
+
+namespace JobApplicationPortal.Repository.Repository.Interface;
+
+public interface IStatusRepository
+{
+    public IQueryable<Status> GetStatuses();
+}

@@ -1,5 +1,6 @@
 using JobApplicationPortal.DataModels.Models;
 using JobApplicationPortal.Repository.Repository.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace JobApplicationPortal.Repository.Repository.Implementation;
 
@@ -29,7 +30,7 @@ public class JobRepository : IJobRepository
     public async Task<Job> UpdateJob(Job job)
     {
         var existingJob = GetJobById(job.Id);
-        
+
         existingJob.Title = job.Title;
         existingJob.Description = job.Description;
         existingJob.Location = job.Location;
@@ -57,12 +58,13 @@ public class JobRepository : IJobRepository
         var job = GetJobById(jobId);
 
         job.IsDeleted = true;
-        
+
         _context.Jobs.Update(job);
         await _context.SaveChangesAsync();
     }
 
-    public bool JobTitleByEmployerAlreadyExists(string title, int employerId){
+    public bool JobTitleByEmployerAlreadyExists(string title, int employerId)
+    {
         return _context.Jobs.Any(j => j.Title == title && j.EmployerId == employerId && (bool)!j.IsDeleted);
     }
 
