@@ -18,10 +18,10 @@ public class ApplicationRepository : IApplicationRepository
     {
         return await _context.Applications.AnyAsync(a => a.JobId == jobId && a.CandidateId == candidateId);
     }
-    
+
     public async Task<Application> CreateApplication(Application application)
     {
-        await _context.Applications.AddAsync(application);
+        _context.Applications.Add(application);
         await _context.SaveChangesAsync();
         return application;
     }

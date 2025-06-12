@@ -53,8 +53,7 @@ public class ExceptionMiddleware
             Details = exception.Message
         };
         await context.Response.WriteAsync(JsonSerializer.Serialize(response));
-        _logger.LogError($"Status Code: {context.Response.StatusCode}, Message: {message}");
-        _logger.LogError($"Exception Details: {exception.Message}");
+        _logger.LogError($"Status Code: {context.Response.StatusCode}, Message: {message},Exception Details: {exception.Message}");
 
     }
 

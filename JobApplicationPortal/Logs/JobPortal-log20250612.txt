@@ -1,0 +1,12 @@
+[2025-06-12 13:56:40 ERR] Status Code: 500, Message: Internal server error. Please try again later.
+
+
+[2025-06-12 13:56:40 ERR] Exception Details: Self referencing loop detected with type 'JobApplicationPortal.DataModels.Models.Application'. Path 'candidate.applications'.
+
+
+[2025-06-12 14:01:37 ERR] Status Code: 500, Message: Internal server error. Please try again later.
+
+
+[2025-06-12 14:01:37 ERR] Exception Details: Self referencing loop detected with type 'JobApplicationPortal.DataModels.Models.Application'. Path 'candidate.applications'.
+
+

@@ -39,7 +39,10 @@ var conn = builder.Configuration.GetConnectionString("JobPortalConnection");
 builder.Services.AddDbContext<JobApplicationPortalContext>(q => q.UseNpgsql(conn));
 
 
-builder.Services.AddControllers().AddNewtonsoftJson();
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

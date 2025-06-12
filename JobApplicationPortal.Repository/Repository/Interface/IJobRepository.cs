@@ -15,4 +15,6 @@ public interface IJobRepository
     public bool JobTitleByEmployerAlreadyExists(string title, int employerId);
     public Task<Job> CreateJob(Job job);
     public bool CheckJobById(int jobId);
+    public bool CheckExperience(int jobId, int experience);
+
 }

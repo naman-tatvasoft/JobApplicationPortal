@@ -84,4 +84,10 @@ public class JobRepository : IJobRepository
     {
         return _context.Jobs.Any(job => job.Id == jobId && (bool)!job.IsDeleted && (bool)job.IsActive);
     }
+
+    public bool CheckExperience(int jobId, int experience)
+    {
+        var job = _context.Jobs.Any(j => j.Id == jobId && (bool)!j.IsDeleted && (bool)j.IsActive && j.ExperienceRequired <= experience);
+        return job;
+    }
 }

@@ -73,6 +73,16 @@ public class ApplicationService : IApplicationService
             };
         }
 
+        var isEnoughExperience = _jobRepository.CheckExperience(applicationDto.JobId, applicationDto.Experience);
+        if (!isEnoughExperience)
+        {
+            return new CommonDto<Application>
+            {
+                StatusCode = 400,
+                Message = "You do not have enough experience for this job."
+            };
+        }
+
         var coverLetterFileName = string.Empty;
         if (applicationDto.CoverLetter != null && applicationDto.CoverLetter.Length > 0)
         {
@@ -107,6 +117,8 @@ public class ApplicationService : IApplicationService
                 await applicationDto.Resume.CopyToAsync(stream);
             }
         }
+
+
 
         var application = new Application
         {
