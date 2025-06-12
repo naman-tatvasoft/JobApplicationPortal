@@ -22,7 +22,7 @@ API'S
 
 ✔ 10)jobs by employer (api/get/jobs-by-employer)(GET)(Admin)
 
-✔ 11)Read All Jobs (api/get/job)(GET)(Admin, Candidate)
+✔ 11)Read All Jobs (api/get/job)(GET)(Admin, Candidate) (with search and pagination and  filtering by Skill, Location, Experience)
 
 ✔ 12)Apply Job (api/job/application)(POST)(Candidates)
 
@@ -34,15 +34,11 @@ API'S
 
 ✔ 16)Update status of applied applications on job (api/application/change-status)(PUT)(Employer)
 
-✔ 17)Total applications per job (Get)(Admin, Employer)
+✔ 17)Total applications per job (api/get/job/total-applications)(Get)(Admin, Employer)
 
-18)Search and pagination for job listings (Get)(Admin, Candidate)
+✔ 18)get all status (api/get/statuses)(Get)(Employer, Admin)
 
-19)job filtering by Skill, Location, Experience (Get)(Admin, Candidate)
-
-✔ 20)get all status (api/get/statuses)(Get)(Employer, Admin)
-
-✔ 21)get all skills  (api/get/skills)(Get)(Employer)
+✔ 19)get all skills  (api/get/skills)(Get)(Employer)
 
 
 git repo:-

@@ -5,6 +5,7 @@ using JobApplicationPortal.DataModels.Models;
 using JobApplicationPortal.Repository.Repository.Interface;
 using JobApplicationPortal.Service.Service.Interface;
 using Microsoft.AspNetCore.Http;
+using Microsoft.VisualBasic;
 
 namespace JobApplicationPortal.Service.Service.Implementation;
 
@@ -307,11 +308,13 @@ public class JobService : IJobService
         };
 
     }
-    public CommonDto<List<JobDto>> GetJobs()
+
+    public CommonDto<List<JobDto>> GetJobs(string search, int pageNumber, int pageSize, string skill, string location, int experience)
     {
         var jobs = _jobRepository.GetJobs()
             .Select(job => new JobDto
             {
+                Id = job.Id,
                 Title = job.Title,
                 Description = job.Description,
                 Location = job.Location,
@@ -323,6 +326,41 @@ public class JobService : IJobService
                     Name = skill.Skill.Name
                 }).ToList()
             }).ToList();
+
+        if (!string.IsNullOrEmpty(search))
+        {
+            jobs = jobs.Where(j => j.Title.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                                   j.Description.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                                   j.Location.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        if (!string.IsNullOrEmpty(skill))
+        {
+            jobs = jobs.Where(j => j.skillsRequiredList.Any(s => s.Name.ToLower() == skill.ToLower())).ToList();
+        }
+
+        if (!string.IsNullOrEmpty(location))
+        {
+            
+            jobs = jobs.Where(j => j.Location.ToLower() == location.ToLower()).ToList();
+        }
+
+        if (experience > 0)
+        {
+            jobs = jobs.Where(u => u.ExperienceRequired <= experience).ToList();
+        }
+
+        jobs = jobs.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+
+        if (!jobs.Any())
+        {
+            return new CommonDto<List<JobDto>>
+            {
+                StatusCode = 400,
+                Message = "No jobs found."
+            };
+        }
+
 
         var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 

@@ -99,9 +99,10 @@ public class JobController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Candidate, Admin")]
-    public IActionResult GetJobs()
+    public IActionResult GetJobs([FromQuery] string search = "", [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 2,
+                                    [FromQuery]  string skill = "", [FromQuery]  string location = "", [FromQuery]  int experience = 0)
     {
-        var result = _jobService.GetJobs();
+        var result = _jobService.GetJobs(search, pageNumber, pageSize, skill, location, experience);
         
         if (result.StatusCode == 200)
         {
