@@ -79,4 +79,9 @@ public class JobRepository : IJobRepository
 
         return job;
     }
+
+    public bool CheckJobById(int jobId)
+    {
+        return _context.Jobs.Any(job => job.Id == jobId && (bool)!job.IsDeleted && (bool)job.IsActive);
+    }
 }

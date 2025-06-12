@@ -14,7 +14,75 @@ public class ApplicationRepository : IApplicationRepository
         _context = context;
     }
 
-    public List<ApplicationInfoDto> GetApplicationsByJob(int jobId){
+    public async Task<bool> CheckAlreadyApplied(int jobId, int candidateId)
+    {
+        return await _context.Applications.AnyAsync(a => a.JobId == jobId && a.CandidateId == candidateId);
+    }
+    
+    public async Task<Application> CreateApplication(Application application)
+    {
+        await _context.Applications.AddAsync(application);
+        await _context.SaveChangesAsync();
+        return application;
+    }
+
+    public List<ApplicationInfoDto> GetApplications()
+    {
+        var applicationInfo = _context.Applications
+                .Include(j => j.Job)
+                .ThenInclude(js => js.Employer)
+                .Include(j => j.Candidate)
+                .ThenInclude(c => c.User)
+                .Select(j => new ApplicationInfoDto
+                {
+                    Id = j.Id,
+                    Experience = j.Experience,
+                    NoteForEmployer = j.NoteForEmployer,
+                    ResumeName = j.Resume,
+                    CoverLetterName = j.CoverLetter,
+                    ApplicationDate = (DateTime)j.AppliedDate,
+
+                    JobTitle = j.Job.Title,
+                    CompanyName = j.Job.Employer.CompanyName,
+                    jobLocation = j.Job.Location,
+
+                    CandidateId = j.Candidate.Id,
+                    CandidateName = j.Candidate.Name,
+                    CandidateEmail = j.Candidate.User.Email,
+
+                    Status = _context.Statuses.FirstOrDefault(s => s.Id == j.StatusId).Name,
+                }).ToList();
+        return applicationInfo;
+    }
+
+
+
+    public List<ApplicationInfoDto> GetApplicationsByCandidate(int candidateId)
+    {
+        var applicationInfo = _context.Applications
+                .Include(j => j.Job)
+                .ThenInclude(js => js.Employer)
+                .Include(j => j.Candidate)
+                .ThenInclude(c => c.User)
+                .Where(j => j.CandidateId == candidateId)
+                .Select(j => new ApplicationInfoDto
+                {
+                    Id = j.Id,
+                    JobTitle = j.Job.Title,
+                    CompanyName = j.Job.Employer.CompanyName,
+                    jobLocation = j.Job.Location,
+                    Experience = j.Experience,
+                    NoteForEmployer = j.NoteForEmployer,
+                    ResumeName = j.Resume,
+                    CoverLetterName = j.CoverLetter,
+                    ApplicationDate = (DateTime)j.AppliedDate,
+                    Status = _context.Statuses.FirstOrDefault(s => s.Id == j.StatusId).Name,
+                }).ToList();
+        return applicationInfo;
+    }
+
+    public List<ApplicationInfoDto> GetApplicationsByJob(int jobId)
+    {
         var applicationInfo = _context.Applications
                 .Include(j => j.Job)
                 .ThenInclude(js => js.Employer)

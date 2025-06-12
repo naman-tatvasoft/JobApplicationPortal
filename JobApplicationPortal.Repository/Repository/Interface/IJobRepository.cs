@@ -14,4 +14,5 @@ public interface IJobRepository
     public Task DeleteJob(int jobId);
     public bool JobTitleByEmployerAlreadyExists(string title, int employerId);
     public Task<Job> CreateJob(Job job);
+    public bool CheckJobById(int jobId);
 }

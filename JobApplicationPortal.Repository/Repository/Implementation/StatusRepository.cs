@@ -17,4 +17,10 @@ public class StatusRepository : IStatusRepository
         return _context.Statuses.AsQueryable();
     }
 
+    public int GetStatusIdByName(string statusName)
+    {
+        var status = _context.Statuses.FirstOrDefault(s => s.Name.ToLower() == statusName.ToLower());
+        return status?.Id ?? 0; 
+    }
+
 }

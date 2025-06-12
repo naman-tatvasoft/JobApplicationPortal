@@ -1,17 +1,37 @@
 using System.Security.Claims;
 using System.Text;
 using JobApplicationPortal.DataModels.Models;
+using JobApplicationPortal.Middleware;
 using JobApplicationPortal.Repository.Repository.Implementation;
 using JobApplicationPortal.Repository.Repository.Interface;
 using JobApplicationPortal.Service.Helper;
 using JobApplicationPortal.Service.Service.Implementation;
 using JobApplicationPortal.Service.Service.Interface;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+string logFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Logs", "JobPortal-log.txt");
+ 
+// Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Error()
+    .Enrich.FromLogContext()
+    .WriteTo.File(
+        path: logFilePath,
+        rollingInterval: RollingInterval.Day,
+        retainedFileCountLimit: 7,
+        fileSizeLimitBytes: 10_000_000,
+        rollOnFileSizeLimit: true,
+        shared: true,
+        outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}{NewLine}{NewLine}"
+    )
+    .CreateLogger();
+ 
+// Replace built-in logger with Serilog
+builder.Logging.AddSerilog(Log.Logger);
 
 // Add services to the container.
 
@@ -106,6 +126,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthentication();
 
