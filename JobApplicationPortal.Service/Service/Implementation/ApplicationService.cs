@@ -64,7 +64,7 @@ public class ApplicationService : IApplicationService
         }
 
         var isAlreadyApplied = await _applicationRepository.CheckAlreadyApplied(applicationDto.JobId, candidate.Id);
-        if( isAlreadyApplied)
+        if (isAlreadyApplied)
         {
             return new CommonDto<Application>
             {
@@ -336,5 +336,54 @@ public class ApplicationService : IApplicationService
             StatusCode = 200,
             Message = "Status retieved successfully."
         };
+    }
+
+    public CommonDto<int> GetTotalApplicationByJob(int jobId)
+    {
+        var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        if (string.IsNullOrEmpty(email))
+        {
+            return new CommonDto<int>
+            {
+                StatusCode = 401,
+                Message = "User is not authenticated."
+            };
+        }
+
+        var jobIdCheck = _jobRepository.GetJobById(jobId);
+        if (jobIdCheck == null)
+        {
+            return new CommonDto<int>
+            {
+                StatusCode = 400,
+                Message = "Job not found."
+            };
+        }
+
+        var employer = _employerRepository.GetEmployerByEmail(email);
+        if (employer != null)
+        {
+            var isJobByEmployer = _jobRepository.IsJobByEmployer(jobId, employer);
+            if (!isJobByEmployer)
+            {
+                return new CommonDto<int>
+                {
+                    StatusCode = 400,
+                    Message = "Job is not created by the employer."
+                };
+            }
+
+            var totalApplicationsEmployer = _applicationRepository.GetApplicationsByJob(jobId).Count;
+        }
+
+        var totalApplications = _applicationRepository.GetApplicationsByJob(jobId).Count;
+
+        return new CommonDto<int>
+        {
+            Data = totalApplications,
+            StatusCode = 200,
+            Message = "Total applications retrieved successfully."
+        };
+
     }
 }

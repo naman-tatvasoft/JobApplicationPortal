@@ -56,6 +56,4 @@ public class ExceptionMiddleware
         _logger.LogError($"Status Code: {context.Response.StatusCode}, Message: {message},Exception Details: {exception.Message}");
 
     }
-
-
 }

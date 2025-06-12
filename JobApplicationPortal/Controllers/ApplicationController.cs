@@ -24,7 +24,7 @@ public class ApplicationController : ControllerBase
     [Authorize(Roles = "Candidate")]
     public async Task<IActionResult> JobApplication([FromForm] ApplicationDto applicationDto)
     {
-       var result = await _applicationService.JobApplication(applicationDto);
+        var result = await _applicationService.JobApplication(applicationDto);
         if (result.StatusCode == 201)
         {
             return Ok(result.Data);
@@ -179,6 +179,38 @@ public class ApplicationController : ControllerBase
         if (result.StatusCode == 200)
         {
             return Ok(result.Data);
+        }
+        else
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, result.Message);
+        }
+    }
+
+    [HttpGet("get/job/total-applications/")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Admin, Employer")]
+    public IActionResult GetTotalApplicationByJob(int jobId)
+    {
+        var result = _applicationService.GetTotalApplicationByJob(jobId);
+        if (result.StatusCode == 200)
+        {
+            return Ok(result.Data);
+        }
+        else if (result.StatusCode == 400)
+        {
+            return BadRequest(result.Message);
+        }
+        else if (result.StatusCode == 401)
+        {
+            return Unauthorized(result.Message);
+        }
+        else if (result.StatusCode == 403)
+        {
+            return Forbid(result.Message);
         }
         else
         {

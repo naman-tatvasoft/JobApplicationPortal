@@ -55,8 +55,6 @@ public class ApplicationRepository : IApplicationRepository
         return applicationInfo;
     }
 
-
-
     public List<ApplicationInfoDto> GetApplicationsByCandidate(int candidateId)
     {
         var applicationInfo = _context.Applications

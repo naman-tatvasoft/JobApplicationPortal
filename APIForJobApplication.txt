@@ -34,7 +34,7 @@ API'S
 
 ✔ 16)Update status of applied applications on job (api/application/change-status)(PUT)(Employer)
 
-17)Total applications per job (Get)(Admin, Employer)
+✔ 17)Total applications per job (Get)(Admin, Employer)
 
 18)Search and pagination for job listings (Get)(Admin, Candidate)
 
