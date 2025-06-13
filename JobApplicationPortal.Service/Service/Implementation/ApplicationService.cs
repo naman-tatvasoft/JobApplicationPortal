@@ -128,7 +128,7 @@ public class ApplicationService : IApplicationService
             </div>
             <div style='padding: 20px 5px; background-color: #e8e8e8;'>
                 <p>Job Portal</p>
-                <p>New Application Recieved for job tile {jobTitle}</p>
+                <p>New Application Recieved for job title {jobTitle}</p>
                 <p>If you encounter any issues or have any questions, please do not hesitate to contact our support team.</p>
                 <p><strong style='color: orange;'>Important Note:</strong>
                     If you did not created this job, please ignore this email or contact our support team immediately.

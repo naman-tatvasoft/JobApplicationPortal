@@ -322,6 +322,7 @@ public class JobService : IJobService
 
         var jobDtos = jobs.Select(job => new JobDto
         {
+            Id = job.Id,
             Title = job.Title,
             Description = job.Description,
             Location = job.Location,
@@ -357,6 +358,7 @@ public class JobService : IJobService
         {
             jobDtos = jobs.Select(job => new JobDto
             {
+                Id = job.Id,
                 Title = job.Title,
                 Description = job.Description,
                 Location = job.Location,

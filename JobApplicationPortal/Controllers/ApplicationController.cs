@@ -39,7 +39,7 @@ public class ApplicationController : ControllerBase
     public IActionResult GetApplications()
     {
         var result = _applicationService.GetApplications();
-        return Ok(result.Data);
+        return StatusCode(StatusCodes.Status201Created, result.Data);
 
     }
 
