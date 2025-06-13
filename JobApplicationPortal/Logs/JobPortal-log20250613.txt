@@ -1,0 +1,3 @@
+[2025-06-13 09:49:33 ERR] Status Code: 400, Message: Email already exists.,Exception Details: Email already exists.
+
+

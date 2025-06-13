@@ -26,16 +26,7 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> RegisterEmployer([FromBody] RegisterEmployerDto registerEmployerDto)
     {
         var result = await _authService.RegisterEmployer(registerEmployerDto);
-
-        if (result.StatusCode == 201)
-        {
-            return StatusCode(StatusCodes.Status201Created, result.Message);
-        }
-        else
-        {
-            return BadRequest(result.Message);
-        }
-
+        return StatusCode(StatusCodes.Status201Created, result.Message);
     }
 
     [HttpPost("register/candidate")]
@@ -45,15 +36,8 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> RegisterCandidate([FromBody] RegisterCandidateDto registerCandidateDto)
     {
         var result = await _authService.RegisterCandidate(registerCandidateDto);
+        return StatusCode(StatusCodes.Status201Created, result.Message);
 
-        if (result.StatusCode == 201)
-        {
-            return StatusCode(StatusCodes.Status201Created, result.Message);
-        }
-        else
-        {
-            return BadRequest(result.Message);
-        }
     }
 
     [HttpPost("login")]
@@ -64,21 +48,8 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login([FromBody] LoginDTO loginDto)
     {
         var result = await _authService.Login(loginDto);
+        return Ok(new { token = result.Data });
 
-        if (result.StatusCode == 200)
-        {
-            return Ok(new { token = result.Data });
-        }
-        else if (result.StatusCode == 401)
-        {
-            return Unauthorized(result.Message);
-        }
-        else if (result.StatusCode == 400)
-        {
-            return BadRequest(result.Message);
-        }else{
-            return StatusCode(StatusCodes.Status500InternalServerError, result.Message);
-        }
     }
 
 }

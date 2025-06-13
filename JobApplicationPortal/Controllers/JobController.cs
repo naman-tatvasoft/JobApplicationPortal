@@ -26,22 +26,7 @@ public class JobController : ControllerBase
     public async Task<IActionResult> CreateJob([FromBody] JobDto createJobDto)
     {
         var result = await _jobService.CreateJob(createJobDto);
-        if (result.StatusCode == 201)
-        {
-            return StatusCode(StatusCodes.Status201Created, result.Message);
-        }
-        else if (result.StatusCode == 400)
-        {
-            return BadRequest(result.Message);
-        }
-        else if (result.StatusCode == 401)
-        {
-            return Unauthorized(result.Message);
-        }
-        else
-        {
-            return StatusCode(result.StatusCode, result.Message);
-        }
+        return StatusCode(StatusCodes.Status201Created, result.Message);
     }
 
     [HttpGet("get/job-by-id")]
@@ -53,18 +38,7 @@ public class JobController : ControllerBase
     public IActionResult GetJobsById(int jobId)
     {
         var result = _jobService.GetJobById(jobId);
-        
-        if (result.StatusCode == 200)
-        {
-            return Ok(result.Data);
-        }
-        else if (result.StatusCode == 401){
-            return Unauthorized(result.Message);
-        }
-        else
-        {
-            return StatusCode(result.StatusCode, result.Message);
-        }
+        return Ok(result.Data);
     }
 
     [HttpPut("update/job")]
@@ -76,21 +50,7 @@ public class JobController : ControllerBase
     public async Task<IActionResult> UpdateJob([FromBody] JobDto updateJobDto)
     {
         var result = await _jobService.UpdateJob(updateJobDto);
-        
-        if (result.StatusCode == 200)
-        {
-            return Ok(result.Data);
-        }
-        else if(result.StatusCode == 400){
-            return BadRequest(result.Message);
-        }
-        else if (result.StatusCode == 401){
-            return Unauthorized(result.Message);
-        }
-        else
-        {
-            return StatusCode(result.StatusCode, result.Message);
-        }
+        return Ok(result.Data);
     }
 
     [HttpGet("get/jobs")]
@@ -100,21 +60,10 @@ public class JobController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Candidate, Admin")]
     public IActionResult GetJobs([FromQuery] string search = "", [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 2,
-                                    [FromQuery]  string skill = "", [FromQuery]  string location = "", [FromQuery]  int experience = 0)
+                                    [FromQuery] string skill = "", [FromQuery] string location = "", [FromQuery] int experience = 0)
     {
         var result = _jobService.GetJobs(search, pageNumber, pageSize, skill, location, experience);
-        
-        if (result.StatusCode == 200)
-        {
-            return Ok(result.Data);
-        }
-        else if (result.StatusCode == 401){
-            return Unauthorized(result.Message);
-        }
-        else
-        {
-            return StatusCode(result.StatusCode, result.Message);
-        }
+        return Ok(result.Data);
     }
 
     [HttpGet("get/created-jobs")]
@@ -125,22 +74,8 @@ public class JobController : ControllerBase
     [Authorize(Roles = "Employer")]
     public IActionResult GetCreatedJobs()
     {
-       var result = _jobService.GetCreatedJobs();
-     
-        if (result.StatusCode == 200)
-        {
-            return Ok(result.Data);
-        }
-        else if (result.StatusCode == 400){
-            return BadRequest(result.Message);
-        }
-        else if(result.StatusCode == 401){
-            return Unauthorized(result.Message);
-        }
-        else
-        {
-            return StatusCode(result.StatusCode, result.Message);
-        }
+        var result = _jobService.GetCreatedJobs();
+        return Ok(result.Data);
     }
 
 
@@ -154,17 +89,8 @@ public class JobController : ControllerBase
     public IActionResult GetJobsByEmployer(int employerId)
     {
         var result = _jobService.GetJobsByEmployer(employerId);
-        if (result.StatusCode == 200)
-        {
-            return Ok(result.Data);
-        }
-        else if (result.StatusCode == 400){
-            return BadRequest(result.Message);
-        }
-        else
-        {
-            return StatusCode(result.StatusCode, result.Message);
-        }
+        return Ok(result.Data);
+
     }
 
     [HttpPut("delete/job")]
@@ -176,19 +102,8 @@ public class JobController : ControllerBase
     [Authorize(Roles = "Employer")]
     public async Task<IActionResult> DeleteJob(int jobId)
     {
-       var result = await _jobService.DeleteJob(jobId);
-        if (result.StatusCode == 201)
-        {
-            return StatusCode(StatusCodes.Status201Created, result.Message);
-        }
-        else if (result.StatusCode == 400)
-        {
-            return BadRequest(result.Message);
-        }
-        else
-        {
-            return StatusCode(result.StatusCode, result.Message);
-        }
+        var result = await _jobService.DeleteJob(jobId);
+        return StatusCode(StatusCodes.Status201Created, result.Message);
     }
 
     [HttpGet("get/skills")]
@@ -200,13 +115,6 @@ public class JobController : ControllerBase
     public IActionResult GetSkills()
     {
         var result = _jobService.GetSkills();
-        if (result.StatusCode == 200)
-        {
-            return Ok(result.Data);
-        }
-        else
-        {
-            return StatusCode(result.StatusCode, result.Message);
-        }
+        return Ok(result.Data);
     }
 }

@@ -26,15 +26,6 @@ public class UserService : IUserService
             Email = e.User.Email
         }).ToList();
 
-        if (employersInfoList.Count == 0)
-        {
-            return new CommonDto<List<EmployerInfoDto>>
-            {
-                StatusCode = 400,
-                Message = "No employers found"
-            };
-        }
-
         return new CommonDto<List<EmployerInfoDto>>
         {
             StatusCode = 200,
@@ -50,15 +41,6 @@ public class UserService : IUserService
             Name = c.Name,
             Email = c.User.Email
         }).ToList();
-
-        if (candidatesInfoList.Count == 0)
-        {
-            return new CommonDto<List<CandidateInfoDto>>
-            {
-                StatusCode = 400,
-                Message = "No candidates found"
-            };
-        }
 
         return new CommonDto<List<CandidateInfoDto>>
         {

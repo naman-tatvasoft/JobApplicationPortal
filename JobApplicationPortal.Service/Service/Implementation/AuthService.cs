@@ -2,6 +2,7 @@ using JobApplicationPortal.DataModels.Dtos.RequestDtos;
 using JobApplicationPortal.DataModels.Dtos.ResponseDtos;
 using JobApplicationPortal.DataModels.Models;
 using JobApplicationPortal.Repository.Repository.Interface;
+using JobApplicationPortal.Service.Exceptions;
 using JobApplicationPortal.Service.Helper;
 using JobApplicationPortal.Service.Service.Interface;
 
@@ -10,20 +11,14 @@ namespace JobApplicationPortal.Service.Service.Implementation;
 public class AuthService : IAuthService
 {
     private readonly IUserRepository _userRepository;
-    private readonly IEmployerRepository _employerRepository;
-    private readonly ICandidateRepository _candidateRepository;
     private readonly IRoleRepository _roleRepository;
 
     private readonly JwtHelper _jwtHelper;
 
     public AuthService(IUserRepository userRepository,
-        IEmployerRepository employerRepository,
-        ICandidateRepository candidateRepository,
         IRoleRepository roleRepository,
         JwtHelper jwtHelper)
     {
-        _employerRepository = employerRepository;
-        _candidateRepository = candidateRepository;
         _userRepository = userRepository;
         _roleRepository = roleRepository;
         _jwtHelper = jwtHelper;
@@ -33,20 +28,12 @@ public class AuthService : IAuthService
     {
         if (registerEmployerDto == null)
         {
-            return new CommonDto<object>
-            {
-                StatusCode = 400,
-                Message = "Invalid registration data."
-            };
+            throw new RegistrationException();
         }
 
         if (await _userRepository.IsEmailExists(registerEmployerDto.Email))
         {
-            return new CommonDto<object>
-            {
-                StatusCode = 400,
-                Message = "Email already exists."
-            };
+            throw new EmailAlreadyExistException();
         }
 
         var hashedPassword = PasswordHasher.Hash(registerEmployerDto.Password);
@@ -74,20 +61,12 @@ public class AuthService : IAuthService
     {
         if (registerCandidateDto == null)
         {
-            return new CommonDto<object>
-            {
-                StatusCode = 400,
-                Message = "Invalid registration data."
-            };
+            throw new RegistrationException();
         }
 
         if (await _userRepository.IsEmailExists(registerCandidateDto.Email))
         {
-            return new CommonDto<object>
-            {
-                StatusCode = 400,
-                Message = "Email already exists."
-            };
+            throw new EmailAlreadyExistException();
         }
 
         var hashedPassword = PasswordHasher.Hash(registerCandidateDto.Password);
@@ -114,31 +93,19 @@ public class AuthService : IAuthService
     {
         if (loginDto == null)
         {
-            return new CommonDto<string>
-            {
-                StatusCode = 400,
-                Message = "Invalid Login data."
-            };
+            throw new LoginException();
         }
 
         if (!await _userRepository.IsEmailExists(loginDto.Email))
         {
-            return new CommonDto<string>
-            {
-                StatusCode = 400,
-                Message = "Email does not exist."
-            };
+            throw new EmailDoesNotExistException();
         }
 
         var user = _userRepository.GetUserByEmail(loginDto.Email);
 
         if (!PasswordHasher.Verify(user.Password, loginDto.Password))
         {
-            return new CommonDto<string>
-            {
-                StatusCode = 401,
-                Message = "Invalid password"
-            };
+           throw new InvalidPasswordException();
         }
 
         var rolename = _roleRepository.GetRoleById(user.RoleId).Name;

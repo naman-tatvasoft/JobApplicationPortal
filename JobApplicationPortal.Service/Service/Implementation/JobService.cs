@@ -3,6 +3,7 @@ using JobApplicationPortal.DataModels.Dtos.RequestDtos;
 using JobApplicationPortal.DataModels.Dtos.ResponseDtos;
 using JobApplicationPortal.DataModels.Models;
 using JobApplicationPortal.Repository.Repository.Interface;
+using JobApplicationPortal.Service.Exceptions;
 using JobApplicationPortal.Service.Service.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.VisualBasic;
@@ -36,39 +37,23 @@ public class JobService : IJobService
 
     public async Task<CommonDto<object>> CreateJob(JobDto createJobDto)
     {
-        if (createJobDto == null || !createJobDto.skillsRequiredList.Any())
-        {
-            return new CommonDto<object>
-            {
-                StatusCode = 400,
-                Message = "Invalid job data."
-            };
-        }
-
         var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-
         if (string.IsNullOrEmpty(email))
         {
-            return new CommonDto<object>
-            {
-                StatusCode = 401,
-                Message = "User is not authenticated."
-            };
+            throw new UnauthorizedAccessException();
         }
 
         var employer = _employerRepository.GetEmployerByEmail(email);
-
+        if (employer == null)
+        {
+            throw new EmployerNotFoundException();
+        }
 
         var jobExists = _jobRepository.JobTitleByEmployerAlreadyExists(createJobDto.Title, employer.Id);
         if (jobExists)
         {
-            return new CommonDto<object>
-            {
-                StatusCode = 400,
-                Message = "Job with the same title already exists for this employer."
-            };
+            throw new JobNameAlreadyExistException();
         }
-
 
         var job = new Job
         {
@@ -98,11 +83,7 @@ public class JobService : IJobService
                 }
                 else
                 {
-                    return new CommonDto<object>
-                    {
-                        StatusCode = 400,
-                        Message = "Such skill is not present"
-                    };
+                    throw new SkillNotPresentException();
                 }
             }
         }
@@ -117,45 +98,27 @@ public class JobService : IJobService
     public CommonDto<JobDto> GetJobById(int jobId)
     {
         var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-
         if (string.IsNullOrEmpty(email))
         {
-            return new CommonDto<JobDto>
-            {
-                StatusCode = 401,
-                Message = "User is not authenticated."
-            };
+            throw new UnauthorizedAccessException();
         }
 
         var employer = _employerRepository.GetEmployerByEmail(email);
-
         if (employer == null)
         {
-            return new CommonDto<JobDto>
-            {
-                StatusCode = 400,
-                Message = "Employer not found."
-            };
+            throw new EmployerNotFoundException();
         }
 
         var jobIdCheck = _jobRepository.GetJobById(jobId);
         if (jobIdCheck == null)
         {
-            return new CommonDto<JobDto>
-            {
-                StatusCode = 400,
-                Message = "Job not found or deleted."
-            };
+            throw new JobNotFoundException();
         }
 
         var isJobByEmployer = _jobRepository.IsJobByEmployer(jobId, employer);
         if (!isJobByEmployer)
         {
-            return new CommonDto<JobDto>
-            {
-                StatusCode = 400,
-                Message = "Job is not created by the employer."
-            };
+            throw new JobNotByEmployerException();
         }
 
         var job = _jobRepository.GetJobById(jobId);
@@ -185,65 +148,36 @@ public class JobService : IJobService
 
     public async Task<CommonDto<JobDto>> UpdateJob(JobDto updateJobDto)
     {
-        if (updateJobDto == null || !updateJobDto.skillsRequiredList.Any())
-        {
-            return new CommonDto<JobDto>
-            {
-                StatusCode = 400,
-                Message = "Invalid job data."
-            };
-        }
-
         var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
         if (string.IsNullOrEmpty(email))
         {
-            return new CommonDto<JobDto>
-            {
-                StatusCode = 401,
-                Message = "User is not authenticated."
-            };
+            throw new UnauthorizedAccessException();
         }
 
         var employer = _employerRepository.GetEmployerByEmail(email);
 
         if (employer == null)
         {
-            return new CommonDto<JobDto>
-            {
-                StatusCode = 400,
-                Message = "Employer not found."
-            };
+            throw new EmployerNotFoundException();
         }
 
         var jobIdCheck = _jobRepository.GetJobById(updateJobDto.Id);
         if (jobIdCheck == null)
         {
-            return new CommonDto<JobDto>
-            {
-                StatusCode = 400,
-                Message = "Job not found or deleted."
-            };
+            throw new JobNotFoundException();
         }
 
         var isJobByEmployer = _jobRepository.IsJobByEmployer(updateJobDto.Id, employer);
         if (!isJobByEmployer)
         {
-            return new CommonDto<JobDto>
-            {
-                StatusCode = 400,
-                Message = "Job is not created by the employer."
-            };
+            throw new JobNotByEmployerException();
         }
 
         var IsJobDateAlreadyActive = _jobRepository.GetJobById(updateJobDto.Id).OpenFrom;
         if (IsJobDateAlreadyActive <= DateOnly.FromDateTime(DateTime.Now))
         {
-            return new CommonDto<JobDto>
-            {
-                StatusCode = 400,
-                Message = "Already opened job cannot be updated."
-            };
+            throw new JobAlreadyOpenedException();
         }
 
         var jobToUpdate = new Job
@@ -259,9 +193,7 @@ public class JobService : IJobService
 
         await _jobRepository.UpdateJob(jobToUpdate);
 
-        // Clear existing skills for the job
         await _jobSkillRepository.DeleteJobSkillByJobId(updateJobDto.Id);
-
         foreach (var skill in updateJobDto.skillsRequiredList)
         {
             var existingSkill = _skillRepository.GetSkillByName(skill.Name);
@@ -276,11 +208,7 @@ public class JobService : IJobService
             }
             else
             {
-                return new CommonDto<JobDto>
-                {
-                    StatusCode = 400,
-                    Message = "Such skill is not present"
-                };
+                throw new SkillNotPresentException();
             }
         }
 
@@ -341,7 +269,7 @@ public class JobService : IJobService
 
         if (!string.IsNullOrEmpty(location))
         {
-            
+
             jobs = jobs.Where(j => j.Location.ToLower() == location.ToLower()).ToList();
         }
 
@@ -352,24 +280,11 @@ public class JobService : IJobService
 
         jobs = jobs.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
-        if (!jobs.Any())
-        {
-            return new CommonDto<List<JobDto>>
-            {
-                StatusCode = 400,
-                Message = "No jobs found."
-            };
-        }
-
         var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
         if (string.IsNullOrEmpty(email))
         {
-            return new CommonDto<List<JobDto>>
-            {
-                StatusCode = 401,
-                Message = "User is not authenticated."
-            };
+            throw new UnauthorizedAccessException();
         }
 
         var candidate = _candidateRepository.GetCandidateByEmail(email);
@@ -393,22 +308,14 @@ public class JobService : IJobService
 
         if (string.IsNullOrEmpty(email))
         {
-            return new CommonDto<List<JobDto>>
-            {
-                StatusCode = 401,
-                Message = "User is not authenticated."
-            };
+            throw new UnauthorizedAccessException();
         }
 
         var employer = _employerRepository.GetEmployerByEmail(email);
 
         if (employer == null)
         {
-            return new CommonDto<List<JobDto>>
-            {
-                StatusCode = 400,
-                Message = "Employer not found."
-            };
+            throw new EmployerNotFoundException();
         }
 
         var jobs = _jobRepository.GetJobsByEmployer(employer.Id);
@@ -440,37 +347,28 @@ public class JobService : IJobService
     {
         if (!_employerRepository.IsEmployerIdExist(employerId))
         {
-            return new CommonDto<List<JobDto>>
-            {
-                StatusCode = 400,
-                Message = "Employer not found."
-            };
+            throw new EmployerNotFoundException();
         }
 
         var jobs = _jobRepository.GetJobsByEmployer(employerId);
 
-        if (!jobs.Any())
+        var jobDtos = new List<JobDto>();
+        if (jobs.Any())
         {
-            return new CommonDto<List<JobDto>>
+            jobDtos = jobs.Select(job => new JobDto
             {
-                StatusCode = 400,
-                Message = "No jobs found for this employer."
-            };
+                Title = job.Title,
+                Description = job.Description,
+                Location = job.Location,
+                ExperienceRequired = job.ExperienceRequired,
+                OpenFrom = job.OpenFrom,
+                skillsRequiredList = job.JobSkills.Select(skill => new SkillDto
+                {
+                    Id = skill.Id,
+                    Name = skill.Skill.Name
+                }).ToList()
+            }).ToList();
         }
-
-        var jobDtos = jobs.Select(job => new JobDto
-        {
-            Title = job.Title,
-            Description = job.Description,
-            Location = job.Location,
-            ExperienceRequired = job.ExperienceRequired,
-            OpenFrom = job.OpenFrom,
-            skillsRequiredList = job.JobSkills.Select(skill => new SkillDto
-            {
-                Id = skill.Id,
-                Name = skill.Skill.Name
-            }).ToList()
-        }).ToList();
 
         return new CommonDto<List<JobDto>>
         {
@@ -486,52 +384,32 @@ public class JobService : IJobService
 
         if (string.IsNullOrEmpty(email))
         {
-            return new CommonDto<object>
-            {
-                StatusCode = 401,
-                Message = "User is not authenticated."
-            };
+           throw new UnauthorizedAccessException();
         }
 
         var employer = _employerRepository.GetEmployerByEmail(email);
 
         if (employer == null)
         {
-            return new CommonDto<object>
-            {
-                StatusCode = 400,
-                Message = "Employer not found."
-            };
+            throw new EmployerNotFoundException();
         }
 
         var jobIdCheck = _jobRepository.GetJobById(jobId);
         if (jobIdCheck == null)
         {
-            return new CommonDto<object>
-            {
-                StatusCode = 400,
-                Message = "Job not found."
-            };
+            throw new JobNotFoundException();
         }
 
         var isJobByEmployer = _jobRepository.IsJobByEmployer(jobId, employer);
         if (!isJobByEmployer)
         {
-            return new CommonDto<object>
-            {
-                StatusCode = 400,
-                Message = "Job is not created by the employer."
-            };
+           throw new JobNotByEmployerException();
         }
 
         var IsAlreadyDeleted = _jobRepository.IsJobAlreadyDeleted(jobId);
         if (IsAlreadyDeleted)
         {
-            return new CommonDto<object>
-            {
-                StatusCode = 400,
-                Message = "Job is already deleted."
-            };
+            throw new JobAlreadyDeleted();
         }
 
         await _jobRepository.DeleteJob(jobId);

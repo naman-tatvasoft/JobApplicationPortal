@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using JobApplicationPortal.Service.Exceptions;
 
 namespace JobApplicationPortal.Middleware;
 
@@ -34,14 +35,65 @@ public class ExceptionMiddleware
 
         switch (exception)
         {
+            case RegistrationException _:
+                code = HttpStatusCode.BadRequest;
+                message = "Invalid registration data.";
+                break;
+            case EmailAlreadyExistException _:
+                code = HttpStatusCode.BadRequest;
+                message = "Email already exists.";
+                break;
+            case LoginException _:
+                code = HttpStatusCode.BadRequest;
+                message = "Invalid login data.";
+                break;
+            case EmailDoesNotExistException _:
+                code = HttpStatusCode.NotFound;
+                message = "Email does not exist.";
+                break;
+            case InvalidPasswordException _:
+                code = HttpStatusCode.Unauthorized;
+                message = "Invalid password.";
+                break;
+
+            case EmployerNotFoundException _:
+                code = HttpStatusCode.NotFound;
+                message = "Employer not found.";
+                break;
+            case JobNameAlreadyExistException _:
+                code = HttpStatusCode.BadRequest;
+                message = "Job with the same title already exists for this employer.";
+                break;
+            case SkillNotPresentException _:
+                code = HttpStatusCode.NotFound;
+                message = "Such skill is not present.";
+                break;
+            case JobNotFoundException _:
+                code = HttpStatusCode.NotFound;
+                message = "Job not found.";
+                break;
+            case JobNotByEmployerException _:
+                code = HttpStatusCode.Forbidden;
+                message = "Job is not created by the employer.";
+                break;
+            case JobAlreadyOpenedException _:
+                code = HttpStatusCode.Conflict;
+                message = "Already opened job cannot be updated.";
+                break;
+            case JobAlreadyDeleted _:
+                code = HttpStatusCode.Conflict;
+                message = "Job is already deleted.";
+                break;
+            
             case ArgumentNullException _:
                 code = HttpStatusCode.BadRequest;
                 message = "Invalid request. Required data is missing.";
                 break;
             case UnauthorizedAccessException _:
-                 code = HttpStatusCode.Unauthorized;
-                message = "Invalid request. Required data is missing.";
+                code = HttpStatusCode.Unauthorized;
+                message = "You are unauthorized.";
                 break;
+
             default:
                 code = HttpStatusCode.InternalServerError;
                 message = "Internal server error. Please try again later.";
@@ -53,11 +105,12 @@ public class ExceptionMiddleware
         var response = new
         {
             StatusCode = context.Response.StatusCode,
-            Message = message,
-            Details = exception.Message
+            Message = message
         };
+
         await context.Response.WriteAsync(JsonSerializer.Serialize(response));
-        _logger.LogError($"Status Code: {context.Response.StatusCode}, Message: {message},Exception Details: {exception.Message}");
+        
+        _logger.LogError($"Status Code: {response.StatusCode}, Message: {response.Message},Exception Details: {exception.Message}");
 
     }
 }
