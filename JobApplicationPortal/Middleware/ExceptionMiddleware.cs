@@ -35,6 +35,10 @@ public class ExceptionMiddleware
 
         switch (exception)
         {
+            case UnAuthenticatedException _:
+                code = HttpStatusCode.Unauthorized;
+                message = "User is not authenticated.";
+                break;
             case RegistrationException _:
                 code = HttpStatusCode.BadRequest;
                 message = "Invalid registration data.";
@@ -84,6 +88,28 @@ public class ExceptionMiddleware
                 code = HttpStatusCode.Conflict;
                 message = "Job is already deleted.";
                 break;
+
+            case CandidateNotFoundException _:
+                code = HttpStatusCode.NotFound;
+                message = "Candidate not found.";
+                break;
+            case JobNotFoundOrNotOpenToApplyException _:
+                code = HttpStatusCode.NotFound;
+                message = "Job not found or not active or deleted or not still open to apply.";
+                break;
+            case JobAlreadyAppliedException _:
+                code = HttpStatusCode.Conflict;
+                message = "You have already applied for this job.";
+                break;
+            case NotEnoughExperienceException _:
+                code = HttpStatusCode.Forbidden;
+                message = "You do not have enough experience for this job.";
+                break;
+            case ApplicationNotFoundException _:
+                code = HttpStatusCode.NotFound;
+                message = "Application not found.";
+                break;
+            
             
             case ArgumentNullException _:
                 code = HttpStatusCode.BadRequest;

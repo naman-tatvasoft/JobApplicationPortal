@@ -16,5 +16,6 @@ public interface IJobRepository
     public Task<Job> CreateJob(Job job);
     public bool CheckJobById(int jobId);
     public bool CheckExperience(int jobId, int experience);
+    public string GetEmployerEmailByJobId(int jobId);
 
 }

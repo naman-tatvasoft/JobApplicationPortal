@@ -90,4 +90,10 @@ public class JobRepository : IJobRepository
         var job = _context.Jobs.Any(j => j.Id == jobId && (bool)!j.IsDeleted && (bool)j.IsActive && j.ExperienceRequired <= experience);
         return job;
     }
+
+    public string GetEmployerEmailByJobId(int jobId)
+    {
+        var job = _context.Jobs.Include(j => j.Employer).ThenInclude(e => e.User).FirstOrDefault(j => j.Id == jobId && (bool)!j.IsDeleted);
+        return job?.Employer?.User?.Email ?? string.Empty;
+    }
 }

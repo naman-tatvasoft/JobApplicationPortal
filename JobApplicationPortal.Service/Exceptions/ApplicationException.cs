@@ -14,3 +14,4 @@ public abstract class ApplicationException : Exception
         ErrorCode = errorCode;
     }
 }
+

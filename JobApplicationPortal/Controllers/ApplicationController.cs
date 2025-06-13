@@ -25,26 +25,8 @@ public class ApplicationController : ControllerBase
     public async Task<IActionResult> JobApplication([FromForm] ApplicationDto applicationDto)
     {
         var result = await _applicationService.JobApplication(applicationDto);
-        if (result.StatusCode == 201)
-        {
-            return Ok(result.Data);
-        }
-        else if (result.StatusCode == 400)
-        {
-            return BadRequest(result.Message);
-        }
-        else if (result.StatusCode == 401)
-        {
-            return Unauthorized(result.Message);
-        }
-        else if (result.StatusCode == 403)
-        {
-            return Forbid(result.Message);
-        }
-        else
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, result.Message);
-        }
+        return Ok(result.Data);
+
     }
 
     [HttpGet("get/applications")]
@@ -57,18 +39,8 @@ public class ApplicationController : ControllerBase
     public IActionResult GetApplications()
     {
         var result = _applicationService.GetApplications();
-        if (result.StatusCode == 200)
-        {
-            return Ok(result.Data);
-        }
-        else if (result.StatusCode == 400)
-        {
-            return BadRequest(result.Message);
-        }
-        else
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, result.Message);
-        }
+        return Ok(result.Data);
+
     }
 
     [HttpGet("get/applications-by-candidate")]
@@ -81,26 +53,8 @@ public class ApplicationController : ControllerBase
     public IActionResult GetApplicationsByCandidate()
     {
         var result = _applicationService.GetApplicationsByCandidate();
-        if (result.StatusCode == 200)
-        {
-            return Ok(result.Data);
-        }
-        else if (result.StatusCode == 400)
-        {
-            return BadRequest(result.Message);
-        }
-        else if (result.StatusCode == 401)
-        {
-            return Unauthorized(result.Message);
-        }
-        else if (result.StatusCode == 403)
-        {
-            return Forbid(result.Message);
-        }
-        else
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, result.Message);
-        }
+        return Ok(result.Data);
+
     }
 
     [HttpGet("get/applications-by-job")]
@@ -113,26 +67,8 @@ public class ApplicationController : ControllerBase
     public IActionResult GetApplicationsByJob(int jobId)
     {
         var result = _applicationService.GetApplicationsByJob(jobId);
-        if (result.StatusCode == 200)
-        {
-            return Ok(result.Data);
-        }
-        else if (result.StatusCode == 400)
-        {
-            return BadRequest(result.Message);
-        }
-        else if (result.StatusCode == 401)
-        {
-            return Unauthorized(result.Message);
-        }
-        else if (result.StatusCode == 403)
-        {
-            return Forbid(result.Message);
-        }
-        else
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, result.Message);
-        }
+        return Ok(result.Data);
+
     }
 
     [HttpPut("application/change-status")]
@@ -145,26 +81,8 @@ public class ApplicationController : ControllerBase
     public async Task<IActionResult> UpdateStatus(int applicationId, int statusId)
     {
         var result = await _applicationService.UpdateStatus(applicationId, statusId);
-        if (result.StatusCode == 200)
-        {
-            return Ok(result.Message);
-        }
-        else if (result.StatusCode == 400)
-        {
-            return BadRequest(result.Message);
-        }
-        else if (result.StatusCode == 401)
-        {
-            return Unauthorized(result.Message);
-        }
-        else if (result.StatusCode == 403)
-        {
-            return Forbid(result.Message);
-        }
-        else
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, result.Message);
-        }
+        return Ok(result.Message);
+
     }
 
     [HttpGet("get/statuses")]
@@ -176,14 +94,8 @@ public class ApplicationController : ControllerBase
     public IActionResult GetStatuses()
     {
         var result = _applicationService.GetStatuses();
-        if (result.StatusCode == 200)
-        {
-            return Ok(result.Data);
-        }
-        else
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, result.Message);
-        }
+        return Ok(result.Data);
+
     }
 
     [HttpGet("get/job/total-applications/")]
@@ -196,25 +108,7 @@ public class ApplicationController : ControllerBase
     public IActionResult GetTotalApplicationByJob(int jobId)
     {
         var result = _applicationService.GetTotalApplicationByJob(jobId);
-        if (result.StatusCode == 200)
-        {
-            return Ok(result.Data);
-        }
-        else if (result.StatusCode == 400)
-        {
-            return BadRequest(result.Message);
-        }
-        else if (result.StatusCode == 401)
-        {
-            return Unauthorized(result.Message);
-        }
-        else if (result.StatusCode == 403)
-        {
-            return Forbid(result.Message);
-        }
-        else
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, result.Message);
-        }
+        return Ok(result.Data);
+
     }
 }

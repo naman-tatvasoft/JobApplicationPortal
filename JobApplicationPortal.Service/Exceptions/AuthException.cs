@@ -13,11 +13,15 @@ public abstract class AuthException : ApplicationException
 
 }
 
+public class UnAuthenticatedException : AuthException
+{
+    public UnAuthenticatedException() : base("User is not authenticated.", "unauthenticated_exception"){}
+}
+
 public class RegistrationException : AuthException
 {
     public RegistrationException() : base("Invalid registration data.", "registration_exception"){}
 }
-
 
 public class EmailAlreadyExistException : AuthException
 {

@@ -5,6 +5,7 @@ using JobApplicationPortal.DataModels.Dtos.RequestDtos;
 using JobApplicationPortal.DataModels.Dtos.ResponseDtos;
 using JobApplicationPortal.DataModels.Models;
 using JobApplicationPortal.Repository.Repository.Interface;
+using JobApplicationPortal.Service.Exceptions;
 using JobApplicationPortal.Service.Service.Interface;
 using Microsoft.AspNetCore.Http;
 
@@ -38,51 +39,31 @@ public class ApplicationService : IApplicationService
         var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
         if (string.IsNullOrEmpty(email))
         {
-            return new CommonDto<Application>
-            {
-                StatusCode = 401,
-                Message = "User is not authenticated."
-            };
+            throw new UnAuthenticatedException();
         }
 
         var candidate = _candidateRepository.GetCandidateByEmail(email);
         if (candidate == null)
         {
-            return new CommonDto<Application>
-            {
-                StatusCode = 403,
-                Message = "Candidate not found."
-            };
+            throw new CandidateNotFoundException();
         }
 
         var jobIdCheck = _jobRepository.CheckJobById(applicationDto.JobId);
         if (!jobIdCheck)
         {
-            return new CommonDto<Application>
-            {
-                StatusCode = 400,
-                Message = "Job not found or not active or deleted or not still open to apply."
-            };
+            throw new JobNotFoundOrNotOpenToApplyException();
         }
 
         var isAlreadyApplied = await _applicationRepository.CheckAlreadyApplied(applicationDto.JobId, candidate.Id);
         if (isAlreadyApplied)
         {
-            return new CommonDto<Application>
-            {
-                StatusCode = 400,
-                Message = "You have already applied for this job."
-            };
+            throw new JobAlreadyAppliedException();
         }
 
         var isEnoughExperience = _jobRepository.CheckExperience(applicationDto.JobId, applicationDto.Experience);
         if (!isEnoughExperience)
         {
-            return new CommonDto<Application>
-            {
-                StatusCode = 400,
-                Message = "You do not have enough experience for this job."
-            };
+            throw new NotEnoughExperienceException();
         }
 
         var coverLetterFileName = string.Empty;
@@ -120,8 +101,6 @@ public class ApplicationService : IApplicationService
             }
         }
 
-
-
         var application = new Application
         {
             CandidateId = candidate.Id,
@@ -135,6 +114,45 @@ public class ApplicationService : IApplicationService
 
         var createdApplication = await _applicationRepository.CreateApplication(application);
 
+        var employerEmail = _jobRepository.GetEmployerEmailByJobId(applicationDto.JobId);
+        var jobTitle = _jobRepository.GetJobById(applicationDto.JobId)?.Title;
+
+        var senderEmail = new MailAddress("test.dotnet@etatvasoft.com", "test.dotnet@etatvasoft.com");
+        var receiverEmail = new MailAddress(employerEmail, "Receiver");
+        var password = "P}N^{z-]7Ilp";
+        var sub = $@"Application Received for {jobTitle}";
+        var body = $@"
+            <div style='max-width: 500px; font-family: Arial, sans-serif; border: 1px solid #ddd;'>
+            <div style='background: #006CAC; padding: 10px; text-align: center; height:90px; max-width:100%; display: flex; justify-content: center; align-items: center;'>
+                <span style='color: #fff; font-size: 24px; margin-left: 10px; font-weight: 600;'>Job Portal</span>
+            </div>
+            <div style='padding: 20px 5px; background-color: #e8e8e8;'>
+                <p>Job Portal</p>
+                <p>New Application Recieved for job tile {jobTitle}</p>
+                <p>If you encounter any issues or have any questions, please do not hesitate to contact our support team.</p>
+                <p><strong style='color: orange;'>Important Note:</strong>
+                    If you did not created this job, please ignore this email or contact our support team immediately.
+                </p>
+            </div>
+            </div>";
+
+        var smtp = new SmtpClient
+        {
+            Host = "mail.etatvasoft.com",
+            Port = 587,
+            EnableSsl = true,
+            DeliveryMethod = SmtpDeliveryMethod.Network,
+            UseDefaultCredentials = false,
+            Credentials = new NetworkCredential(senderEmail.Address, password)
+        };
+        using (var mess = new MailMessage(senderEmail, receiverEmail))
+        {
+            mess.Subject = sub;
+            mess.Body = body;
+            mess.IsBodyHtml = true;
+            await smtp.SendMailAsync(mess);
+        }
+
         return new CommonDto<Application>
         {
             StatusCode = 201,
@@ -146,14 +164,6 @@ public class ApplicationService : IApplicationService
     public CommonDto<List<ApplicationInfoDto>> GetApplications()
     {
         var applicationInfo = _applicationRepository.GetApplications();
-        if (applicationInfo == null || !applicationInfo.Any())
-        {
-            return new CommonDto<List<ApplicationInfoDto>>
-            {
-                StatusCode = 400,
-                Message = "No applications found."
-            };
-        }
 
         return new CommonDto<List<ApplicationInfoDto>>
         {
@@ -168,32 +178,16 @@ public class ApplicationService : IApplicationService
         var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
         if (string.IsNullOrEmpty(email))
         {
-            return new CommonDto<List<ApplicationInfoDto>>
-            {
-                StatusCode = 401,
-                Message = "User is not authenticated."
-            };
+            throw new UnAuthenticatedException();
         }
 
         var candidate = _candidateRepository.GetCandidateByEmail(email);
         if (candidate == null)
         {
-            return new CommonDto<List<ApplicationInfoDto>>
-            {
-                StatusCode = 403,
-                Message = "You are not authorized to view applications."
-            };
+            throw new CandidateNotFoundException();
         }
 
         var applicationInfo = _applicationRepository.GetApplicationsByCandidate(candidate.Id);
-        if (applicationInfo == null || !applicationInfo.Any())
-        {
-            return new CommonDto<List<ApplicationInfoDto>>
-            {
-                StatusCode = 400,
-                Message = "No applications found for this Candidate."
-            };
-        }
 
         return new CommonDto<List<ApplicationInfoDto>>
         {
@@ -208,51 +202,27 @@ public class ApplicationService : IApplicationService
         var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
         if (string.IsNullOrEmpty(email))
         {
-            return new CommonDto<List<ApplicationInfoDto>>
-            {
-                StatusCode = 401,
-                Message = "User is not authenticated."
-            };
+            throw new UnAuthenticatedException();
         }
 
         var employer = _employerRepository.GetEmployerByEmail(email);
         if (employer == null)
         {
-            return new CommonDto<List<ApplicationInfoDto>>
-            {
-                StatusCode = 403,
-                Message = "You are not authorized to update the application status."
-            };
+            throw new UnauthorizedAccessException();
         }
         var jobIdCheck = _jobRepository.GetJobById(jobId);
         if (jobIdCheck == null)
         {
-            return new CommonDto<List<ApplicationInfoDto>>
-            {
-                StatusCode = 400,
-                Message = "Job not found."
-            };
+            throw new JobNotFoundException();
         }
 
         var isJobByEmployer = _jobRepository.IsJobByEmployer(jobId, employer);
         if (!isJobByEmployer)
         {
-            return new CommonDto<List<ApplicationInfoDto>>
-            {
-                StatusCode = 400,
-                Message = "Job is not created by the employer."
-            };
+            throw new JobNotByEmployerException();
         }
 
         var applicationInfo = _applicationRepository.GetApplicationsByJob(jobId);
-        if (applicationInfo == null || !applicationInfo.Any())
-        {
-            return new CommonDto<List<ApplicationInfoDto>>
-            {
-                StatusCode = 400,
-                Message = "No applications found for this job."
-            };
-        }
 
         return new CommonDto<List<ApplicationInfoDto>>
         {
@@ -267,52 +237,28 @@ public class ApplicationService : IApplicationService
         var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
         if (string.IsNullOrEmpty(email))
         {
-            return new CommonDto<object>
-            {
-                StatusCode = 401,
-                Message = "User is not authenticated."
-            };
+            throw new UnAuthenticatedException();
         }
 
         var employer = _employerRepository.GetEmployerByEmail(email);
         if (employer == null)
         {
-            return new CommonDto<object>
-            {
-                StatusCode = 403,
-                Message = "You are not authorized to update the application status."
-            };
+            throw new UnauthorizedAccessException();
         }
 
         var applicationIdCheck = _applicationRepository.GetApplicationById(applicationId);
         if (applicationIdCheck == null)
         {
-            return new CommonDto<object>
-            {
-                StatusCode = 400,
-                Message = "Application not found."
-            };
+            throw new ApplicationNotFoundException();
         }
 
         var jobByEmployer = _applicationRepository.JobByEmployer(applicationIdCheck.JobId, employer.Id);
         if (!jobByEmployer)
         {
-            return new CommonDto<object>
-            {
-                StatusCode = 403,
-                Message = "You are not authorized to update this application status."
-            };
+            throw new UnauthorizedAccessException();
         }
 
         var updatedaApplication = await _applicationRepository.UpdateApplicationStatus(applicationId, statusId);
-        if (updatedaApplication == null)
-        {
-            return new CommonDto<object>
-            {
-                StatusCode = 500,
-                Message = "Failed to update application status."
-            };
-        }
 
         var candidateEmail = _applicationRepository.GetCandidateEmailByApplicationId(applicationId);
         var statusName = _statusRepository.GetStatusNameById(statusId);
@@ -362,69 +308,57 @@ public class ApplicationService : IApplicationService
     }
 
     public CommonDto<List<StatusDto>> GetStatuses()
-{
-    var status = _statusRepository.GetStatuses()
-               .Select(status => new StatusDto
-               {
-                   Id = status.Id,
-                   Name = status.Name
-               })
-               .ToList();
-
-    return new CommonDto<List<StatusDto>>
     {
-        Data = status,
-        StatusCode = 200,
-        Message = "Status retieved successfully."
-    };
-}
+        var status = _statusRepository.GetStatuses()
+                   .Select(status => new StatusDto
+                   {
+                       Id = status.Id,
+                       Name = status.Name
+                   })
+                   .ToList();
 
-public CommonDto<int> GetTotalApplicationByJob(int jobId)
-{
-    var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-    if (string.IsNullOrEmpty(email))
-    {
-        return new CommonDto<int>
+        return new CommonDto<List<StatusDto>>
         {
-            StatusCode = 401,
-            Message = "User is not authenticated."
+            Data = status,
+            StatusCode = 200,
+            Message = "Status retieved successfully."
         };
     }
 
-    var jobIdCheck = _jobRepository.GetJobById(jobId);
-    if (jobIdCheck == null)
+    public CommonDto<int> GetTotalApplicationByJob(int jobId)
     {
-        return new CommonDto<int>
+        var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        if (string.IsNullOrEmpty(email))
         {
-            StatusCode = 400,
-            Message = "Job not found."
-        };
-    }
-
-    var employer = _employerRepository.GetEmployerByEmail(email);
-    if (employer != null)
-    {
-        var isJobByEmployer = _jobRepository.IsJobByEmployer(jobId, employer);
-        if (!isJobByEmployer)
-        {
-            return new CommonDto<int>
-            {
-                StatusCode = 400,
-                Message = "Job is not created by the employer."
-            };
+            throw new UnAuthenticatedException();
         }
 
-        var totalApplicationsEmployer = _applicationRepository.GetApplicationsByJob(jobId).Count;
+        var jobIdCheck = _jobRepository.GetJobById(jobId);
+        if (jobIdCheck == null)
+        {
+            throw new JobNotFoundException();
+        }
+
+        var employer = _employerRepository.GetEmployerByEmail(email);
+        if (employer != null)
+        {
+            var isJobByEmployer = _jobRepository.IsJobByEmployer(jobId, employer);
+            if (!isJobByEmployer)
+            {
+                throw new JobNotByEmployerException();
+            }
+
+            var totalApplicationsEmployer = _applicationRepository.GetApplicationsByJob(jobId).Count;
+        }
+
+        var totalApplications = _applicationRepository.GetApplicationsByJob(jobId).Count;
+
+        return new CommonDto<int>
+        {
+            Data = totalApplications,
+            StatusCode = 200,
+            Message = "Total applications retrieved successfully."
+        };
+
     }
-
-    var totalApplications = _applicationRepository.GetApplicationsByJob(jobId).Count;
-
-    return new CommonDto<int>
-    {
-        Data = totalApplications,
-        StatusCode = 200,
-        Message = "Total applications retrieved successfully."
-    };
-
-}
 }
