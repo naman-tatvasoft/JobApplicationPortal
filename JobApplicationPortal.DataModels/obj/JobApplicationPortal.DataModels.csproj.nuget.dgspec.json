@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.DataModels\\JobApplicationPortal.DataModels.csproj": {}
+    "c:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.DataModels\\JobApplicationPortal.DataModels.csproj": {}
   },
   "projects": {
-    "C:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.DataModels\\JobApplicationPortal.DataModels.csproj": {
+    "c:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.DataModels\\JobApplicationPortal.DataModels.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.DataModels\\JobApplicationPortal.DataModels.csproj",
+        "projectUniqueName": "c:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.DataModels\\JobApplicationPortal.DataModels.csproj",
         "projectName": "JobApplicationPortal.DataModels",
-        "projectPath": "C:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.DataModels\\JobApplicationPortal.DataModels.csproj",
+        "projectPath": "c:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.DataModels\\JobApplicationPortal.DataModels.csproj",
         "packagesPath": "C:\\Users\\pca106\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.DataModels\\obj\\",
+        "outputPath": "c:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.DataModels\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\pca106\\AppData\\Roaming\\NuGet\\NuGet.Config"

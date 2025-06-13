@@ -7165,14 +7165,14 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.DataModels\\JobApplicationPortal.DataModels.csproj": {
-              "projectPath": "C:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.DataModels\\JobApplicationPortal.DataModels.csproj"
+            "c:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.DataModels\\JobApplicationPortal.DataModels.csproj": {
+              "projectPath": "c:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.DataModels\\JobApplicationPortal.DataModels.csproj"
             },
             "C:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.Repository\\JobApplicationPortal.Repository.csproj": {
               "projectPath": "C:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.Repository\\JobApplicationPortal.Repository.csproj"
             },
-            "C:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.Service\\JobApplicationPortal.Service.csproj": {
-              "projectPath": "C:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.Service\\JobApplicationPortal.Service.csproj"
+            "c:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.Service\\JobApplicationPortal.Service.csproj": {
+              "projectPath": "c:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.Service\\JobApplicationPortal.Service.csproj"
             }
           }
         }

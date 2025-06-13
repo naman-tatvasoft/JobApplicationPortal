@@ -18,6 +18,8 @@ public class JobDto
 
     [Range(0, 40, ErrorMessage = "Experience required must be between 0 and 40 years")]
     public int? ExperienceRequired { get; set; }
+
+    public bool IsActive {get; set;}
     public DateOnly OpenFrom { get; set; }
     public List<SkillDto> skillsRequiredList { get; set; } = new List<SkillDto>();
 }

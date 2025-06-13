@@ -24,7 +24,7 @@ public class JobRepository : IJobRepository
 
     public Job GetJobById(int jobId)
     {
-        return _context.Jobs.FirstOrDefault(job => job.Id == jobId && (bool)!job.IsDeleted);
+        return _context.Jobs.Include(job => job.JobSkills).ThenInclude(js => js.Skill).FirstOrDefault(job => job.Id == jobId && (bool)!job.IsDeleted);
     }
 
     public async Task<Job> UpdateJob(Job job)

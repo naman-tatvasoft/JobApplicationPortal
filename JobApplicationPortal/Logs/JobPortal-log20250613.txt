@@ -91,3 +91,9 @@
 [2025-06-13 15:14:51 ERR] Status Code: 404, Message: Application not found.,Exception Details: Application not found.
 
 
+[2025-06-13 16:14:56 ERR] Status Code: 500, Message: Internal server error. Please try again later.,Exception Details: Object reference not set to an instance of an object.
+
+
+[2025-06-13 16:17:09 ERR] Status Code: 500, Message: Internal server error. Please try again later.,Exception Details: Object reference not set to an instance of an object.
+
+
