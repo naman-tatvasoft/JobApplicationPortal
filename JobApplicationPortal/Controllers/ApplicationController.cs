@@ -109,6 +109,18 @@ public class ApplicationController : ControllerBase
     {
         var result = _applicationService.GetTotalApplicationByJob(jobId);
         return Ok(result.Data);
+    }
 
+    [HttpPut("application/withdraw-application")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Candidate")]
+    public async Task<IActionResult> WithdrawApplication(int applicationId)
+    {
+        var result = await _applicationService.WithdrawApplication(applicationId);
+        return Ok(result.Message);
     }
 }

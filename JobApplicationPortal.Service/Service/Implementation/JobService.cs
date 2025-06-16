@@ -19,7 +19,6 @@ public class JobService : IJobService
     private readonly IJobSkillRepository _jobSkillRepository;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-
     public JobService(ISkillRepository skillRepository,
         ICandidateRepository candidateRepository,
         IEmployerRepository employerRepository,

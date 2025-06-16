@@ -252,9 +252,13 @@ public class ApplicationService : IApplicationService
             throw new ApplicationNotFoundException();
         }
 
-        var jobByEmployer = _applicationRepository.JobByEmployer(applicationIdCheck.JobId, employer.Id);
+        var jobByEmployer = _jobRepository.IsJobByEmployer(applicationIdCheck.JobId, employer);
         if (!jobByEmployer)
         {
+            throw new UnauthorizedAccessException();
+        }
+
+        if (statusId == 5){
             throw new UnauthorizedAccessException();
         }
 
@@ -360,5 +364,39 @@ public class ApplicationService : IApplicationService
             Message = "Total applications retrieved successfully."
         };
 
+    }
+
+    public async Task<CommonDto<object>> WithdrawApplication(int applicationId)
+    {
+        var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        if (string.IsNullOrEmpty(email))
+        {
+            throw new UnAuthenticatedException();
+        }
+
+        var candidate = _candidateRepository.GetCandidateByEmail(email);
+        if (candidate == null)
+        {
+            throw new CandidateNotFoundException();
+        }
+
+        var applicationIdCheck = _applicationRepository.GetApplicationById(applicationId);
+        if (applicationIdCheck == null)
+        {
+            throw new ApplicationNotFoundException();
+        }
+
+        if (applicationIdCheck.CandidateId != candidate.Id)
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        await _applicationRepository.WithdrawApplication(applicationId);
+
+        return new CommonDto<object>
+        {
+            StatusCode = 200,
+            Message = "Application withdrawn successfully."
+        };
     }
 }

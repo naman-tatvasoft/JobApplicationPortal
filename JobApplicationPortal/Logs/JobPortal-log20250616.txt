@@ -1,0 +1,16 @@
+[2025-06-16 09:39:59 ERR] An unhandled exception has occurred while executing the request.
+Swashbuckle.AspNetCore.SwaggerGen.SwaggerGeneratorException: Conflicting method/path combination "PUT api/application/change-status" for actions - JobApplicationPortal.Controllers.ApplicationController.UpdateStatus (JobApplicationPortal),JobApplicationPortal.Controllers.ApplicationController.WithdrawApplication (JobApplicationPortal). Actions require a unique method/path combination for Swagger/OpenAPI 3.0. Use ConflictingActionsResolver as a workaround
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.GenerateOperations(IEnumerable`1 apiDescriptions, SchemaRepository schemaRepository)
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.GeneratePaths(IEnumerable`1 apiDescriptions, SchemaRepository schemaRepository)
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.GetSwaggerDocumentWithoutFilters(String documentName, String host, String basePath)
+   at Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator.GetSwaggerAsync(String documentName, String host, String basePath)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddlewareImpl.Invoke(HttpContext context)
+
+
+[2025-06-16 09:48:22 ERR] Status Code: 404, Message: Application not found.,Exception Details: Application not found.
+
+
+[2025-06-16 09:48:44 ERR] Status Code: 401, Message: You are unauthorized.,Exception Details: Attempted to perform an unauthorized operation.
+
+

@@ -16,7 +16,7 @@ public class ApplicationRepository : IApplicationRepository
 
     public async Task<bool> CheckAlreadyApplied(int jobId, int candidateId)
     {
-        return await _context.Applications.AnyAsync(a => a.JobId == jobId && a.CandidateId == candidateId);
+        return await _context.Applications.AnyAsync(a => a.JobId == jobId && a.CandidateId == candidateId && a.StatusId != 5);
     }
 
     public async Task<Application> CreateApplication(Application application)
@@ -86,7 +86,7 @@ public class ApplicationRepository : IApplicationRepository
                 .ThenInclude(js => js.Employer)
                 .Include(j => j.Candidate)
                 .ThenInclude(c => c.User)
-                .Where(j => j.JobId == jobId)
+                .Where(j => j.JobId == jobId && j.StatusId != 5)
                 .Select(j => new ApplicationInfoDto
                 {
                     Id = j.Id,
@@ -108,14 +108,9 @@ public class ApplicationRepository : IApplicationRepository
 
     public Application GetApplicationById(int applicationId)
     {
-        return _context.Applications.FirstOrDefault(a => a.Id == applicationId);
+        return _context.Applications.FirstOrDefault(a => a.Id == applicationId && a.StatusId != 5);
     }
-
-    public bool JobByEmployer(int jobId, int employerId)
-    {
-        return _context.Jobs.Any(j => j.Id == jobId && j.EmployerId == employerId);
-    }
-
+    
     public async Task<Application> UpdateApplicationStatus(int applicationId, int statusId)
     {
         var application = await _context.Applications.FirstOrDefaultAsync(a => a.Id == applicationId);
@@ -137,5 +132,19 @@ public class ApplicationRepository : IApplicationRepository
             .FirstOrDefault(a => a.Id == applicationId);
 
         return application?.Candidate?.User?.Email;
+    }
+
+    public async Task<bool> WithdrawApplication(int applicationId){
+        var application = await _context.Applications.FirstOrDefaultAsync(a => a.Id == applicationId);
+        if (application != null)
+        {
+            var status = _context.Statuses.FirstOrDefault(s => s.Name == "Withdrawn");
+            application.StatusId = status != null ? status.Id : 5;
+           
+            _context.Applications.Update(application);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        return false;
     }
 }
