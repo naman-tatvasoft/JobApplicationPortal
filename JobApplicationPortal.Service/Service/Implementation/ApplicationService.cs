@@ -258,16 +258,18 @@ public class ApplicationService : IApplicationService
             throw new UnauthorizedAccessException();
         }
 
-        if (statusId == 5){
+        if (_statusRepository.GetStatusIdByName("Withdrawn") == statusId)
+        {
             throw new UnauthorizedAccessException();
         }
 
         var updatedaApplication = await _applicationRepository.UpdateApplicationStatus(applicationId, statusId);
 
-        if(statusId == 2){
+        if (_statusRepository.GetStatusIdByName("Hired") == statusId)
+        {
             await _jobRepository.ReduceVacancy(updatedaApplication.JobId);
         }
-        
+
         var candidateEmail = _applicationRepository.GetCandidateEmailByApplicationId(applicationId);
         var statusName = _statusRepository.GetStatusNameById(statusId);
 

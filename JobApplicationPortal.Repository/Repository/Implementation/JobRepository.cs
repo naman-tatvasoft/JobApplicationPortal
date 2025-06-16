@@ -14,7 +14,7 @@ public class JobRepository : IJobRepository
 
     public IQueryable<Job> GetJobs()
     {
-        return _context.Jobs.Where(job => (bool)!job.IsDeleted).AsQueryable();
+        return _context.Jobs.Where(job => (bool)!job.IsDeleted && (bool)job.IsActive).AsQueryable();
     }
 
     public IQueryable<Job> GetJobsByEmployer(int employerId)
