@@ -27,7 +27,11 @@ public partial class Job
 
     public long Vacancy { get; set; }
 
+    public int CategoryId { get; set; }
+
     public virtual ICollection<Application> Applications { get; } = new List<Application>();
+
+    public virtual Category Category { get; set; } = null!;
 
     public virtual Employer Employer { get; set; } = null!;
 

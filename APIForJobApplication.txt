@@ -22,7 +22,7 @@ API'S
 
 10)jobs by employer (api/get/jobs-by-employer)(GET)(Admin)
 
-11)Read All Jobs (api/get/job)(GET)(Admin, Candidate) (with search and pagination and  filtering by Skill, Location, Experience)
+11)Read All Jobs (api/get/job)(GET)(Admin, Candidate) (with search and pagination and  filtering by Skill, Location, Experience, category)
 
 12)Apply Job (api/job/application)(POST)(Candidates)
 
@@ -38,7 +38,7 @@ API'S
 
 18)get all status (api/get/statuses)(Get)(Employer, Admin)
 
-19)get all skills  (api/get/skills)(Get)(Employer)
+19)get all skills  (api/get/skills)(Get)(ALL)
 
 20)Withdraw Application (api/application/withdraw-application)(PUT)(Candidate)
 
@@ -47,6 +47,8 @@ API'S
 22)Update Employer (api/update/employer-profile)(PUT)(Employer)
 
 23)Update Candidate (api/update/candidate-profile)(PUT)(Candidate)
+
+24)Get Categories (api/get/categories)(GET)(ALL)
 
 git repo:-
 https://github.com/naman-tatvasoft/JobApplicationPortal/

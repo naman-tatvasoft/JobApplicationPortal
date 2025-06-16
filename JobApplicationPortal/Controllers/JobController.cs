@@ -60,9 +60,9 @@ public class JobController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Candidate, Admin")]
     public IActionResult GetJobs([FromQuery] string search = "", [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 2,
-                                    [FromQuery] string skill = "", [FromQuery] string location = "", [FromQuery] int experience = 0)
+                                    [FromQuery] string skill = "", [FromQuery] string location = "", [FromQuery] int experience = 0, [FromQuery] string category = "")
     {
-        var result = _jobService.GetJobs(search, pageNumber, pageSize, skill, location, experience);
+        var result = _jobService.GetJobs(search, pageNumber, pageSize, skill, location, experience, category);
         return Ok(result.Data);
     }
 
@@ -111,10 +111,20 @@ public class JobController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize(Roles = "Admin, Employer")]
     public IActionResult GetSkills()
     {
         var result = _jobService.GetSkills();
+        return Ok(result.Data);
+    }
+
+    [HttpGet("get/categories")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public IActionResult GetCategories()
+    {
+        var result = _jobService.GetCategories();
         return Ok(result.Data);
     }
 }

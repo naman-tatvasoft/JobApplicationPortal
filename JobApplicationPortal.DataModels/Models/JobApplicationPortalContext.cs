@@ -19,6 +19,8 @@ public partial class JobApplicationPortalContext : DbContext
 
     public virtual DbSet<Candidate> Candidates { get; set; }
 
+    public virtual DbSet<Category> Categories { get; set; }
+
     public virtual DbSet<Employer> Employers { get; set; }
 
     public virtual DbSet<Job> Jobs { get; set; }
@@ -77,6 +79,15 @@ public partial class JobApplicationPortalContext : DbContext
                 .HasConstraintName("Candidates_UserId_fkey");
         });
 
+        modelBuilder.Entity<Category>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("Categories_pkey");
+
+            entity.HasIndex(e => e.Name, "Categories_Name_key").IsUnique();
+
+            entity.Property(e => e.Name).HasMaxLength(50);
+        });
+
         modelBuilder.Entity<Employer>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("Employers_pkey");
@@ -105,6 +116,12 @@ public partial class JobApplicationPortalContext : DbContext
                 .HasDefaultValueSql("true");
             entity.Property(e => e.Location).HasMaxLength(100);
             entity.Property(e => e.Title).HasMaxLength(50);
+            entity.Property(e => e.Vacancy).HasDefaultValueSql("1");
+
+            entity.HasOne(d => d.Category).WithMany(p => p.Jobs)
+                .HasForeignKey(d => d.CategoryId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("Jobs_CategoryId_fkey");
 
             entity.HasOne(d => d.Employer).WithMany(p => p.Jobs)
                 .HasForeignKey(d => d.EmployerId)

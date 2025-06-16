@@ -37,6 +37,7 @@ public class JobRepository : IJobRepository
         existingJob.ExperienceRequired = job.ExperienceRequired;
         existingJob.OpenFrom = job.OpenFrom;
         existingJob.Vacancy = job.Vacancy;
+        existingJob.CategoryId = job.CategoryId;
 
         _context.Jobs.Update(existingJob);
         await _context.SaveChangesAsync();

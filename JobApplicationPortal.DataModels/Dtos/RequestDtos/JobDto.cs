@@ -23,4 +23,9 @@ public class JobDto
     public DateOnly OpenFrom { get; set; }
     public long Vacancies {get; set;}
     public List<SkillDto> skillsRequiredList { get; set; } = new List<SkillDto>();
+
+    public int CategoryId {get; set;}
+
+    public string CategoryName {get; set;}
+
 }

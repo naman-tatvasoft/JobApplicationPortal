@@ -17,6 +17,7 @@ public class JobService : IJobService
     private readonly ISkillRepository _skillRepository;
     private readonly IJobRepository _jobRepository;
     private readonly IJobSkillRepository _jobSkillRepository;
+    private readonly ICategoryRepository _categoriesRepository;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public JobService(ISkillRepository skillRepository,
@@ -24,6 +25,7 @@ public class JobService : IJobService
         IEmployerRepository employerRepository,
         IJobRepository jobRepository,
         IJobSkillRepository jobSkillRepository,
+        ICategoryRepository categoriesRepository,
         IHttpContextAccessor httpContextAccessor)
     {
         _skillRepository = skillRepository;
@@ -31,6 +33,7 @@ public class JobService : IJobService
         _employerRepository = employerRepository;
         _jobRepository = jobRepository;
         _jobSkillRepository = jobSkillRepository;
+        _categoriesRepository = categoriesRepository;
         _httpContextAccessor = httpContextAccessor;
     }
 
@@ -62,7 +65,8 @@ public class JobService : IJobService
             ExperienceRequired = createJobDto.ExperienceRequired,
             EmployerId = employer.Id,
             OpenFrom = createJobDto.OpenFrom,
-            Vacancy = createJobDto.Vacancies
+            Vacancy = createJobDto.Vacancies,
+            CategoryId = createJobDto.CategoryId,
         };
 
         var jobSaved = await _jobRepository.CreateJob(job);
@@ -132,6 +136,8 @@ public class JobService : IJobService
             ExperienceRequired = job.ExperienceRequired,
             OpenFrom = job.OpenFrom,
             Vacancies = job.Vacancy,
+            CategoryId = job.CategoryId,
+            CategoryName = job.Category.Name,
             skillsRequiredList = job.JobSkills.Where(skill => skill.Skill != null).Select(skill => new SkillDto
             {
                 Id = skill.Id,
@@ -191,7 +197,8 @@ public class JobService : IJobService
             EmployerId = employer.Id,
             IsActive = updateJobDto.IsActive,
             OpenFrom = updateJobDto.OpenFrom,
-            Vacancy = updateJobDto.Vacancies
+            Vacancy = updateJobDto.Vacancies,
+            CategoryId = updateJobDto.CategoryId,
         };
 
         await _jobRepository.UpdateJob(jobToUpdate);
@@ -225,6 +232,8 @@ public class JobService : IJobService
             ExperienceRequired = updatedJob.ExperienceRequired,
             OpenFrom = updatedJob.OpenFrom,
             Vacancies = updatedJob.Vacancy,
+            CategoryId = updatedJob.CategoryId,
+            CategoryName = updatedJob.Category.Name,
             skillsRequiredList = updatedJob.JobSkills.Select(skill => new SkillDto
             {
                 Id = skill.Id,
@@ -241,7 +250,7 @@ public class JobService : IJobService
 
     }
 
-    public CommonDto<List<JobDto>> GetJobs(string search, int pageNumber, int pageSize, string skill, string location, int experience)
+    public CommonDto<List<JobDto>> GetJobs(string search, int pageNumber, int pageSize, string skill, string location, int experience, string category)
     {
         var jobs = _jobRepository.GetJobs()
             .Select(job => new JobDto
@@ -253,6 +262,8 @@ public class JobService : IJobService
                 ExperienceRequired = job.ExperienceRequired,
                 OpenFrom = job.OpenFrom,
                 Vacancies = job.Vacancy,
+                CategoryId = job.CategoryId,
+                CategoryName = job.Category.Name,
                 skillsRequiredList = job.JobSkills.Select(skill => new SkillDto
                 {
                     Id = skill.Id,
@@ -264,7 +275,8 @@ public class JobService : IJobService
         {
             jobs = jobs.Where(j => j.Title.Contains(search, StringComparison.OrdinalIgnoreCase) ||
                                    j.Description.Contains(search, StringComparison.OrdinalIgnoreCase) ||
-                                   j.Location.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+                                   j.Location.Contains(search, StringComparison.OrdinalIgnoreCase) ||
+                                   j.CategoryName.Contains(search,StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         if (!string.IsNullOrEmpty(skill))
@@ -278,10 +290,15 @@ public class JobService : IJobService
             jobs = jobs.Where(j => j.Location.ToLower() == location.ToLower()).ToList();
         }
 
+        if (!string.IsNullOrEmpty(category)){
+            jobs = jobs.Where(j => j.CategoryName.ToLower() == category.ToLower()).ToList();
+        }
+        
         if (experience > 0)
         {
             jobs = jobs.Where(u => u.ExperienceRequired <= experience).ToList();
         }
+
 
         jobs = jobs.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
@@ -334,6 +351,8 @@ public class JobService : IJobService
             ExperienceRequired = job.ExperienceRequired,
             OpenFrom = job.OpenFrom,
             Vacancies = job.Vacancy,
+            CategoryId = job.CategoryId,
+            CategoryName =  job.Category.Name,
             skillsRequiredList = job.JobSkills.Select(skill => new SkillDto
             {
                 Id = skill.Id,
@@ -371,6 +390,8 @@ public class JobService : IJobService
                 ExperienceRequired = job.ExperienceRequired,
                 OpenFrom = job.OpenFrom,
                 Vacancies = job.Vacancy,
+                CategoryId = job.CategoryId,
+                CategoryName = job.Category.Name,
                 skillsRequiredList = job.JobSkills.Select(skill => new SkillDto
                 {
                     Id = skill.Id,
@@ -393,7 +414,7 @@ public class JobService : IJobService
 
         if (string.IsNullOrEmpty(email))
         {
-           throw new UnAuthenticatedException();
+            throw new UnAuthenticatedException();
         }
 
         var employer = _employerRepository.GetEmployerByEmail(email);
@@ -412,7 +433,7 @@ public class JobService : IJobService
         var isJobByEmployer = _jobRepository.IsJobByEmployer(jobId, employer);
         if (!isJobByEmployer)
         {
-           throw new JobNotByEmployerException();
+            throw new JobNotByEmployerException();
         }
 
         var IsAlreadyDeleted = _jobRepository.IsJobAlreadyDeleted(jobId);
@@ -446,6 +467,25 @@ public class JobService : IJobService
             Data = skills,
             StatusCode = 200,
             Message = "Skills retieved successfully."
+        };
+    }
+
+
+    public CommonDto<List<CategoriesDto>> GetCategories()
+    {
+        var categories = _categoriesRepository.GetCategories()
+            .Select(categories => new CategoriesDto
+            {
+                Id = categories.Id,
+                Name = categories.Name
+            })
+            .ToList();
+
+        return new CommonDto<List<CategoriesDto>>
+        {
+            Data = categories,
+            StatusCode = 200,
+            Message = "categories retieved successfully."
         };
     }
 

@@ -25,6 +25,11 @@ CREATE TABLE "Candidates" (
 	"UserId" INTEGER NOT NULL UNIQUE REFERENCES "Users"("Id")
 );
 
+CREATE TABLE "Categories" (
+    "Id" SERIAL PRIMARY KEY,
+    "Name" VARCHAR(50) NOT NULL UNIQUE
+)
+
 CREATE TABLE "Jobs" (
 	"Id" SERIAL PRIMARY KEY,
 	"Title" VARCHAR(50) NOT NULL,
@@ -33,9 +38,11 @@ CREATE TABLE "Jobs" (
     "ExperienceRequired" INTEGER DEFAULT 0,
     "EmployerId" INTEGER NOT NULL REFERENCES "Employers"("Id"),
     "OpenFrom" DATE NOT NULL,
+    "CategoryId" INTEGER NOT NULL REFERENCES "Categories"("Id"),
+    "Vacancy" INTEGER NOT NULL DEFAULT 1,
     "CreatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    "IsActive" BOOLEAN DEFAULT TRUE,
-    "IsDeleted" BOOLEAN DEFAULT FALSE
+    "IsActive" BOOLEAN NOT NULL DEFAULT TRUE,
+    "IsDeleted" BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE "Skills" (
@@ -65,4 +72,3 @@ CREATE TABLE "Applications" (
     "AppliedDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "StatusId" INTEGER NOT NULL REFERENCES "Status"("Id")
 );
- 

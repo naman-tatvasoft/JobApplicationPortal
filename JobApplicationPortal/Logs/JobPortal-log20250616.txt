@@ -47,3 +47,446 @@ System.InvalidOperationException: A second operation was started on this context
 [2025-06-16 14:36:00 ERR] Status Code: 500, Message: Internal server error. Please try again later.,Exception Details: A second operation was started on this context instance before a previous operation completed. This is usually caused by different threads concurrently using the same instance of DbContext. For more information on how to avoid threading issues with DbContext, see https://go.microsoft.com/fwlink/?linkid=2097913.
 
 
+[2025-06-16 17:18:09 ERR] Failed executing DbCommand (0ms) [Parameters=[@__categoryId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT c."Id", c."Name"
+FROM "Categories" AS c
+WHERE c."Id" = @__categoryId_0
+LIMIT 1
+
+
+[2025-06-16 17:18:09 ERR] An exception occurred while iterating over the results of a query for context type 'JobApplicationPortal.DataModels.Models.JobApplicationPortalContext'.
+Npgsql.NpgsqlOperationInProgressException (0x80004005): A command is already in progress: SELECT j."Id", j."Title", j."Description", j."Location", j."ExperienceRequired", j."OpenFrom", j."Vacancy", j."CategoryId", t."Id", t."Name", t."Id0"
+FROM "Jobs" AS j
+LEFT JOIN (
+    SELECT j0."Id", s."Name", s."Id" AS "Id0", j0."JobId"
+    FROM "JobSkills" AS j0
+    INNER JOIN "Skills" AS s ON j0."SkillId" = s."Id"
+) AS t ON j."Id" = t."JobId"
+WHERE NOT (j."IsDeleted") AND j."IsActive"
+ORDER BY j."Id", t."Id"
+   at Npgsql.Internal.NpgsqlConnector.<StartUserAction>g__DoStartUserAction|279_0(ConnectorState newState, NpgsqlCommand command, <>c__DisplayClass279_0&)
+   at Npgsql.Internal.NpgsqlConnector.StartUserAction(ConnectorState newState, NpgsqlCommand command, CancellationToken cancellationToken, Boolean attemptPgCancellation)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.InitializeReader(Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.<>c.<MoveNext>b__21_0(DbContext _, Enumerator enumerator)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+Npgsql.NpgsqlOperationInProgressException (0x80004005): A command is already in progress: SELECT j."Id", j."Title", j."Description", j."Location", j."ExperienceRequired", j."OpenFrom", j."Vacancy", j."CategoryId", t."Id", t."Name", t."Id0"
+FROM "Jobs" AS j
+LEFT JOIN (
+    SELECT j0."Id", s."Name", s."Id" AS "Id0", j0."JobId"
+    FROM "JobSkills" AS j0
+    INNER JOIN "Skills" AS s ON j0."SkillId" = s."Id"
+) AS t ON j."Id" = t."JobId"
+WHERE NOT (j."IsDeleted") AND j."IsActive"
+ORDER BY j."Id", t."Id"
+   at Npgsql.Internal.NpgsqlConnector.<StartUserAction>g__DoStartUserAction|279_0(ConnectorState newState, NpgsqlCommand command, <>c__DisplayClass279_0&)
+   at Npgsql.Internal.NpgsqlConnector.StartUserAction(ConnectorState newState, NpgsqlCommand command, CancellationToken cancellationToken, Boolean attemptPgCancellation)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.InitializeReader(Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.<>c.<MoveNext>b__21_0(DbContext _, Enumerator enumerator)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+
+
+[2025-06-16 17:18:09 ERR] An exception occurred while iterating over the results of a query for context type 'JobApplicationPortal.DataModels.Models.JobApplicationPortalContext'.
+Npgsql.NpgsqlOperationInProgressException (0x80004005): A command is already in progress: SELECT j."Id", j."Title", j."Description", j."Location", j."ExperienceRequired", j."OpenFrom", j."Vacancy", j."CategoryId", t."Id", t."Name", t."Id0"
+FROM "Jobs" AS j
+LEFT JOIN (
+    SELECT j0."Id", s."Name", s."Id" AS "Id0", j0."JobId"
+    FROM "JobSkills" AS j0
+    INNER JOIN "Skills" AS s ON j0."SkillId" = s."Id"
+) AS t ON j."Id" = t."JobId"
+WHERE NOT (j."IsDeleted") AND j."IsActive"
+ORDER BY j."Id", t."Id"
+   at Npgsql.Internal.NpgsqlConnector.<StartUserAction>g__DoStartUserAction|279_0(ConnectorState newState, NpgsqlCommand command, <>c__DisplayClass279_0&)
+   at Npgsql.Internal.NpgsqlConnector.StartUserAction(ConnectorState newState, NpgsqlCommand command, CancellationToken cancellationToken, Boolean attemptPgCancellation)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.InitializeReader(Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.<>c.<MoveNext>b__21_0(DbContext _, Enumerator enumerator)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+   at System.Linq.Enumerable.TryGetSingle[TSource](IEnumerable`1 source, Boolean& found)
+   at lambda_method101(Closure, QueryContext)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.Execute[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.Execute[TResult](Expression expression)
+   at JobApplicationPortal.Repository.Repository.Implementation.CategoryRepository.GetCategoryById(Int32 categoryId) in C:\Users\pca106\Desktop\JobApplicationPortal\JobApplicationPortal.Repository\Repository\Implementation\CategoryRepository.cs:line 21
+   at lambda_method97(Closure, QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+Npgsql.NpgsqlOperationInProgressException (0x80004005): A command is already in progress: SELECT j."Id", j."Title", j."Description", j."Location", j."ExperienceRequired", j."OpenFrom", j."Vacancy", j."CategoryId", t."Id", t."Name", t."Id0"
+FROM "Jobs" AS j
+LEFT JOIN (
+    SELECT j0."Id", s."Name", s."Id" AS "Id0", j0."JobId"
+    FROM "JobSkills" AS j0
+    INNER JOIN "Skills" AS s ON j0."SkillId" = s."Id"
+) AS t ON j."Id" = t."JobId"
+WHERE NOT (j."IsDeleted") AND j."IsActive"
+ORDER BY j."Id", t."Id"
+   at Npgsql.Internal.NpgsqlConnector.<StartUserAction>g__DoStartUserAction|279_0(ConnectorState newState, NpgsqlCommand command, <>c__DisplayClass279_0&)
+   at Npgsql.Internal.NpgsqlConnector.StartUserAction(ConnectorState newState, NpgsqlCommand command, CancellationToken cancellationToken, Boolean attemptPgCancellation)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.InitializeReader(Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.<>c.<MoveNext>b__21_0(DbContext _, Enumerator enumerator)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+   at System.Linq.Enumerable.TryGetSingle[TSource](IEnumerable`1 source, Boolean& found)
+   at lambda_method101(Closure, QueryContext)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.Execute[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.Execute[TResult](Expression expression)
+   at JobApplicationPortal.Repository.Repository.Implementation.CategoryRepository.GetCategoryById(Int32 categoryId) in C:\Users\pca106\Desktop\JobApplicationPortal\JobApplicationPortal.Repository\Repository\Implementation\CategoryRepository.cs:line 21
+   at lambda_method97(Closure, QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+
+
+[2025-06-16 17:18:09 ERR] Status Code: 500, Message: Internal server error. Please try again later.,Exception Details: A command is already in progress: SELECT j."Id", j."Title", j."Description", j."Location", j."ExperienceRequired", j."OpenFrom", j."Vacancy", j."CategoryId", t."Id", t."Name", t."Id0"
+FROM "Jobs" AS j
+LEFT JOIN (
+    SELECT j0."Id", s."Name", s."Id" AS "Id0", j0."JobId"
+    FROM "JobSkills" AS j0
+    INNER JOIN "Skills" AS s ON j0."SkillId" = s."Id"
+) AS t ON j."Id" = t."JobId"
+WHERE NOT (j."IsDeleted") AND j."IsActive"
+ORDER BY j."Id", t."Id"
+
+
+[2025-06-16 17:19:39 ERR] Failed executing DbCommand (1ms) [Parameters=[@__categoryId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT c."Id", c."Name"
+FROM "Categories" AS c
+WHERE c."Id" = @__categoryId_0
+LIMIT 1
+
+
+[2025-06-16 17:19:39 ERR] An exception occurred while iterating over the results of a query for context type 'JobApplicationPortal.DataModels.Models.JobApplicationPortalContext'.
+Npgsql.NpgsqlOperationInProgressException (0x80004005): A command is already in progress: SELECT j."Id", j."Title", j."Description", j."Location", j."ExperienceRequired", j."OpenFrom", j."Vacancy", j."CategoryId", t."Id", t."Name", t."Id0"
+FROM "Jobs" AS j
+LEFT JOIN (
+    SELECT j0."Id", s."Name", s."Id" AS "Id0", j0."JobId"
+    FROM "JobSkills" AS j0
+    INNER JOIN "Skills" AS s ON j0."SkillId" = s."Id"
+) AS t ON j."Id" = t."JobId"
+WHERE NOT (j."IsDeleted") AND j."IsActive"
+ORDER BY j."Id", t."Id"
+   at Npgsql.Internal.NpgsqlConnector.<StartUserAction>g__DoStartUserAction|279_0(ConnectorState newState, NpgsqlCommand command, <>c__DisplayClass279_0&)
+   at Npgsql.Internal.NpgsqlConnector.StartUserAction(ConnectorState newState, NpgsqlCommand command, CancellationToken cancellationToken, Boolean attemptPgCancellation)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.InitializeReader(Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.<>c.<MoveNext>b__21_0(DbContext _, Enumerator enumerator)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+Npgsql.NpgsqlOperationInProgressException (0x80004005): A command is already in progress: SELECT j."Id", j."Title", j."Description", j."Location", j."ExperienceRequired", j."OpenFrom", j."Vacancy", j."CategoryId", t."Id", t."Name", t."Id0"
+FROM "Jobs" AS j
+LEFT JOIN (
+    SELECT j0."Id", s."Name", s."Id" AS "Id0", j0."JobId"
+    FROM "JobSkills" AS j0
+    INNER JOIN "Skills" AS s ON j0."SkillId" = s."Id"
+) AS t ON j."Id" = t."JobId"
+WHERE NOT (j."IsDeleted") AND j."IsActive"
+ORDER BY j."Id", t."Id"
+   at Npgsql.Internal.NpgsqlConnector.<StartUserAction>g__DoStartUserAction|279_0(ConnectorState newState, NpgsqlCommand command, <>c__DisplayClass279_0&)
+   at Npgsql.Internal.NpgsqlConnector.StartUserAction(ConnectorState newState, NpgsqlCommand command, CancellationToken cancellationToken, Boolean attemptPgCancellation)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.InitializeReader(Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.<>c.<MoveNext>b__21_0(DbContext _, Enumerator enumerator)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+
+
+[2025-06-16 17:19:51 ERR] An exception occurred while iterating over the results of a query for context type 'JobApplicationPortal.DataModels.Models.JobApplicationPortalContext'.
+Npgsql.NpgsqlOperationInProgressException (0x80004005): A command is already in progress: SELECT j."Id", j."Title", j."Description", j."Location", j."ExperienceRequired", j."OpenFrom", j."Vacancy", j."CategoryId", t."Id", t."Name", t."Id0"
+FROM "Jobs" AS j
+LEFT JOIN (
+    SELECT j0."Id", s."Name", s."Id" AS "Id0", j0."JobId"
+    FROM "JobSkills" AS j0
+    INNER JOIN "Skills" AS s ON j0."SkillId" = s."Id"
+) AS t ON j."Id" = t."JobId"
+WHERE NOT (j."IsDeleted") AND j."IsActive"
+ORDER BY j."Id", t."Id"
+   at Npgsql.Internal.NpgsqlConnector.<StartUserAction>g__DoStartUserAction|279_0(ConnectorState newState, NpgsqlCommand command, <>c__DisplayClass279_0&)
+   at Npgsql.Internal.NpgsqlConnector.StartUserAction(ConnectorState newState, NpgsqlCommand command, CancellationToken cancellationToken, Boolean attemptPgCancellation)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.InitializeReader(Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.<>c.<MoveNext>b__21_0(DbContext _, Enumerator enumerator)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+   at System.Linq.Enumerable.TryGetSingle[TSource](IEnumerable`1 source, Boolean& found)
+   at lambda_method28(Closure, QueryContext)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.Execute[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.Execute[TResult](Expression expression)
+   at JobApplicationPortal.Repository.Repository.Implementation.CategoryRepository.GetCategoryById(Int32 categoryId) in C:\Users\pca106\Desktop\JobApplicationPortal\JobApplicationPortal.Repository\Repository\Implementation\CategoryRepository.cs:line 21
+   at lambda_method24(Closure, QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+Npgsql.NpgsqlOperationInProgressException (0x80004005): A command is already in progress: SELECT j."Id", j."Title", j."Description", j."Location", j."ExperienceRequired", j."OpenFrom", j."Vacancy", j."CategoryId", t."Id", t."Name", t."Id0"
+FROM "Jobs" AS j
+LEFT JOIN (
+    SELECT j0."Id", s."Name", s."Id" AS "Id0", j0."JobId"
+    FROM "JobSkills" AS j0
+    INNER JOIN "Skills" AS s ON j0."SkillId" = s."Id"
+) AS t ON j."Id" = t."JobId"
+WHERE NOT (j."IsDeleted") AND j."IsActive"
+ORDER BY j."Id", t."Id"
+   at Npgsql.Internal.NpgsqlConnector.<StartUserAction>g__DoStartUserAction|279_0(ConnectorState newState, NpgsqlCommand command, <>c__DisplayClass279_0&)
+   at Npgsql.Internal.NpgsqlConnector.StartUserAction(ConnectorState newState, NpgsqlCommand command, CancellationToken cancellationToken, Boolean attemptPgCancellation)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.InitializeReader(Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.<>c.<MoveNext>b__21_0(DbContext _, Enumerator enumerator)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+   at System.Linq.Enumerable.TryGetSingle[TSource](IEnumerable`1 source, Boolean& found)
+   at lambda_method28(Closure, QueryContext)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.Execute[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.Execute[TResult](Expression expression)
+   at JobApplicationPortal.Repository.Repository.Implementation.CategoryRepository.GetCategoryById(Int32 categoryId) in C:\Users\pca106\Desktop\JobApplicationPortal\JobApplicationPortal.Repository\Repository\Implementation\CategoryRepository.cs:line 21
+   at lambda_method24(Closure, QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+
+
+[2025-06-16 17:21:45 ERR] Failed executing DbCommand (1ms) [Parameters=[@__categoryId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT c."Id", c."Name"
+FROM "Categories" AS c
+WHERE c."Id" = @__categoryId_0
+LIMIT 1
+
+
+[2025-06-16 17:21:45 ERR] An exception occurred while iterating over the results of a query for context type 'JobApplicationPortal.DataModels.Models.JobApplicationPortalContext'.
+Npgsql.NpgsqlOperationInProgressException (0x80004005): A command is already in progress: SELECT j."Id", j."Title", j."Description", j."Location", j."ExperienceRequired", j."OpenFrom", j."Vacancy", j."CategoryId", t."Id", t."Name", t."Id0"
+FROM "Jobs" AS j
+LEFT JOIN (
+    SELECT j0."Id", s."Name", s."Id" AS "Id0", j0."JobId"
+    FROM "JobSkills" AS j0
+    INNER JOIN "Skills" AS s ON j0."SkillId" = s."Id"
+) AS t ON j."Id" = t."JobId"
+WHERE NOT (j."IsDeleted") AND j."IsActive"
+ORDER BY j."Id", t."Id"
+   at Npgsql.Internal.NpgsqlConnector.<StartUserAction>g__DoStartUserAction|279_0(ConnectorState newState, NpgsqlCommand command, <>c__DisplayClass279_0&)
+   at Npgsql.Internal.NpgsqlConnector.StartUserAction(ConnectorState newState, NpgsqlCommand command, CancellationToken cancellationToken, Boolean attemptPgCancellation)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.InitializeReader(Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.<>c.<MoveNext>b__21_0(DbContext _, Enumerator enumerator)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+Npgsql.NpgsqlOperationInProgressException (0x80004005): A command is already in progress: SELECT j."Id", j."Title", j."Description", j."Location", j."ExperienceRequired", j."OpenFrom", j."Vacancy", j."CategoryId", t."Id", t."Name", t."Id0"
+FROM "Jobs" AS j
+LEFT JOIN (
+    SELECT j0."Id", s."Name", s."Id" AS "Id0", j0."JobId"
+    FROM "JobSkills" AS j0
+    INNER JOIN "Skills" AS s ON j0."SkillId" = s."Id"
+) AS t ON j."Id" = t."JobId"
+WHERE NOT (j."IsDeleted") AND j."IsActive"
+ORDER BY j."Id", t."Id"
+   at Npgsql.Internal.NpgsqlConnector.<StartUserAction>g__DoStartUserAction|279_0(ConnectorState newState, NpgsqlCommand command, <>c__DisplayClass279_0&)
+   at Npgsql.Internal.NpgsqlConnector.StartUserAction(ConnectorState newState, NpgsqlCommand command, CancellationToken cancellationToken, Boolean attemptPgCancellation)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.InitializeReader(Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.<>c.<MoveNext>b__21_0(DbContext _, Enumerator enumerator)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+
+
+[2025-06-16 17:21:45 ERR] An exception occurred while iterating over the results of a query for context type 'JobApplicationPortal.DataModels.Models.JobApplicationPortalContext'.
+Npgsql.NpgsqlOperationInProgressException (0x80004005): A command is already in progress: SELECT j."Id", j."Title", j."Description", j."Location", j."ExperienceRequired", j."OpenFrom", j."Vacancy", j."CategoryId", t."Id", t."Name", t."Id0"
+FROM "Jobs" AS j
+LEFT JOIN (
+    SELECT j0."Id", s."Name", s."Id" AS "Id0", j0."JobId"
+    FROM "JobSkills" AS j0
+    INNER JOIN "Skills" AS s ON j0."SkillId" = s."Id"
+) AS t ON j."Id" = t."JobId"
+WHERE NOT (j."IsDeleted") AND j."IsActive"
+ORDER BY j."Id", t."Id"
+   at Npgsql.Internal.NpgsqlConnector.<StartUserAction>g__DoStartUserAction|279_0(ConnectorState newState, NpgsqlCommand command, <>c__DisplayClass279_0&)
+   at Npgsql.Internal.NpgsqlConnector.StartUserAction(ConnectorState newState, NpgsqlCommand command, CancellationToken cancellationToken, Boolean attemptPgCancellation)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.InitializeReader(Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.<>c.<MoveNext>b__21_0(DbContext _, Enumerator enumerator)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+   at System.Linq.Enumerable.TryGetSingle[TSource](IEnumerable`1 source, Boolean& found)
+   at lambda_method28(Closure, QueryContext)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.Execute[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.Execute[TResult](Expression expression)
+   at JobApplicationPortal.Repository.Repository.Implementation.CategoryRepository.GetCategoryById(Int32 categoryId) in C:\Users\pca106\Desktop\JobApplicationPortal\JobApplicationPortal.Repository\Repository\Implementation\CategoryRepository.cs:line 21
+   at lambda_method24(Closure, QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+Npgsql.NpgsqlOperationInProgressException (0x80004005): A command is already in progress: SELECT j."Id", j."Title", j."Description", j."Location", j."ExperienceRequired", j."OpenFrom", j."Vacancy", j."CategoryId", t."Id", t."Name", t."Id0"
+FROM "Jobs" AS j
+LEFT JOIN (
+    SELECT j0."Id", s."Name", s."Id" AS "Id0", j0."JobId"
+    FROM "JobSkills" AS j0
+    INNER JOIN "Skills" AS s ON j0."SkillId" = s."Id"
+) AS t ON j."Id" = t."JobId"
+WHERE NOT (j."IsDeleted") AND j."IsActive"
+ORDER BY j."Id", t."Id"
+   at Npgsql.Internal.NpgsqlConnector.<StartUserAction>g__DoStartUserAction|279_0(ConnectorState newState, NpgsqlCommand command, <>c__DisplayClass279_0&)
+   at Npgsql.Internal.NpgsqlConnector.StartUserAction(ConnectorState newState, NpgsqlCommand command, CancellationToken cancellationToken, Boolean attemptPgCancellation)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.InitializeReader(Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.<>c.<MoveNext>b__21_0(DbContext _, Enumerator enumerator)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+   at System.Linq.Enumerable.TryGetSingle[TSource](IEnumerable`1 source, Boolean& found)
+   at lambda_method28(Closure, QueryContext)
+   at Microsoft.EntityFrameworkCore.Query.Internal.QueryCompiler.Execute[TResult](Expression query)
+   at Microsoft.EntityFrameworkCore.Query.Internal.EntityQueryProvider.Execute[TResult](Expression expression)
+   at JobApplicationPortal.Repository.Repository.Implementation.CategoryRepository.GetCategoryById(Int32 categoryId) in C:\Users\pca106\Desktop\JobApplicationPortal\JobApplicationPortal.Repository\Repository\Implementation\CategoryRepository.cs:line 21
+   at lambda_method24(Closure, QueryContext, DbDataReader, ResultContext, SingleQueryResultCoordinator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+
+
+[2025-06-16 17:21:45 ERR] Status Code: 500, Message: Internal server error. Please try again later.,Exception Details: A command is already in progress: SELECT j."Id", j."Title", j."Description", j."Location", j."ExperienceRequired", j."OpenFrom", j."Vacancy", j."CategoryId", t."Id", t."Name", t."Id0"
+FROM "Jobs" AS j
+LEFT JOIN (
+    SELECT j0."Id", s."Name", s."Id" AS "Id0", j0."JobId"
+    FROM "JobSkills" AS j0
+    INNER JOIN "Skills" AS s ON j0."SkillId" = s."Id"
+) AS t ON j."Id" = t."JobId"
+WHERE NOT (j."IsDeleted") AND j."IsActive"
+ORDER BY j."Id", t."Id"
+
+
+[2025-06-16 17:25:14 ERR] Failed executing DbCommand (2ms) [Parameters=[@__categoryId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT c."Id", c."Name"
+FROM "Categories" AS c
+WHERE c."Id" = @__categoryId_0
+LIMIT 1
+
+
+[2025-06-16 17:25:14 ERR] An exception occurred while iterating over the results of a query for context type 'JobApplicationPortal.DataModels.Models.JobApplicationPortalContext'.
+Npgsql.NpgsqlOperationInProgressException (0x80004005): A command is already in progress: SELECT j."Id", j."Title", j."Description", j."Location", j."ExperienceRequired", j."OpenFrom", j."Vacancy", j."CategoryId", t."Id", t."Name", t."Id0"
+FROM "Jobs" AS j
+LEFT JOIN (
+    SELECT j0."Id", s."Name", s."Id" AS "Id0", j0."JobId"
+    FROM "JobSkills" AS j0
+    INNER JOIN "Skills" AS s ON j0."SkillId" = s."Id"
+) AS t ON j."Id" = t."JobId"
+WHERE NOT (j."IsDeleted") AND j."IsActive"
+ORDER BY j."Id", t."Id"
+   at Npgsql.Internal.NpgsqlConnector.<StartUserAction>g__DoStartUserAction|279_0(ConnectorState newState, NpgsqlCommand command, <>c__DisplayClass279_0&)
+   at Npgsql.Internal.NpgsqlConnector.StartUserAction(ConnectorState newState, NpgsqlCommand command, CancellationToken cancellationToken, Boolean attemptPgCancellation)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.InitializeReader(Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.<>c.<MoveNext>b__21_0(DbContext _, Enumerator enumerator)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+Npgsql.NpgsqlOperationInProgressException (0x80004005): A command is already in progress: SELECT j."Id", j."Title", j."Description", j."Location", j."ExperienceRequired", j."OpenFrom", j."Vacancy", j."CategoryId", t."Id", t."Name", t."Id0"
+FROM "Jobs" AS j
+LEFT JOIN (
+    SELECT j0."Id", s."Name", s."Id" AS "Id0", j0."JobId"
+    FROM "JobSkills" AS j0
+    INNER JOIN "Skills" AS s ON j0."SkillId" = s."Id"
+) AS t ON j."Id" = t."JobId"
+WHERE NOT (j."IsDeleted") AND j."IsActive"
+ORDER BY j."Id", t."Id"
+   at Npgsql.Internal.NpgsqlConnector.<StartUserAction>g__DoStartUserAction|279_0(ConnectorState newState, NpgsqlCommand command, <>c__DisplayClass279_0&)
+   at Npgsql.Internal.NpgsqlConnector.StartUserAction(ConnectorState newState, NpgsqlCommand command, CancellationToken cancellationToken, Boolean attemptPgCancellation)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.InitializeReader(Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.<>c.<MoveNext>b__21_0(DbContext _, Enumerator enumerator)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+
+
+[2025-06-16 17:29:58 ERR] Failed executing DbCommand (1ms) [Parameters=[@__categoryId_0='?' (DbType = Int32)], CommandType='"Text"', CommandTimeout='30']
+SELECT c."Id", c."Name"
+FROM "Categories" AS c
+WHERE c."Id" = @__categoryId_0
+LIMIT 1
+
+
+[2025-06-16 17:29:58 ERR] An exception occurred while iterating over the results of a query for context type 'JobApplicationPortal.DataModels.Models.JobApplicationPortalContext'.
+Npgsql.NpgsqlOperationInProgressException (0x80004005): A command is already in progress: SELECT j."Id", j."Title", j."Description", j."Location", j."ExperienceRequired", j."OpenFrom", j."Vacancy", j."CategoryId", t."Id", t."Name", t."Id0"
+FROM "Jobs" AS j
+LEFT JOIN (
+    SELECT j0."Id", s."Name", s."Id" AS "Id0", j0."JobId"
+    FROM "JobSkills" AS j0
+    INNER JOIN "Skills" AS s ON j0."SkillId" = s."Id"
+) AS t ON j."Id" = t."JobId"
+WHERE NOT (j."IsDeleted") AND j."IsActive"
+ORDER BY j."Id", t."Id"
+   at Npgsql.Internal.NpgsqlConnector.<StartUserAction>g__DoStartUserAction|279_0(ConnectorState newState, NpgsqlCommand command, <>c__DisplayClass279_0&)
+   at Npgsql.Internal.NpgsqlConnector.StartUserAction(ConnectorState newState, NpgsqlCommand command, CancellationToken cancellationToken, Boolean attemptPgCancellation)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.InitializeReader(Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.<>c.<MoveNext>b__21_0(DbContext _, Enumerator enumerator)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+Npgsql.NpgsqlOperationInProgressException (0x80004005): A command is already in progress: SELECT j."Id", j."Title", j."Description", j."Location", j."ExperienceRequired", j."OpenFrom", j."Vacancy", j."CategoryId", t."Id", t."Name", t."Id0"
+FROM "Jobs" AS j
+LEFT JOIN (
+    SELECT j0."Id", s."Name", s."Id" AS "Id0", j0."JobId"
+    FROM "JobSkills" AS j0
+    INNER JOIN "Skills" AS s ON j0."SkillId" = s."Id"
+) AS t ON j."Id" = t."JobId"
+WHERE NOT (j."IsDeleted") AND j."IsActive"
+ORDER BY j."Id", t."Id"
+   at Npgsql.Internal.NpgsqlConnector.<StartUserAction>g__DoStartUserAction|279_0(ConnectorState newState, NpgsqlCommand command, <>c__DisplayClass279_0&)
+   at Npgsql.Internal.NpgsqlConnector.StartUserAction(ConnectorState newState, NpgsqlCommand command, CancellationToken cancellationToken, Boolean attemptPgCancellation)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior, Boolean async, CancellationToken cancellationToken)
+   at Npgsql.NpgsqlCommand.ExecuteReader(CommandBehavior behavior)
+   at Npgsql.NpgsqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   at Microsoft.EntityFrameworkCore.Storage.RelationalCommand.ExecuteReader(RelationalCommandParameterObject parameterObject)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.InitializeReader(Enumerator enumerator)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.<>c.<MoveNext>b__21_0(DbContext _, Enumerator enumerator)
+   at Npgsql.EntityFrameworkCore.PostgreSQL.Storage.Internal.NpgsqlExecutionStrategy.Execute[TState,TResult](TState state, Func`3 operation, Func`3 verifySucceeded)
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+
+
