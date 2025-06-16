@@ -21,5 +21,6 @@ public class JobDto
 
     public bool IsActive {get; set;}
     public DateOnly OpenFrom { get; set; }
+    public long Vacancies {get; set;}
     public List<SkillDto> skillsRequiredList { get; set; } = new List<SkillDto>();
 }

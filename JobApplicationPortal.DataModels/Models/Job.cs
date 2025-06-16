@@ -19,11 +19,13 @@ public partial class Job
 
     public DateOnly OpenFrom { get; set; }
 
-    public DateTime? CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 
     public bool? IsActive { get; set; }
 
-    public bool? IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
+
+    public long Vacancy { get; set; }
 
     public virtual ICollection<Application> Applications { get; } = new List<Application>();
 

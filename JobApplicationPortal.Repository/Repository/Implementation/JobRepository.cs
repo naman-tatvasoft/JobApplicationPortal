@@ -24,7 +24,7 @@ public class JobRepository : IJobRepository
 
     public Job GetJobById(int jobId)
     {
-        return _context.Jobs.Include(job => job.JobSkills).ThenInclude(js => js.Skill).FirstOrDefault(job => job.Id == jobId && (bool)!job.IsDeleted);
+        return _context.Jobs.Include(job => job.JobSkills).ThenInclude(js => js.Skill).FirstOrDefault(job => job.Id == jobId  && (bool)!job.IsDeleted);
     }
 
     public async Task<Job> UpdateJob(Job job)
@@ -36,6 +36,7 @@ public class JobRepository : IJobRepository
         existingJob.Location = job.Location;
         existingJob.ExperienceRequired = job.ExperienceRequired;
         existingJob.OpenFrom = job.OpenFrom;
+        existingJob.Vacancy = job.Vacancy;
 
         _context.Jobs.Update(existingJob);
         await _context.SaveChangesAsync();
@@ -95,5 +96,21 @@ public class JobRepository : IJobRepository
     {
         var job = _context.Jobs.Include(j => j.Employer).ThenInclude(e => e.User).FirstOrDefault(j => j.Id == jobId && (bool)!j.IsDeleted);
         return job?.Employer?.User?.Email ?? string.Empty;
+    }
+
+    public async Task ReduceVacancy(int jobId)
+    {
+        var job = GetJobById(jobId);
+        if (job != null && job.Vacancy > 0)
+        {
+            job.Vacancy -= 1;
+            if (job.Vacancy == 0)
+            {
+                job.IsActive = false;
+            }
+            
+            _context.Jobs.Update(job);
+            await _context.SaveChangesAsync();
+        }
     }
 }

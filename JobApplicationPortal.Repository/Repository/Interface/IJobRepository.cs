@@ -17,5 +17,6 @@ public interface IJobRepository
     public bool CheckJobById(int jobId);
     public bool CheckExperience(int jobId, int experience);
     public string GetEmployerEmailByJobId(int jobId);
+    public Task ReduceVacancy(int jobId);
 
 }

@@ -100,8 +100,9 @@ public partial class JobApplicationPortalContext : DbContext
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone");
             entity.Property(e => e.ExperienceRequired).HasDefaultValueSql("0");
-            entity.Property(e => e.IsActive).HasDefaultValueSql("true");
-            entity.Property(e => e.IsDeleted).HasDefaultValueSql("false");
+            entity.Property(e => e.IsActive)
+                .IsRequired()
+                .HasDefaultValueSql("true");
             entity.Property(e => e.Location).HasMaxLength(100);
             entity.Property(e => e.Title).HasMaxLength(50);
 

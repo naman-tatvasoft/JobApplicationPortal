@@ -264,6 +264,10 @@ public class ApplicationService : IApplicationService
 
         var updatedaApplication = await _applicationRepository.UpdateApplicationStatus(applicationId, statusId);
 
+        if(statusId == 2){
+            await _jobRepository.ReduceVacancy(updatedaApplication.JobId);
+        }
+        
         var candidateEmail = _applicationRepository.GetCandidateEmailByApplicationId(applicationId);
         var statusName = _statusRepository.GetStatusNameById(statusId);
 

@@ -61,7 +61,8 @@ public class JobService : IJobService
             Location = createJobDto.Location,
             ExperienceRequired = createJobDto.ExperienceRequired,
             EmployerId = employer.Id,
-            OpenFrom = createJobDto.OpenFrom
+            OpenFrom = createJobDto.OpenFrom,
+            Vacancy = createJobDto.Vacancies
         };
 
         var jobSaved = await _jobRepository.CreateJob(job);
@@ -130,6 +131,7 @@ public class JobService : IJobService
             Location = job.Location,
             ExperienceRequired = job.ExperienceRequired,
             OpenFrom = job.OpenFrom,
+            Vacancies = job.Vacancy,
             skillsRequiredList = job.JobSkills.Where(skill => skill.Skill != null).Select(skill => new SkillDto
             {
                 Id = skill.Id,
@@ -188,7 +190,8 @@ public class JobService : IJobService
             ExperienceRequired = updateJobDto.ExperienceRequired,
             EmployerId = employer.Id,
             IsActive = updateJobDto.IsActive,
-            OpenFrom = updateJobDto.OpenFrom
+            OpenFrom = updateJobDto.OpenFrom,
+            Vacancy = updateJobDto.Vacancies
         };
 
         await _jobRepository.UpdateJob(jobToUpdate);
@@ -221,6 +224,7 @@ public class JobService : IJobService
             Location = updatedJob.Location,
             ExperienceRequired = updatedJob.ExperienceRequired,
             OpenFrom = updatedJob.OpenFrom,
+            Vacancies = updatedJob.Vacancy,
             skillsRequiredList = updatedJob.JobSkills.Select(skill => new SkillDto
             {
                 Id = skill.Id,
@@ -248,6 +252,7 @@ public class JobService : IJobService
                 Location = job.Location,
                 ExperienceRequired = job.ExperienceRequired,
                 OpenFrom = job.OpenFrom,
+                Vacancies = job.Vacancy,
                 skillsRequiredList = job.JobSkills.Select(skill => new SkillDto
                 {
                     Id = skill.Id,
@@ -328,6 +333,7 @@ public class JobService : IJobService
             Location = job.Location,
             ExperienceRequired = job.ExperienceRequired,
             OpenFrom = job.OpenFrom,
+            Vacancies = job.Vacancy,
             skillsRequiredList = job.JobSkills.Select(skill => new SkillDto
             {
                 Id = skill.Id,
@@ -364,6 +370,7 @@ public class JobService : IJobService
                 Location = job.Location,
                 ExperienceRequired = job.ExperienceRequired,
                 OpenFrom = job.OpenFrom,
+                Vacancies = job.Vacancy,
                 skillsRequiredList = job.JobSkills.Select(skill => new SkillDto
                 {
                     Id = skill.Id,
