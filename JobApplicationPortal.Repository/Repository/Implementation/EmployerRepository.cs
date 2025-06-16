@@ -25,4 +25,20 @@ public class EmployerRepository : IEmployerRepository
     {
         return _context.Employers.FirstOrDefault(e => e.User.Email == email);
     }
+
+    public async Task<Employer> UpdateEmployer(Employer employer)
+    {
+        var existingEmployer = _context.Employers.FirstOrDefault(e => e.Id == employer.Id);
+        if (existingEmployer == null)
+        {
+            throw new Exception("Employer not found");
+        }
+        existingEmployer.Name = employer.Name;
+        existingEmployer.CompanyName = employer.CompanyName;
+
+        _context.Employers.Update(existingEmployer);
+        await _context.SaveChangesAsync();
+        
+        return existingEmployer;
+    }
 }

@@ -27,5 +27,21 @@ public class UserRepository : IUserRepository
     {
         return _context.Users.FirstOrDefault(u => u.Email == email);
     }
+
+    public async Task<User> UpdateUserAsync(User user)
+    {
+        var existingUser = _context.Users.FirstOrDefault(u => u.Id == user.Id);
+        if (existingUser == null)
+        {
+            throw new Exception("User not found");
+        }
+        
+        existingUser.Email = user.Email;
+
+        _context.Users.Update(existingUser);
+        await _context.SaveChangesAsync();
+
+        return existingUser;
+    }
     
 }

@@ -42,7 +42,11 @@ API'S
 
 20)Withdraw Application (api/application/withdraw-application)(PUT)(Candidate)
 
+21)Get Profile (api/get/profile)(GET)(Candidate, Employer)
 
+22)Update Employer (api/update/employer-profile)(PUT)(Employer)
+
+23)Update Candidate (api/update/candidate-profile)(PUT)(Candidate)
 
 git repo:-
 https://github.com/naman-tatvasoft/JobApplicationPortal/

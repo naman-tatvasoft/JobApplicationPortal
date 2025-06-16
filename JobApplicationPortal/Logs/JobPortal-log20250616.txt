@@ -14,3 +14,36 @@ Swashbuckle.AspNetCore.SwaggerGen.SwaggerGeneratorException: Conflicting method/
 [2025-06-16 09:48:44 ERR] Status Code: 401, Message: You are unauthorized.,Exception Details: Attempted to perform an unauthorized operation.
 
 
+[2025-06-16 11:39:21 ERR] Status Code: 500, Message: Internal server error. Please try again later.,Exception Details: Object reference not set to an instance of an object.
+
+
+[2025-06-16 12:12:52 ERR] Status Code: 500, Message: Internal server error. Please try again later.,Exception Details: The instance of entity type 'Employer' cannot be tracked because another instance with the same key value for {'Id'} is already being tracked. When attaching existing entities, ensure that only one entity instance with a given key value is attached. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see the conflicting key values.
+
+
+[2025-06-16 12:13:18 ERR] Status Code: 500, Message: Internal server error. Please try again later.,Exception Details: The instance of entity type 'Employer' cannot be tracked because another instance with the same key value for {'Id'} is already being tracked. When attaching existing entities, ensure that only one entity instance with a given key value is attached. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see the conflicting key values.
+
+
+[2025-06-16 13:16:51 ERR] Status Code: 500, Message: Internal server error. Please try again later.,Exception Details: Object reference not set to an instance of an object.
+
+
+[2025-06-16 13:19:08 ERR] Status Code: 500, Message: Internal server error. Please try again later.,Exception Details: Object reference not set to an instance of an object.
+
+
+[2025-06-16 13:22:57 ERR] Status Code: 500, Message: Internal server error. Please try again later.,Exception Details: Object reference not set to an instance of an object.
+
+
+[2025-06-16 14:29:23 ERR] Status Code: 500, Message: Internal server error. Please try again later.,Exception Details: The instance of entity type 'Employer' cannot be tracked because another instance with the same key value for {'Id'} is already being tracked. When attaching existing entities, ensure that only one entity instance with a given key value is attached. Consider using 'DbContextOptionsBuilder.EnableSensitiveDataLogging' to see the conflicting key values.
+
+
+[2025-06-16 14:36:00 ERR] An exception occurred while iterating over the results of a query for context type 'JobApplicationPortal.DataModels.Models.JobApplicationPortalContext'.
+System.InvalidOperationException: A second operation was started on this context instance before a previous operation completed. This is usually caused by different threads concurrently using the same instance of DbContext. For more information on how to avoid threading issues with DbContext, see https://go.microsoft.com/fwlink/?linkid=2097913.
+   at Microsoft.EntityFrameworkCore.Infrastructure.Internal.ConcurrencyDetector.EnterCriticalSection()
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+System.InvalidOperationException: A second operation was started on this context instance before a previous operation completed. This is usually caused by different threads concurrently using the same instance of DbContext. For more information on how to avoid threading issues with DbContext, see https://go.microsoft.com/fwlink/?linkid=2097913.
+   at Microsoft.EntityFrameworkCore.Infrastructure.Internal.ConcurrencyDetector.EnterCriticalSection()
+   at Microsoft.EntityFrameworkCore.Query.Internal.SingleQueryingEnumerable`1.Enumerator.MoveNext()
+
+
+[2025-06-16 14:36:00 ERR] Status Code: 500, Message: Internal server error. Please try again later.,Exception Details: A second operation was started on this context instance before a previous operation completed. This is usually caused by different threads concurrently using the same instance of DbContext. For more information on how to avoid threading issues with DbContext, see https://go.microsoft.com/fwlink/?linkid=2097913.
+
+

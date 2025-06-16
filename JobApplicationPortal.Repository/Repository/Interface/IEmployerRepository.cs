@@ -7,4 +7,6 @@ public interface IEmployerRepository
     public IQueryable<Employer> GetAllEmployers();
     public bool IsEmployerIdExist(int employerId);
     public Employer GetEmployerByEmail(string email);
+    public Task<Employer> UpdateEmployer(Employer employer);
+
 }

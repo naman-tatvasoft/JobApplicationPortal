@@ -20,4 +20,20 @@ public class CandidateRepository : ICandidateRepository
     {
         return _context.Candidates.FirstOrDefault(c => c.User.Email == email);
     }
+
+    
+    public async Task<Candidate> UpdateCandidate(Candidate candidate)
+    {
+        var existingCandidate = await _context.Candidates.FindAsync(candidate.Id);
+        if (existingCandidate == null)
+        {
+            throw new KeyNotFoundException("Candidate not found");
+        }
+        existingCandidate.Name = candidate.Name;
+
+        _context.Candidates.Update(existingCandidate);
+        await _context.SaveChangesAsync();
+        
+        return existingCandidate;
+    }
 }
