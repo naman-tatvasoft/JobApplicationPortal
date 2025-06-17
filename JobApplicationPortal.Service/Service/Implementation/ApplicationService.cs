@@ -6,6 +6,7 @@ using JobApplicationPortal.DataModels.Dtos.ResponseDtos;
 using JobApplicationPortal.DataModels.Models;
 using JobApplicationPortal.Repository.Repository.Interface;
 using JobApplicationPortal.Service.Exceptions;
+using JobApplicationPortal.Service.Helper;
 using JobApplicationPortal.Service.Service.Interface;
 using Microsoft.AspNetCore.Http;
 
@@ -117,9 +118,7 @@ public class ApplicationService : IApplicationService
         var employerEmail = _jobRepository.GetEmployerEmailByJobId(applicationDto.JobId);
         var jobTitle = _jobRepository.GetJobById(applicationDto.JobId)?.Title;
 
-        var senderEmail = new MailAddress("test.dotnet@etatvasoft.com", "test.dotnet@etatvasoft.com");
-        var receiverEmail = new MailAddress(employerEmail, "Receiver");
-        var password = "P}N^{z-]7Ilp";
+
         var sub = $@"Application Received for {jobTitle}";
         var body = $@"
             <div style='max-width: 500px; font-family: Arial, sans-serif; border: 1px solid #ddd;'>
@@ -136,22 +135,12 @@ public class ApplicationService : IApplicationService
             </div>
             </div>";
 
-        var smtp = new SmtpClient
-        {
-            Host = "mail.etatvasoft.com",
-            Port = 587,
-            EnableSsl = true,
-            DeliveryMethod = SmtpDeliveryMethod.Network,
-            UseDefaultCredentials = false,
-            Credentials = new NetworkCredential(senderEmail.Address, password)
-        };
-        using (var mess = new MailMessage(senderEmail, receiverEmail))
-        {
-            mess.Subject = sub;
-            mess.Body = body;
-            mess.IsBodyHtml = true;
-            await smtp.SendMailAsync(mess);
-        }
+        await EmailHelper.SendEmailAsync(
+                receiverEmailAddress: employerEmail,
+                receiverDisplayName: "Employer",
+                subject: sub,
+                body: body
+            );
 
         return new CommonDto<Application>
         {
@@ -273,9 +262,7 @@ public class ApplicationService : IApplicationService
         var candidateEmail = _applicationRepository.GetCandidateEmailByApplicationId(applicationId);
         var statusName = _statusRepository.GetStatusNameById(statusId);
 
-        var senderEmail = new MailAddress("test.dotnet@etatvasoft.com", "test.dotnet@etatvasoft.com");
-        var receiverEmail = new MailAddress(candidateEmail, "Receiver");
-        var password = "P}N^{z-]7Ilp";
+
         var sub = "Application status updated";
         var body = $@"
             <div style='max-width: 500px; font-family: Arial, sans-serif; border: 1px solid #ddd;'>
@@ -292,22 +279,12 @@ public class ApplicationService : IApplicationService
             </div>
             </div>";
 
-        var smtp = new SmtpClient
-        {
-            Host = "mail.etatvasoft.com",
-            Port = 587,
-            EnableSsl = true,
-            DeliveryMethod = SmtpDeliveryMethod.Network,
-            UseDefaultCredentials = false,
-            Credentials = new NetworkCredential(senderEmail.Address, password)
-        };
-        using (var mess = new MailMessage(senderEmail, receiverEmail))
-        {
-            mess.Subject = sub;
-            mess.Body = body;
-            mess.IsBodyHtml = true;
-            await smtp.SendMailAsync(mess);
-        }
+        await EmailHelper.SendEmailAsync(
+                     receiverEmailAddress: candidateEmail,
+                     receiverDisplayName: "Candidate",
+                     subject: sub,
+                     body: body
+                 );
 
         return new CommonDto<object>
         {
