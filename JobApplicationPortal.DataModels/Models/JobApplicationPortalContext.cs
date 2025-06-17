@@ -25,6 +25,8 @@ public partial class JobApplicationPortalContext : DbContext
 
     public virtual DbSet<Job> Jobs { get; set; }
 
+    public virtual DbSet<JobPreference> JobPreferences { get; set; }
+
     public virtual DbSet<JobSkill> JobSkills { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
@@ -127,6 +129,29 @@ public partial class JobApplicationPortalContext : DbContext
                 .HasForeignKey(d => d.EmployerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("Jobs_EmployerId_fkey");
+        });
+
+        modelBuilder.Entity<JobPreference>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("JobPreference_pkey");
+
+            entity.ToTable("JobPreference");
+
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone");
+            entity.Property(e => e.ExperienceRequired).HasDefaultValueSql("0");
+            entity.Property(e => e.Location).HasMaxLength(100);
+
+            entity.HasOne(d => d.Candidate).WithMany(p => p.JobPreferences)
+                .HasForeignKey(d => d.CandidateId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("JobPreference_CandidateId_fkey");
+
+            entity.HasOne(d => d.Category).WithMany(p => p.JobPreferences)
+                .HasForeignKey(d => d.CategoryId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("JobPreference_CategoryId_fkey");
         });
 
         modelBuilder.Entity<JobSkill>(entity =>

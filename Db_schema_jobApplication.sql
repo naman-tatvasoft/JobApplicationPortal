@@ -72,3 +72,12 @@ CREATE TABLE "Applications" (
     "AppliedDate" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     "StatusId" INTEGER NOT NULL REFERENCES "Status"("Id")
 );
+
+CREATE TABLE "JobPreference" (
+    "Id" SERIAL PRIMARY KEY,
+    "CandidateId" INTEGER NOT NULL REFERENCES "Candidates"("Id"),
+    "CategoryId" INTEGER NOT NULL REFERENCES "Categories"("Id"),
+    "ExperienceRequired" INTEGER DEFAULT 0,
+    "Location" VARCHAR(100) NOT NULL,
+    "CreatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

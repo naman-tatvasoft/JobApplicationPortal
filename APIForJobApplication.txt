@@ -50,11 +50,17 @@ API'S
 
 24)Get Categories (api/get/categories)(GET)(ALL)
 
+25)Create Job Preferences (api/create/job-preference)(POST)(Candidate)
+
+26)Update Job Preferences (api/update/job-preference)(PUT)(Candidate)
+
+27)Delete Job Preference (api/delete/jon-preference)(DELETE)(Candidate)
+
 git repo:-
 https://github.com/naman-tatvasoft/JobApplicationPortal/
 
 scaffold command:-
-dotnet ef dbcontext scaffold "Name=ConnectionStrings:JobPortalConnection" Npgsql.EntityFrameworkCore.PostgreSQL -o Models -f
+dotnet ef dbcontext scaffold "Host=localhost; Database=Job_Application_Portal; Username=postgres; password=Tatva@123" Npgsql.EntityFrameworkCore.PostgreSQL -o Models -f
 
 packages:-
 microsoft.aspnetcore.authentication.jwtbearer

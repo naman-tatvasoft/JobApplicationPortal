@@ -18,6 +18,7 @@ public class JobService : IJobService
     private readonly IJobRepository _jobRepository;
     private readonly IJobSkillRepository _jobSkillRepository;
     private readonly ICategoryRepository _categoriesRepository;
+    private readonly IJobPreferenceRepository _jobPreferenceRepository;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public JobService(ISkillRepository skillRepository,
@@ -26,6 +27,7 @@ public class JobService : IJobService
         IJobRepository jobRepository,
         IJobSkillRepository jobSkillRepository,
         ICategoryRepository categoriesRepository,
+        IJobPreferenceRepository jobPreferenceRepository,
         IHttpContextAccessor httpContextAccessor)
     {
         _skillRepository = skillRepository;
@@ -34,6 +36,7 @@ public class JobService : IJobService
         _jobRepository = jobRepository;
         _jobSkillRepository = jobSkillRepository;
         _categoriesRepository = categoriesRepository;
+        _jobPreferenceRepository = jobPreferenceRepository;
         _httpContextAccessor = httpContextAccessor;
     }
 
@@ -276,7 +279,7 @@ public class JobService : IJobService
             jobs = jobs.Where(j => j.Title.Contains(search, StringComparison.OrdinalIgnoreCase) ||
                                    j.Description.Contains(search, StringComparison.OrdinalIgnoreCase) ||
                                    j.Location.Contains(search, StringComparison.OrdinalIgnoreCase) ||
-                                   j.CategoryName.Contains(search,StringComparison.OrdinalIgnoreCase)).ToList();
+                                   j.CategoryName.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
         }
 
         if (!string.IsNullOrEmpty(skill))
@@ -290,10 +293,11 @@ public class JobService : IJobService
             jobs = jobs.Where(j => j.Location.ToLower() == location.ToLower()).ToList();
         }
 
-        if (!string.IsNullOrEmpty(category)){
+        if (!string.IsNullOrEmpty(category))
+        {
             jobs = jobs.Where(j => j.CategoryName.ToLower() == category.ToLower()).ToList();
         }
-        
+
         if (experience > 0)
         {
             jobs = jobs.Where(u => u.ExperienceRequired <= experience).ToList();
@@ -352,7 +356,7 @@ public class JobService : IJobService
             OpenFrom = job.OpenFrom,
             Vacancies = job.Vacancy,
             CategoryId = job.CategoryId,
-            CategoryName =  job.Category.Name,
+            CategoryName = job.Category.Name,
             skillsRequiredList = job.JobSkills.Select(skill => new SkillDto
             {
                 Id = skill.Id,
@@ -486,6 +490,152 @@ public class JobService : IJobService
             Data = categories,
             StatusCode = 200,
             Message = "categories retieved successfully."
+        };
+    }
+
+
+    public async Task<CommonDto<JobPreferenceInfoDto>> CreateJobPreference(JobPreferenceDto jobPreferenceDto)
+    {
+        var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+        if (string.IsNullOrEmpty(email))
+        {
+            throw new UnAuthenticatedException();
+        }
+
+        var candidate = _candidateRepository.GetCandidateByEmail(email);
+        if (candidate == null)
+        {
+            throw new CandidateNotFoundException();
+        }
+
+        var categoryNotExists = _categoriesRepository.GetCategories();
+        if (categoryNotExists.All(c => c.Id != jobPreferenceDto.CategoryId))
+        {
+            throw new CategoryNotFoundException();
+        }
+
+        var jobPreference = new JobPreference
+        {
+            CandidateId = candidate.Id,
+            CategoryId = jobPreferenceDto.CategoryId,
+            ExperienceRequired = jobPreferenceDto.ExperienceRequired,
+            Location = jobPreferenceDto.Location
+        };
+
+        var createdJobPreference = await _jobPreferenceRepository.CreateJobPreference(jobPreference);
+
+        var jobPreferenceInfoDto = new JobPreferenceInfoDto
+        {
+            Id = createdJobPreference.Id,
+            CandidateId = createdJobPreference.CandidateId,
+            CategoryId = createdJobPreference.CategoryId,
+            ExperienceRequired = createdJobPreference.ExperienceRequired,
+            Location = createdJobPreference.Location
+        };
+
+        return new CommonDto<JobPreferenceInfoDto>
+        {
+            Data = jobPreferenceInfoDto,
+            StatusCode = 201,
+            Message = "Job preference created successfully."
+        };
+
+    }
+
+    public async Task<CommonDto<JobPreferenceInfoDto>> UpdateJobPreference(JobPreferenceDto jobPreferenceDto)
+    {
+        var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+        if (string.IsNullOrEmpty(email))
+        {
+            throw new UnAuthenticatedException();
+        }
+
+        var candidate = _candidateRepository.GetCandidateByEmail(email);
+        if (candidate == null)
+        {
+            throw new CandidateNotFoundException();
+        }
+
+        var jobPreferenceExists = _jobPreferenceRepository.GetJobPreferenceById(jobPreferenceDto.Id);
+        if (jobPreferenceExists == null)
+        {
+            throw new JobPreferenceNotExistsException();
+        }
+
+        if (jobPreferenceExists.CandidateId != candidate.Id)
+        {
+            throw new JobPreferenceNotBelongsToCandidateException();
+        }
+
+        var categoryNotExists = _categoriesRepository.GetCategories();
+        if (categoryNotExists.All(c => c.Id != jobPreferenceDto.CategoryId))
+        {
+            throw new CategoryNotFoundException();
+        }
+
+        var jobPreference = new JobPreference
+        {
+            Id = jobPreferenceDto.Id,
+            CandidateId = candidate.Id,
+            CategoryId = jobPreferenceDto.CategoryId,
+            ExperienceRequired = jobPreferenceDto.ExperienceRequired,
+            Location = jobPreferenceDto.Location
+        };
+
+        var createdJobPreference = await _jobPreferenceRepository.UpdateJobPreference(jobPreference);
+
+        var jobPreferenceInfoDto = new JobPreferenceInfoDto
+        {
+            Id = createdJobPreference.Id,
+            CandidateId = createdJobPreference.CandidateId,
+            CategoryId = createdJobPreference.CategoryId,
+            ExperienceRequired = createdJobPreference.ExperienceRequired,
+            Location = createdJobPreference.Location
+        };
+
+        return new CommonDto<JobPreferenceInfoDto>
+        {
+            Data = jobPreferenceInfoDto,
+            StatusCode = 200,
+            Message = "Job preference updated successfully."
+        };
+    }
+
+
+    public async Task<CommonDto<object>> DeleteJobPreference(int jobPreferenceId)
+    {
+        var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+        if (string.IsNullOrEmpty(email))
+        {
+            throw new UnAuthenticatedException();
+        }
+
+        var candidate = _candidateRepository.GetCandidateByEmail(email);
+        if (candidate == null)
+        {
+            throw new CandidateNotFoundException();
+        }
+
+        var jobPreferenceExists = _jobPreferenceRepository.GetJobPreferenceById(jobPreferenceId);
+        if (jobPreferenceExists == null)
+        {
+            throw new JobPreferenceNotExistsException();
+        }
+
+        if (jobPreferenceExists.CandidateId != candidate.Id)
+        {
+            throw new JobPreferenceNotBelongsToCandidateException();
+        }
+
+        await _jobPreferenceRepository.DeleteJobPreference(jobPreferenceId);
+
+        return new CommonDto<object>
+        {
+            StatusCode = 200,
+            Message = "Job preference Deleted successfully."
         };
     }
 

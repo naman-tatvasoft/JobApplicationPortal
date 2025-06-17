@@ -127,4 +127,46 @@ public class JobController : ControllerBase
         var result = _jobService.GetCategories();
         return Ok(result.Data);
     }
+
+    [HttpPost("create/job-preference")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Candidate")]
+    public async Task<IActionResult> CreateJobPreference([FromBody] JobPreferenceDto jobPreferenceDto)
+    {
+        var result = await _jobService.CreateJobPreference(jobPreferenceDto);
+        return StatusCode(StatusCodes.Status201Created, result.Data);
+    }
+
+    [HttpPut("update/job-preference")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Candidate")]
+    public async Task<IActionResult> UpdateJobPreference([FromBody] JobPreferenceDto jobPreferenceDto)
+    {
+        var result = await _jobService.UpdateJobPreference(jobPreferenceDto);
+        return StatusCode(StatusCodes.Status200OK, result.Data);
+    }
+
+    [HttpDelete("delete/job-preference")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Candidate")]
+    public async Task<IActionResult> DeleteJobPreference(int jobPreferenceId)
+    {
+        var result = await _jobService.DeleteJobPreference(jobPreferenceId);
+        return StatusCode(StatusCodes.Status200OK, result.Message);
+    }
+
 }

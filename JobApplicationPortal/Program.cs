@@ -90,6 +90,7 @@ builder.Services.AddScoped<IJobSkillRepository, JobSkillRepository>();
 builder.Services.AddScoped<IStatusRepository, StatusRepository>();
 builder.Services.AddScoped<IApplicationRepository, ApplicationRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IJobPreferenceRepository, JobPreferenceRepository>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();

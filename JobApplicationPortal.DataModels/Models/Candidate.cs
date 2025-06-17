@@ -13,5 +13,7 @@ public partial class Candidate
 
     public virtual ICollection<Application> Applications { get; } = new List<Application>();
 
+    public virtual ICollection<JobPreference> JobPreferences { get; } = new List<JobPreference>();
+
     public virtual User User { get; set; } = null!;
 }

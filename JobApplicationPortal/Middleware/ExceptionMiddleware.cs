@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text.Json;
 using JobApplicationPortal.Service.Exceptions;
+using Newtonsoft.Json.Serialization;
 
 namespace JobApplicationPortal.Middleware;
 
@@ -87,6 +88,22 @@ public class ExceptionMiddleware
             case JobAlreadyDeleted _:
                 code = HttpStatusCode.Conflict;
                 message = "Job is already deleted.";
+                break;
+            case JobPreferenceAlreadyExistsException _:
+                code = HttpStatusCode.Conflict;
+                message = "Job preference already exists for this candidate.";
+                break;
+            case JobPreferenceNotExistsException _:
+                code = HttpStatusCode.NotFound;
+                message = "Job preference does not exist.";
+                break;
+            case CategoryNotFoundException _:
+                code = HttpStatusCode.NotFound;
+                message = "Category not found.";
+                break;
+            case JobPreferenceNotBelongsToCandidateException _:
+                code = HttpStatusCode.Forbidden;
+                message = "Job preference does not belong to this candidate.";
                 break;
 
             case CandidateNotFoundException _:
