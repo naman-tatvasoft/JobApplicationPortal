@@ -54,4 +54,16 @@ public class JobPreferenceRepository : IJobPreferenceRepository
             await _context.SaveChangesAsync();
         }
     }
+
+    public List<Candidate> GetCandidatesMatchingPreference(Job job)
+    {
+        return _context.JobPreferences
+            .Include(jp => jp.Candidate)
+            .ThenInclude(jp => jp.User)
+            .Where(jp => jp.CategoryId == job.CategoryId && 
+                         jp.Location == job.Location && 
+                         jp.ExperienceRequired <= job.ExperienceRequired)
+            .Select(jp => jp.Candidate)
+            .ToList();
+    }
 }

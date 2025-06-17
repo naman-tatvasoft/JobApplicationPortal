@@ -8,4 +8,6 @@ public interface IJobPreferenceRepository
     public Task<JobPreference> CreateJobPreference(JobPreference jobPreference);
     public Task<JobPreference> UpdateJobPreference(JobPreference jobPreference);
     public Task DeleteJobPreference(int jobPreferenceId);
+    public List<Candidate> GetCandidatesMatchingPreference(Job job);
+
 }

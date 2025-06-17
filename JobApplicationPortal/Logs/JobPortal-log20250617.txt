@@ -42,3 +42,6 @@ Swashbuckle.AspNetCore.SwaggerGen.SwaggerGeneratorException: Conflicting method/
 [2025-06-17 11:41:50 ERR] Status Code: 404, Message: Job preference does not exist.,Exception Details: Job preference does not exist.
 
 
+[2025-06-17 15:21:51 ERR] Status Code: 400, Message: Job with the same title already exists for this employer.,Exception Details: Job with the same title already exists for this employer.
+
+

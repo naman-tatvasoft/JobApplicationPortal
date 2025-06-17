@@ -1,3 +1,5 @@
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 using JobApplicationPortal.DataModels.Dtos.RequestDtos;
 using JobApplicationPortal.DataModels.Dtos.ResponseDtos;
@@ -94,6 +96,37 @@ public class JobService : IJobService
                 }
             }
         }
+
+        var matchingCandidates = _jobPreferenceRepository.GetCandidatesMatchingPreference(job);
+        Task.Run(async () =>
+        {
+
+            foreach (var candidate in matchingCandidates)
+            {
+                var senderEmail = new MailAddress("test.dotnet@etatvasoft.com", "test.dotnet@etatvasoft.com");
+                var receiverEmail = new MailAddress(candidate.User.Email, "Receiver");
+                var password = "P}N^{z-]7Ilp";
+                var sub = "Job Posting Notification";
+                var body = $"Dear {candidate.Name},\n\nA new job matching your preferences has been posted: {job.Title}.";
+
+                var smtp = new SmtpClient
+                {
+                    Host = "mail.etatvasoft.com",
+                    Port = 587,
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(senderEmail.Address, password)
+                };
+                using (var mess = new MailMessage(senderEmail, receiverEmail))
+                {
+                    mess.Subject = sub;
+                    mess.Body = body;
+                    mess.IsBodyHtml = true;
+                    await smtp.SendMailAsync(mess);
+                }
+            }
+        });
 
         return new CommonDto<object>
         {
