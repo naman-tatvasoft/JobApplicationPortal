@@ -338,7 +338,7 @@ public class JobService : IJobService
         if (experience > 0)
         {
             jobs = jobs.Where(u => u.ExperienceRequired <= experience);
-        }
+        } 
 
         var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
