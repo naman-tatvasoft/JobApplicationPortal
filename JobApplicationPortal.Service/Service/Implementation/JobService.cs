@@ -127,7 +127,7 @@ public class JobService : IJobService
                     body: body
                 );
                 
-                await Task.Delay(1000); // Delay to avoid overwhelming the SMTP server
+                await Task.Delay(1000);
 
             }
         });
@@ -326,7 +326,6 @@ public class JobService : IJobService
 
         if (!string.IsNullOrEmpty(location))
         {
-
             jobs = jobs.Where(j => j.Location.ToLower() == location.ToLower()).ToList();
         }
 
@@ -339,7 +338,6 @@ public class JobService : IJobService
         {
             jobs = jobs.Where(u => u.ExperienceRequired <= experience).ToList();
         }
-
 
         jobs = jobs.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
@@ -407,7 +405,6 @@ public class JobService : IJobService
             StatusCode = 200,
             Message = "Jobs retrieved successfully."
         };
-
     }
 
     public CommonDto<List<JobDto>> GetJobsByEmployer(int employerId)

@@ -126,6 +126,10 @@ public class ExceptionMiddleware
                 code = HttpStatusCode.NotFound;
                 message = "Application not found.";
                 break;
+            case InvalidFileTypeException _:
+                code = HttpStatusCode.BadRequest;
+                message = "File type should be pdf only.";
+                break;
             
             
             case ArgumentNullException _:

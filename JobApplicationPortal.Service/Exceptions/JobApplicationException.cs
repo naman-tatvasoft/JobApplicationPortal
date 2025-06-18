@@ -37,3 +37,8 @@ public class ApplicationNotFoundException : JobApplicationException
 {
     public ApplicationNotFoundException() : base("Application not found.", "application_not_found_exception"){}
 }
+
+public class InvalidFileTypeException : JobApplicationException
+{
+    public InvalidFileTypeException() : base("File type should be pdf only.", "invalid_file_type_exception"){}
+}

@@ -25,8 +25,7 @@ public class ApplicationController : ControllerBase
     public async Task<IActionResult> JobApplication([FromForm] ApplicationDto applicationDto)
     {
         var result = await _applicationService.JobApplication(applicationDto);
-        return Ok(result.Data);
-
+        return StatusCode(StatusCodes.Status201Created, result.Data);
     }
 
     [HttpGet("get/applications")]
@@ -40,7 +39,6 @@ public class ApplicationController : ControllerBase
     {
         var result = _applicationService.GetApplications();
         return StatusCode(StatusCodes.Status201Created, result.Data);
-
     }
 
     [HttpGet("get/applications-by-candidate")]
@@ -54,7 +52,6 @@ public class ApplicationController : ControllerBase
     {
         var result = _applicationService.GetApplicationsByCandidate();
         return Ok(result.Data);
-
     }
 
     [HttpGet("get/applications-by-job")]
@@ -68,7 +65,6 @@ public class ApplicationController : ControllerBase
     {
         var result = _applicationService.GetApplicationsByJob(jobId);
         return Ok(result.Data);
-
     }
 
     [HttpPut("application/change-status")]
@@ -82,7 +78,6 @@ public class ApplicationController : ControllerBase
     {
         var result = await _applicationService.UpdateStatus(applicationId, statusId);
         return Ok(result.Message);
-
     }
 
     [HttpGet("get/statuses")]
@@ -95,7 +90,6 @@ public class ApplicationController : ControllerBase
     {
         var result = _applicationService.GetStatuses();
         return Ok(result.Data);
-
     }
 
     [HttpGet("get/total-applications/")]

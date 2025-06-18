@@ -1,0 +1,6 @@
+[2025-06-18 09:47:25 ERR] Status Code: 400, Message: File type should be pdf only.,Exception Details: File type should be pdf only.
+
+
+[2025-06-18 09:47:43 ERR] Status Code: 400, Message: File type should be pdf only.,Exception Details: File type should be pdf only.
+
+
