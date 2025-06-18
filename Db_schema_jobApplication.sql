@@ -28,7 +28,7 @@ CREATE TABLE "Candidates" (
 CREATE TABLE "Categories" (
     "Id" SERIAL PRIMARY KEY,
     "Name" VARCHAR(50) NOT NULL UNIQUE
-)
+);
 
 CREATE TABLE "Jobs" (
 	"Id" SERIAL PRIMARY KEY,
@@ -81,3 +81,30 @@ CREATE TABLE "JobPreference" (
     "Location" VARCHAR(100) NOT NULL,
     "CreatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+
+-- Insert initiall data
+
+INSERT INTO "Roles" ("Name") VALUES
+('Admin'),
+('Employer'),
+('Candidate');
+
+INSERT INTO "Skills" ("Name") VALUES
+('.NET'),
+('Python'),
+('Buisness'),
+('Azure');
+
+INSERT INTO "Categories" ("Name") VALUES
+('Tech'),
+('Buisness'),
+('Research'),
+('Chemical');
+
+INSERT INTO "Status" ("Name") VALUES
+('Rejected'),
+('Hired'),
+('Shortlisted'),
+('Applied'),
+('Withdrawn');

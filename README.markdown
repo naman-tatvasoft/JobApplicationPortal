@@ -11,7 +11,6 @@ JobApplicationPortal is a .NET Web API project designed to facilitate job applic
 - Database Setup
 - Git Repository
 - Contributing
-- License
 
 ## Features
 
