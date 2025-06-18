@@ -30,7 +30,7 @@ JobApplicationPortal is a .NET Web API project designed to facilitate job applic
 
 ## API Endpoints
 
-- Api rate is limited to 1000 request/ 10 seconds with 200 can be in queue.
+- Api rate is limited to 10 request/ 10 seconds with 2 can be in queue for each user.
 
 | **Endpoint** | **Method** | **Access** | **Description** |
 | --- | --- | --- | --- |

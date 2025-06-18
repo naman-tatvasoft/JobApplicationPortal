@@ -132,11 +132,13 @@ builder.Services.AddRateLimiter(options =>
             partitionKey: context.User.Identity?.Name ?? context.Connection.RemoteIpAddress?.ToString() ?? "anonymous",
             factory: _ => new FixedWindowRateLimiterOptions
             {
-                PermitLimit = 1000, 
-                Window = TimeSpan.FromSeconds(10), 
+                PermitLimit = 10,
+                Window = TimeSpan.FromSeconds(10),
                 QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-                QueueLimit = 200 
-            }));
+                QueueLimit = 2
+            }
+        )
+    );
 });
 
 var app = builder.Build();
