@@ -26,7 +26,11 @@ JobApplicationPortal is a .NET Web API project designed to facilitate job applic
 - Mail sent to all candidate on job creation with same preference.
 - Role-based access control for secure API usage.
 
+
+
 ## API Endpoints
+
+- Api rate is limited to 1000 request/ 10 seconds with 200 can be in queue.
 
 | **Endpoint** | **Method** | **Access** | **Description** |
 | --- | --- | --- | --- |

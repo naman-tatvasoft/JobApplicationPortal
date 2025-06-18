@@ -11,8 +11,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
+
 string logFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Logs", "JobPortal-log.txt");
  
 // Configure Serilog
@@ -121,7 +124,27 @@ builder.Services.AddAuthentication("Bearer")
 
 builder.Services.AddAuthorization();
 
+// Add rate limiting services
+builder.Services.AddRateLimiter(options =>
+{
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.User.Identity?.Name ?? context.Connection.RemoteIpAddress?.ToString() ?? "anonymous",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 1000, 
+                Window = TimeSpan.FromSeconds(10), 
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 200 
+            }));
+});
+
 var app = builder.Build();
+
+app.UseHttpsRedirection();
+
+// Apply rate limiting globally
+app.UseRateLimiter();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -129,8 +152,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseHttpsRedirection();
 
 app.UseMiddleware<ExceptionMiddleware>();
 
