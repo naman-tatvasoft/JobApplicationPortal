@@ -309,37 +309,36 @@ public class JobService : IJobService
                     Id = skill.Id,
                     Name = skill.Skill.Name
                 }).ToList()
-            }).ToList();
+            });
 
         if (!string.IsNullOrEmpty(search))
         {
-            jobs = jobs.Where(j => j.Title.Contains(search, StringComparison.OrdinalIgnoreCase) ||
-                                   j.Description.Contains(search, StringComparison.OrdinalIgnoreCase) ||
-                                   j.Location.Contains(search, StringComparison.OrdinalIgnoreCase) ||
-                                   j.CategoryName.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
+            var lowerSearch = search.ToLower();
+            jobs = jobs.Where(j => j.Title.ToLower().Contains(lowerSearch) ||
+                                   j.Description.ToLower().Contains(lowerSearch) ||
+                                   j.Location.ToLower().Contains(lowerSearch) ||
+                                   j.CategoryName.ToLower().Contains(lowerSearch));
         }
 
         if (!string.IsNullOrEmpty(skill))
         {
-            jobs = jobs.Where(j => j.skillsRequiredList.Any(s => s.Name.ToLower() == skill.ToLower())).ToList();
+            jobs = jobs.Where(j => j.skillsRequiredList.Any(s => s.Name.ToLower() == skill.ToLower()));
         }
 
         if (!string.IsNullOrEmpty(location))
         {
-            jobs = jobs.Where(j => j.Location.ToLower() == location.ToLower()).ToList();
+            jobs = jobs.Where(j => j.Location.ToLower() == location.ToLower());
         }
 
         if (!string.IsNullOrEmpty(category))
         {
-            jobs = jobs.Where(j => j.CategoryName.ToLower() == category.ToLower()).ToList();
+            jobs = jobs.Where(j => j.CategoryName.ToLower() == category.ToLower());
         }
 
         if (experience > 0)
         {
-            jobs = jobs.Where(u => u.ExperienceRequired <= experience).ToList();
+            jobs = jobs.Where(u => u.ExperienceRequired <= experience);
         }
-
-        jobs = jobs.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
 
         var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
@@ -352,12 +351,14 @@ public class JobService : IJobService
 
         if (candidate != null)
         {
-            jobs = jobs.Where(j => j.OpenFrom <= DateOnly.FromDateTime(DateTime.Now)).ToList();
+            jobs = jobs.Where(j => j.OpenFrom <= DateOnly.FromDateTime(DateTime.Now));
         }
+
+        jobs = jobs.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
         return new CommonDto<List<JobDto>>
         {
-            Data = jobs,
+            Data = jobs != null ? jobs.ToList() : new List<JobDto>(),
             StatusCode = 200,
             Message = "Jobs retrieved successfully."
         };
