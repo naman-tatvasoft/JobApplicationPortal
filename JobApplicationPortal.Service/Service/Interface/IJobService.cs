@@ -6,11 +6,11 @@ namespace JobApplicationPortal.Service.Service.Interface;
 public interface IJobService
 {
     public Task<CommonDto<object>> CreateJob(JobDto registerEmployerDto);
-    public CommonDto<JobDto> GetJobById(int jobId);
-    public Task<CommonDto<JobDto>> UpdateJob(JobDto updateJobDto);
-    public CommonDto<List<JobDto>> GetJobs(string search, int pageNumber, int pageSize, string skill, string location, int experience, string category);
-    public CommonDto<List<JobDto>> GetCreatedJobs();
-    public CommonDto<List<JobDto>> GetJobsByEmployer(int employerId);
+    public CommonDto<JobInfoDto> GetJobById(int jobId);
+    public Task<CommonDto<JobInfoDto>> UpdateJob(JobDto updateJobDto);
+    public CommonDto<List<JobInfoDto>> GetJobs(string search, int pageNumber, int pageSize, string skill, string location, int experience, string category);
+    public CommonDto<List<JobInfoDto>> GetCreatedJobs();
+    public CommonDto<List<JobInfoDto>> GetJobsByEmployer(int employerId);
     public Task<CommonDto<object>> DeleteJob(int jobId);
     public CommonDto<List<SkillDto>> GetSkills();
     public CommonDto<List<CategoriesDto>> GetCategories();

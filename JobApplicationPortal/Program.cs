@@ -13,11 +13,15 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
+using FluentValidation.AspNetCore;
+using System.Reflection;
+using JobApplicationPortal.Validators;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 string logFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Logs", "JobPortal-log.txt");
- 
+
 // Configure Serilog
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Error()
@@ -32,7 +36,7 @@ Log.Logger = new LoggerConfiguration()
         outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}{NewLine}{NewLine}"
     )
     .CreateLogger();
- 
+
 // Replace built-in logger with Serilog
 builder.Logging.AddSerilog(Log.Logger);
 
@@ -42,10 +46,27 @@ var conn = builder.Configuration.GetConnectionString("JobPortalConnection");
 builder.Services.AddDbContext<JobApplicationPortalContext>(q => q.UseNpgsql(conn));
 
 
-builder.Services.AddControllers().AddNewtonsoftJson(options =>
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
     {
         options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-    });
+    })
+    .AddFluentValidation(config =>
+        {
+            config.ImplicitlyValidateChildProperties = true;
+            config.ImplicitlyValidateRootCollectionElements = true;
+            
+            var assemblies = Assembly.GetExecutingAssembly()
+            .GetReferencedAssemblies()
+            .Select(Assembly.Load)
+            .Concat(new[] { Assembly.GetExecutingAssembly() })
+            .Distinct();
+
+            foreach (var assembly in assemblies)
+            {
+                config.RegisterValidatorsFromAssembly(assembly);
+            }
+        });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -118,7 +139,7 @@ builder.Services.AddAuthentication("Bearer")
             RoleClaimType = ClaimTypes.Role,
             NameClaimType = ClaimTypes.Name
         };
-        
+
     }
 );
 

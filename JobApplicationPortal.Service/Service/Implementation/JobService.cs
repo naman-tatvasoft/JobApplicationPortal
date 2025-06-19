@@ -139,7 +139,7 @@ public class JobService : IJobService
         };
     }
 
-    public CommonDto<JobDto> GetJobById(int jobId)
+    public CommonDto<JobInfoDto> GetJobById(int jobId)
     {
         var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
         if (string.IsNullOrEmpty(email))
@@ -167,7 +167,7 @@ public class JobService : IJobService
 
         var job = _jobRepository.GetJobById(jobId);
 
-        var jobDto = new JobDto
+        var jobDto = new JobInfoDto
         {
             Id = job.Id,
             Title = job.Title,
@@ -185,7 +185,7 @@ public class JobService : IJobService
             }).ToList()
         };
 
-        return new CommonDto<JobDto>
+        return new CommonDto<JobInfoDto>
         {
             Data = jobDto,
             StatusCode = 200,
@@ -193,7 +193,7 @@ public class JobService : IJobService
         };
     }
 
-    public async Task<CommonDto<JobDto>> UpdateJob(JobDto updateJobDto)
+    public async Task<CommonDto<JobInfoDto>> UpdateJob(JobDto updateJobDto)
     {
         var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
@@ -263,7 +263,7 @@ public class JobService : IJobService
         }
 
         var updatedJob = _jobRepository.GetJobById(updateJobDto.Id);
-        var jobDto = new JobDto
+        var jobDto = new JobInfoDto
         {
             Id = updatedJob.Id,
             Title = updatedJob.Title,
@@ -281,7 +281,7 @@ public class JobService : IJobService
             }).ToList()
         };
 
-        return new CommonDto<JobDto>
+        return new CommonDto<JobInfoDto>
         {
             Data = jobDto,
             StatusCode = 200,
@@ -290,10 +290,10 @@ public class JobService : IJobService
 
     }
 
-    public CommonDto<List<JobDto>> GetJobs(string search, int pageNumber, int pageSize, string skill, string location, int experience, string category)
+    public CommonDto<List<JobInfoDto>> GetJobs(string search, int pageNumber, int pageSize, string skill, string location, int experience, string category)
     {
         var jobs = _jobRepository.GetJobs()
-            .Select(job => new JobDto
+            .Select(job => new JobInfoDto
             {
                 Id = job.Id,
                 Title = job.Title,
@@ -356,15 +356,15 @@ public class JobService : IJobService
 
         jobs = jobs.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
-        return new CommonDto<List<JobDto>>
+        return new CommonDto<List<JobInfoDto>>
         {
-            Data = jobs != null ? jobs.ToList() : new List<JobDto>(),
+            Data = jobs != null ? jobs.ToList() : new List<JobInfoDto>(),
             StatusCode = 200,
             Message = "Jobs retrieved successfully."
         };
     }
 
-    public CommonDto<List<JobDto>> GetCreatedJobs()
+    public CommonDto<List<JobInfoDto>> GetCreatedJobs()
     {
         var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
@@ -382,7 +382,7 @@ public class JobService : IJobService
 
         var jobs = _jobRepository.GetJobsByEmployer(employer.Id);
 
-        var jobDtos = jobs.Select(job => new JobDto
+        var jobDtos = jobs.Select(job => new JobInfoDto
         {
             Id = job.Id,
             Title = job.Title,
@@ -400,7 +400,7 @@ public class JobService : IJobService
             }).ToList()
         }).ToList();
 
-        return new CommonDto<List<JobDto>>
+        return new CommonDto<List<JobInfoDto>>
         {
             Data = jobDtos,
             StatusCode = 200,
@@ -408,7 +408,7 @@ public class JobService : IJobService
         };
     }
 
-    public CommonDto<List<JobDto>> GetJobsByEmployer(int employerId)
+    public CommonDto<List<JobInfoDto>> GetJobsByEmployer(int employerId)
     {
         if (!_employerRepository.IsEmployerIdExist(employerId))
         {
@@ -417,10 +417,10 @@ public class JobService : IJobService
 
         var jobs = _jobRepository.GetJobsByEmployer(employerId);
 
-        var jobDtos = new List<JobDto>();
+        var jobDtos = new List<JobInfoDto>();
         if (jobs.Any())
         {
-            jobDtos = jobs.Select(job => new JobDto
+            jobDtos = jobs.Select(job => new JobInfoDto
             {
                 Id = job.Id,
                 Title = job.Title,
@@ -439,7 +439,7 @@ public class JobService : IJobService
             }).ToList();
         }
 
-        return new CommonDto<List<JobDto>>
+        return new CommonDto<List<JobInfoDto>>
         {
             Data = jobDtos,
             StatusCode = 200,

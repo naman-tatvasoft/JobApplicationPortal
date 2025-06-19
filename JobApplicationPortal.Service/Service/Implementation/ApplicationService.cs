@@ -69,11 +69,6 @@ public class ApplicationService : IApplicationService
 
         var coverLetterFileName = string.Empty;
 
-        if (applicationDto.CoverLetter != null && applicationDto.CoverLetter.ContentType != "application/pdf")
-        {
-            throw new InvalidFileTypeException();
-        }
-
         if (applicationDto.CoverLetter != null && applicationDto.CoverLetter.Length > 0)
         {
             var coverLetterPath = Path.Combine("uploads", "CoverLetters");
@@ -92,11 +87,6 @@ public class ApplicationService : IApplicationService
         }
 
         var resumeFileName = string.Empty;
-
-        if (applicationDto.Resume != null && applicationDto.Resume.ContentType != "application/pdf")
-        {
-            throw new InvalidFileTypeException();
-        }
 
         if (applicationDto.Resume != null && applicationDto.Resume.Length > 0)
         {

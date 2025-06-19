@@ -25,7 +25,7 @@ JobApplicationPortal is a .NET Web API project designed to facilitate job applic
 - Job preference management for Candidates.
 - Mail sent to all candidate on job creation with same preference.
 - Role-based access control for secure API usage.
-
+- Validation performed through Fluent validator
 
 
 ## API Endpoints
