@@ -16,7 +16,7 @@ public class JobController : ControllerBase
         _jobService = jobService;
     }
 
-    [HttpPost("create/job")]
+    [HttpPost("job")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -29,19 +29,19 @@ public class JobController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, result.Message);
     }
 
-    [HttpGet("get/job-by-id")]
+    [HttpGet("job")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Employer")]
-    public IActionResult GetJobsById(int jobId)
+    public IActionResult GetJobsById([FromQuery] int jobId)
     {
         var result = _jobService.GetJobById(jobId);
         return Ok(result.Data);
     }
 
-    [HttpPut("update/job")]
+    [HttpPut("job")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -53,7 +53,7 @@ public class JobController : ControllerBase
         return Ok(result.Data);
     }
 
-    [HttpGet("get/jobs")]
+    [HttpGet("jobs")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -66,7 +66,7 @@ public class JobController : ControllerBase
         return Ok(result.Data);
     }
 
-    [HttpGet("get/created-jobs")]
+    [HttpGet("created-jobs")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -79,14 +79,14 @@ public class JobController : ControllerBase
     }
 
 
-    [HttpGet("get/jobs-by-employer")]
+    [HttpGet("jobs-by-employer")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Admin")]
-    public IActionResult GetJobsByEmployer(int employerId)
+    public IActionResult GetJobsByEmployer([FromQuery] int employerId)
     {
         var result = _jobService.GetJobsByEmployer(employerId);
         return Ok(result.Data);
@@ -100,13 +100,13 @@ public class JobController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Employer")]
-    public async Task<IActionResult> DeleteJob(int jobId)
+    public async Task<IActionResult> DeleteJob([FromQuery] int jobId)
     {
         var result = await _jobService.DeleteJob(jobId);
         return StatusCode(StatusCodes.Status201Created, result.Message);
     }
 
-    [HttpGet("get/skills")]
+    [HttpGet("skills")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -117,7 +117,7 @@ public class JobController : ControllerBase
         return Ok(result.Data);
     }
 
-    [HttpGet("get/categories")]
+    [HttpGet("categories")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -128,7 +128,7 @@ public class JobController : ControllerBase
         return Ok(result.Data);
     }
 
-    [HttpPost("create/job-preference")]
+    [HttpPost("job-preference")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -142,7 +142,7 @@ public class JobController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, result.Data);
     }
 
-    [HttpPut("update/job-preference")]
+    [HttpPut("job-preference")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -156,14 +156,14 @@ public class JobController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, result.Data);
     }
 
-    [HttpDelete("delete/job-preference")]
+    [HttpDelete("job-preference")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Candidate")]
-    public async Task<IActionResult> DeleteJobPreference(int jobPreferenceId)
+    public async Task<IActionResult> DeleteJobPreference([FromQuery] int jobPreferenceId)
     {
         var result = await _jobService.DeleteJobPreference(jobPreferenceId);
         return StatusCode(StatusCodes.Status200OK, result.Message);

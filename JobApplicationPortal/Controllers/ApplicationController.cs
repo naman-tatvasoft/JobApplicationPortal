@@ -15,7 +15,7 @@ public class ApplicationController : ControllerBase
         _applicationService = applicationService;
     }
 
-    [HttpPost("job/application")]
+    [HttpPost("application")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -62,7 +62,7 @@ public class ApplicationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Employer")]
-    public IActionResult GetApplicationsByJob(int jobId)
+    public IActionResult GetApplicationsByJob([FromQuery] int jobId)
     {
         var result = _applicationService.GetApplicationsByJob(jobId);
         return Ok(result.Data);
@@ -75,7 +75,7 @@ public class ApplicationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Employer")]
-    public async Task<IActionResult> UpdateStatus(int applicationId, int statusId)
+    public async Task<IActionResult> UpdateStatus([FromQuery] int applicationId, [FromQuery] int statusId)
     {
         var result = await _applicationService.UpdateStatus(applicationId, statusId);
         return Ok(result.Message);
@@ -100,7 +100,7 @@ public class ApplicationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Admin, Employer")]
-    public IActionResult GetTotalApplicationByJob(int jobId)
+    public IActionResult GetTotalApplicationByJob([FromQuery] int jobId)
     {
         var result = _applicationService.GetTotalApplicationByJob(jobId);
         return Ok(result.Data);
@@ -113,7 +113,7 @@ public class ApplicationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Candidate")]
-    public async Task<IActionResult> WithdrawApplication(int applicationId)
+    public async Task<IActionResult> WithdrawApplication([FromQuery] int applicationId)
     {
         var result = await _applicationService.WithdrawApplication(applicationId);
         return Ok(result.Message);

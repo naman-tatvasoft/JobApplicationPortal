@@ -20,7 +20,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [Authorize(Roles = "Admin")]
-    [HttpGet("get/employers")]
+    [HttpGet("employers")]
     public IActionResult GetEmployers()
     {
         var result = _userService.GetEmployers();
@@ -29,7 +29,7 @@ public class UserController : ControllerBase
     }
 
 
-    [HttpGet("get/candidates")]
+    [HttpGet("candidates")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -40,7 +40,7 @@ public class UserController : ControllerBase
         return Ok(result.Data);
     }
 
-    [HttpGet("get/profile")]
+    [HttpGet("profile")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -51,7 +51,7 @@ public class UserController : ControllerBase
         return Ok(result.Data);
     }
 
-    [HttpPut("update/employer-profile")]
+    [HttpPut("employer-profile")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -62,7 +62,7 @@ public class UserController : ControllerBase
         return Ok(result.Data);
     }
 
-    [HttpPut("update/candidate-profile")]
+    [HttpPut("candidate-profile")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]

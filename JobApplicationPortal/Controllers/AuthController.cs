@@ -10,7 +10,6 @@ namespace JobApplicationPortal.Controllers;
 public class AuthController : ControllerBase
 {
 
-
     private readonly IAuthService _authService;
 
     public AuthController(IAuthService authService)
@@ -18,8 +17,7 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
-
-    [HttpPost("register/employer")]
+    [HttpPost("employer")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -29,7 +27,7 @@ public class AuthController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, result.Message);
     }
 
-    [HttpPost("register/candidate")]
+    [HttpPost("candidate")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
