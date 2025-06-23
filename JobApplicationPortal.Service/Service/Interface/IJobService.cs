@@ -7,7 +7,7 @@ public interface IJobService
 {
     public Task<CommonDto<object>> CreateJob(JobDto registerEmployerDto);
     public CommonDto<JobInfoDto> GetJobById(int jobId);
-    public Task<CommonDto<JobInfoDto>> UpdateJob(JobDto updateJobDto);
+    public Task<CommonDto<JobInfoDto>> UpdateJob(int jobId, JobDto updateJobDto);
     public CommonDto<List<JobInfoDto>> GetJobs(string search, int pageNumber, int pageSize, string skill, string location, int experience, string category);
     public CommonDto<List<JobInfoDto>> GetCreatedJobs();
     public CommonDto<List<JobInfoDto>> GetJobsByEmployer(int employerId);
@@ -16,7 +16,7 @@ public interface IJobService
     public CommonDto<List<CategoriesDto>> GetCategories();
 
     public Task<CommonDto<JobPreferenceInfoDto>> CreateJobPreference(JobPreferenceDto jobPreferenceDto);
-    public Task<CommonDto<JobPreferenceInfoDto>> UpdateJobPreference(JobPreferenceDto jobPreferenceDto);
+    public Task<CommonDto<JobPreferenceInfoDto>> UpdateJobPreference(int jobPreferenceId, JobPreferenceDto jobPreferenceDto);
     public Task<CommonDto<object>> DeleteJobPreference(int jobPreferenceId);
 
 }

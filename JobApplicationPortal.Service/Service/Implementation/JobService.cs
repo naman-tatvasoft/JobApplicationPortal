@@ -193,8 +193,13 @@ public class JobService : IJobService
         };
     }
 
-    public async Task<CommonDto<JobInfoDto>> UpdateJob(JobDto updateJobDto)
+    public async Task<CommonDto<JobInfoDto>> UpdateJob(int jobId, JobDto updateJobDto)
     {
+        if(jobId != updateJobDto.Id)
+        {
+            throw new IdMismatchException();
+        }
+
         var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
         if (string.IsNullOrEmpty(email))
@@ -578,8 +583,13 @@ public class JobService : IJobService
 
     }
 
-    public async Task<CommonDto<JobPreferenceInfoDto>> UpdateJobPreference(JobPreferenceDto jobPreferenceDto)
+    public async Task<CommonDto<JobPreferenceInfoDto>> UpdateJobPreference(int jobPreferenceId, JobPreferenceDto jobPreferenceDto)
     {
+        if (jobPreferenceId != jobPreferenceDto.Id)
+        {
+            throw new IdMismatchException();
+        }
+        
         var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
         if (string.IsNullOrEmpty(email))

@@ -105,6 +105,10 @@ public class ExceptionMiddleware
                 code = HttpStatusCode.Forbidden;
                 message = "Job preference does not belong to this candidate.";
                 break;
+            case IdMismatchException _:
+                code = HttpStatusCode.BadRequest;
+                message = "Id mismatch, cannot be updated.";
+                break;
 
             case CandidateNotFoundException _:
                 code = HttpStatusCode.NotFound;

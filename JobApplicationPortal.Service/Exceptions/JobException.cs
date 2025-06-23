@@ -65,3 +65,8 @@ public class JobPreferenceNotBelongsToCandidateException : JobException
 {
     public JobPreferenceNotBelongsToCandidateException() : base("Job preference does not belong to the candidate.", "job_preference_not_belongs_to_candidate_exception"){}
 }
+
+public class IdMismatchException : JobException
+{
+    public IdMismatchException() : base("Id mismatch, cannot be updated", "id_mismatch_exception"){}
+}

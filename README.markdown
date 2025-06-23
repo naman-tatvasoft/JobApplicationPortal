@@ -34,34 +34,34 @@ JobApplicationPortal is a .NET Web API project designed to facilitate job applic
 
 | **Endpoint** | **Method** | **Access** | **Description** |
 | --- | --- | --- | --- |
-| `api/Auth/register/employer` | POST | All | Register a new employer. |
-| `api/Auth/register/candidate` | POST | All | Register a new candidate. |
+| `api/Auth/employer` | POST | All | Register a new employer. |
+| `api/Auth/candidate` | POST | All | Register a new candidate. |
 | `api/Auth/login` | POST | All | Authenticate a user and return a JWT token. |
-| `api/get/employers` | GET | Admin | Retrieve a list of all employers. |
-| `api/get/candidates` | GET | Admin | Retrieve a list of all candidates. |
-| `api/create/job` | POST | Employer | Create a new job posting. |
-| `api/get/created-jobs` | GET | Employer | Retrieve jobs created by the authenticated employer. |
-| `api/get/job-by-id` | GET | Employer | Retrieve a specific job by ID. |
-| `api/update/job` | PUT | Employer | Update a job before it is open for applications. |
-| `api/delete/job` | PUT | Employer | Soft delete a job. |
-| `api/get/jobs-by-employer` | GET | Admin | Retrieve all jobs posted by a specific employer. |
-| `api/get/job` | GET | Admin, Candidate | Retrieve all jobs with search, pagination, and filtering (Skill, Location, etc.). |
-| `api/job/application` | POST | Candidate | Apply for a job. |
-| `api/get/applications-by-candidate` | GET | Candidate | View job application history for the authenticated candidate. |
-| `api/get/applications` | GET | Admin | Retrieve all job applications. |
-| `api/get/applications-by-job` | GET | Employer | View applications for a specific job. |
-| `api/application/change-status` | PUT | Employer | Update the status of a job application. |
-| `api/get/job/total-applications` | GET | Admin, Employer | Get the total number of applications for a specific job. |
-| `api/get/statuses` | GET | Employer, Admin | Retrieve all possible application statuses. |
-| `api/get/skills` | GET | All | Retrieve all available skills. |
-| `api/application/withdraw-application` | PUT | Candidate | Withdraw a job application. |
-| `api/get/profile` | GET | Candidate, Employer | Retrieve the authenticated user's profile. |
-| `api/update/employer-profile` | PUT | Employer | Update the employer's profile. |
-| `api/update/candidate-profile` | PUT | Candidate | Update the candidate's profile. |
-| `api/get/categories` | GET | All | Retrieve all job categories. |
-| `api/create/job-preference` | POST | Candidate | Create job preferences for a candidate. |
-| `api/update/job-preference` | PUT | Candidate | Update job preferences for a candidate. |
-| `api/delete/job-preference` | DELETE | Candidate | Delete job preferences for a candidate. |
+| `api/employers` | GET | Admin | Retrieve a list of all employers. |
+| `api/candidates` | GET | Admin | Retrieve a list of all candidates. |
+| `api/job` | POST | Employer | Create a new job posting. |
+| `api/created-jobs` | GET | Employer | Retrieve jobs created by the authenticated employer. |
+| `api/job/{jobId}` | GET | Employer | Retrieve a specific job by ID. |
+| `api/job/{jobId}` | PUT | Employer | Update a job before it is open for applications. |
+| `api/delete/job/{jobId}` | PUT | Employer | Soft delete a job. |
+| `api/jobs-by-employer/{employerId}` | GET | Admin | Retrieve all jobs posted by a specific employer. |
+| `api/jobs` | GET | Admin, Candidate | Retrieve all jobs with search, pagination, and filtering (Skill, Location, etc.). |
+| `api/application` | POST | Candidate | Apply for a job. |
+| `api/applications-by-candidate` | GET | Candidate | View job application history for the authenticated candidate. |
+| `api/applications` | GET | Admin | Retrieve all job applications. |
+| `api/applications-by-job/{jobId}` | GET | Employer | View applications for a specific job. |
+| `api/application/{applicationId}/change-status/{statusId}` | PUT | Employer | Update the status of a job application. |
+| `api/job/{jobId}/total-applications/` | GET | Admin, Employer | Get the total number of applications for a specific job. |
+| `api/statuses` | GET | Employer, Admin | Retrieve all possible application statuses. |
+| `api/skills` | GET | All | Retrieve all available skills. |
+| `api/application/withdraw-application/{applicationId}` | PUT | Candidate | Withdraw a job application. |
+| `api/profile` | GET | Candidate, Employer | Retrieve the authenticated user's profile. |
+| `api/employer-profile` | PUT | Employer | Update the employer's profile. |
+| `api/candidate-profile` | PUT | Candidate | Update the candidate's profile. |
+| `api/categories` | GET | All | Retrieve all job categories. |
+| `api/job-preference` | POST | Candidate | Create job preferences for a candidate. |
+| `api/job-preference/{jobPreferenceId}` | PUT | Candidate | Update job preferences for a candidate. |
+| `api/job-preference/{jobPreferenceId}` | DELETE | Candidate | Delete job preferences for a candidate. |
 
 ## Technologies
 
