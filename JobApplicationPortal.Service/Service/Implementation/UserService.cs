@@ -148,7 +148,7 @@ public class UserService : IUserService
             CompanyName = updateEmployerProfileDto.CompanyName
         };
 
-        var result = await _employerRepository.UpdateEmployer(employer);
+        var result = await _employerRepository.UpdateEmployer(employerToUpdate);
 
         var userToUpdate = new User{
             Id = employer.UserId,
@@ -192,7 +192,7 @@ public class UserService : IUserService
             Name = updateCandidateProfileDto.Name
         };
 
-        var result = await _candidateRepository.UpdateCandidate(candidate);
+        var result = await _candidateRepository.UpdateCandidate(employerToUpdate);
 
         var userToUpdate = new User{
             Id = result.UserId,
@@ -215,4 +215,5 @@ public class UserService : IUserService
             Data = userProfile
         };
     }
+
 }

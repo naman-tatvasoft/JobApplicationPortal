@@ -47,7 +47,7 @@ public class JobController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Employer")]
-    public async Task<IActionResult> UpdateJob(int jobId,[FromBody] JobDto updateJobDto)
+    public async Task<IActionResult> UpdateJob(int jobId, [FromBody] JobDto updateJobDto)
     {
         var result = await _jobService.UpdateJob(jobId, updateJobDto);
         return Ok(result.Data);
@@ -150,7 +150,7 @@ public class JobController : ControllerBase
     [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Candidate")]
-    public async Task<IActionResult> UpdateJobPreference(int jobPreferenceId , [FromBody] JobPreferenceDto jobPreferenceDto)
+    public async Task<IActionResult> UpdateJobPreference(int jobPreferenceId, [FromBody] JobPreferenceDto jobPreferenceDto)
     {
         var result = await _jobService.UpdateJobPreference(jobPreferenceId, jobPreferenceDto);
         return StatusCode(StatusCodes.Status200OK, result.Data);

@@ -16,11 +16,11 @@ public class UserController : ControllerBase
         _userService = userService;
     }
 
+    [HttpGet("employers")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [Authorize(Roles = "Admin")]
-    [HttpGet("employers")]
     public IActionResult GetEmployers()
     {
         var result = _userService.GetEmployers();
@@ -72,6 +72,7 @@ public class UserController : ControllerBase
         var result = await _userService.UpdateCandidateProfile(updateCandidateProfileDto);
         return Ok(result.Data);
     }
+
 
 
 }

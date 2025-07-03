@@ -16,9 +16,11 @@ using System.Threading.RateLimiting;
 using FluentValidation.AspNetCore;
 using System.Reflection;
 using JobApplicationPortal.Validators;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 string logFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Logs", "JobPortal-log.txt");
 
@@ -45,6 +47,13 @@ builder.Logging.AddSerilog(Log.Logger);
 var conn = builder.Configuration.GetConnectionString("JobPortalConnection");
 builder.Services.AddDbContext<JobApplicationPortalContext>(q => q.UseNpgsql(conn));
 
+builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowFrontend",
+            builder => builder.WithOrigins("http://localhost:3000")
+                              .AllowAnyHeader()
+                              .AllowAnyMethod());
+    });
 
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
@@ -120,8 +129,11 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<IApplicationService, ApplicationService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 
 builder.Services.AddScoped<JwtHelper>();
+
+builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddHttpContextAccessor();
 
@@ -181,6 +193,8 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseCors("AllowFrontend");
 
 app.MapControllers();
 

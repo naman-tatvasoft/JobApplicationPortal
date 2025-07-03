@@ -57,7 +57,7 @@ public class ExceptionMiddleware
                 message = "Email does not exist.";
                 break;
             case InvalidPasswordException _:
-                code = HttpStatusCode.Unauthorized;
+                code = HttpStatusCode.BadRequest;
                 message = "Invalid password.";
                 break;
 

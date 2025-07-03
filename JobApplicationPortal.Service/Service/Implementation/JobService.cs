@@ -126,7 +126,7 @@ public class JobService : IJobService
                     subject: sub,
                     body: body
                 );
-                
+
                 await Task.Delay(1000);
 
             }
@@ -153,8 +153,8 @@ public class JobService : IJobService
             throw new EmployerNotFoundException();
         }
 
-        var jobIdCheck = _jobRepository.GetJobById(jobId);
-        if (jobIdCheck == null)
+        var job = _jobRepository.GetJobById(jobId);
+        if (job == null)
         {
             throw new JobNotFoundException();
         }
@@ -164,8 +164,6 @@ public class JobService : IJobService
         {
             throw new JobNotByEmployerException();
         }
-
-        var job = _jobRepository.GetJobById(jobId);
 
         var jobDto = new JobInfoDto
         {
@@ -195,7 +193,7 @@ public class JobService : IJobService
 
     public async Task<CommonDto<JobInfoDto>> UpdateJob(int jobId, JobDto updateJobDto)
     {
-        if(jobId != updateJobDto.Id)
+        if (jobId != updateJobDto.Id)
         {
             throw new IdMismatchException();
         }
@@ -343,7 +341,7 @@ public class JobService : IJobService
         if (experience > 0)
         {
             jobs = jobs.Where(u => u.ExperienceRequired <= experience);
-        } 
+        }
 
         var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
@@ -589,7 +587,7 @@ public class JobService : IJobService
         {
             throw new IdMismatchException();
         }
-        
+
         var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
         if (string.IsNullOrEmpty(email))

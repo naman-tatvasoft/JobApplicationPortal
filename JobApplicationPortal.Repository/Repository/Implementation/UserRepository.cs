@@ -13,7 +13,7 @@ public class UserRepository : IUserRepository
 
     public async Task<bool> IsEmailExists(string email)
     {
-       return _context.Users.Any(u => u.Email == email);
+        return _context.Users.Any(u => u.Email == email);
     }
 
     public async Task AddUserAsync(User user)
@@ -35,7 +35,7 @@ public class UserRepository : IUserRepository
         {
             throw new Exception("User not found");
         }
-        
+
         existingUser.Email = user.Email;
 
         _context.Users.Update(existingUser);
@@ -43,5 +43,20 @@ public class UserRepository : IUserRepository
 
         return existingUser;
     }
+
+    public int GetTotalCandidates()
+    {
+        return _context.Users.Count(u => u.Role.Name == "Candidate");
+    }
+
+    public int GetTotalEmployers()
+    {
+        return _context.Users.Count(u => u.Role.Name == "Employer");
+    }
+
+    public List<string> GetTotalUsers(){
+        return _context.Users.Select(u => u.Role.Name).ToList();
+    }
+
     
 }

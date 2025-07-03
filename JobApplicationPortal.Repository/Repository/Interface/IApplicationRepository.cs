@@ -15,4 +15,6 @@ public interface IApplicationRepository
     public Task<Application> UpdateApplicationStatus(int applicationId, int statusId);
     public string GetCandidateEmailByApplicationId(int applicationId);
     public Task<bool> WithdrawApplication(int applicationId);
+    public int GetTotalApplications();
+
 }

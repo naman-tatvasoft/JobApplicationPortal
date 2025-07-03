@@ -68,13 +68,13 @@ public class ApplicationController : ControllerBase
         return Ok(result.Data);
     }
 
+    [HttpPut("application/{applicationId}/change-status/{statusId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Employer")]
-    [HttpPut("application/{applicationId}/change-status/{statusId}")]
     public async Task<IActionResult> UpdateStatus(int applicationId, int statusId)
     {
         var result = await _applicationService.UpdateStatus(applicationId, statusId);
@@ -118,4 +118,5 @@ public class ApplicationController : ControllerBase
         var result = await _applicationService.WithdrawApplication(applicationId);
         return Ok(result.Message);
     }
+
 }

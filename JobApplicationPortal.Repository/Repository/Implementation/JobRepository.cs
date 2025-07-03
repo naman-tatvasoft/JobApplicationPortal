@@ -24,7 +24,7 @@ public class JobRepository : IJobRepository
 
     public Job GetJobById(int jobId)
     {
-        return _context.Jobs.Include(job => job.JobSkills).ThenInclude(js => js.Skill).FirstOrDefault(job => job.Id == jobId  && (bool)!job.IsDeleted);
+        return _context.Jobs.Include(job => job.JobSkills).ThenInclude(js => js.Skill).Include(job => job.Category).FirstOrDefault(job => job.Id == jobId  && (bool)!job.IsDeleted);
     }
 
     public async Task<Job> UpdateJob(Job job)
@@ -114,4 +114,10 @@ public class JobRepository : IJobRepository
             await _context.SaveChangesAsync();
         }
     }
+
+    public int GetTotalJobs()
+    {
+        return _context.Jobs.Count(job => (bool)!job.IsDeleted && (bool)job.IsActive);
+    }
+    
 }

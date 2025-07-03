@@ -8,5 +8,8 @@ public interface IUserRepository
     public Task AddUserAsync(User user);
     public User GetUserByEmail(string email);
     public Task<User> UpdateUserAsync(User user);
+    public int GetTotalCandidates();
 
+    public int GetTotalEmployers();
+    public List<string> GetTotalUsers();
 }

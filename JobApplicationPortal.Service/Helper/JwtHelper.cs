@@ -39,6 +39,51 @@ public class JwtHelper
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
+    public string GenerateRefreshToken(string email, string role)
+    {
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
+        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var claims = new[]
+        {
+            new Claim("email", email),
+            new Claim("role", role)
+        };
+
+        var token = new JwtSecurityToken(
+            issuer: "localhost",
+            audience: "localhost",
+            claims: claims,
+            expires: DateTime.UtcNow.AddDays(_tokenDuration),
+            signingCredentials: credentials
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    public bool ValidateToken(string token)
+    {
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
+        var tokenHandler = new JwtSecurityTokenHandler();
+        try
+        {
+            tokenHandler.ValidateToken(token, new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = key,
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ClockSkew = TimeSpan.Zero
+            }, out SecurityToken validatedToken);
+
+            return validatedToken != null;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     public ClaimsPrincipal? GetClaimsFromToken(string token)
     {
         var handler = new JwtSecurityTokenHandler();

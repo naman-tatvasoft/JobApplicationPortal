@@ -147,4 +147,9 @@ public class ApplicationRepository : IApplicationRepository
         }
         return false;
     }
+
+    public int GetTotalApplications()
+    {
+        return _context.Applications.Count(a => a.Status.Name != "Withdrawn");
+    }
 }
