@@ -147,22 +147,26 @@ public class JobService : IJobService
             throw new UnAuthenticatedException();
         }
 
-        var employer = _employerRepository.GetEmployerByEmail(email);
-        if (employer == null)
+        var role = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+        if (role == "Employer")
         {
-            throw new EmployerNotFoundException();
+            var employer = _employerRepository.GetEmployerByEmail(email);
+            if (employer == null)
+            {
+                throw new EmployerNotFoundException();
+            }
+
+            var isJobByEmployer = _jobRepository.IsJobByEmployer(jobId, employer);
+            if (!isJobByEmployer)
+            {
+                throw new JobNotByEmployerException();
+            }
         }
 
         var job = _jobRepository.GetJobById(jobId);
         if (job == null)
         {
             throw new JobNotFoundException();
-        }
-
-        var isJobByEmployer = _jobRepository.IsJobByEmployer(jobId, employer);
-        if (!isJobByEmployer)
-        {
-            throw new JobNotByEmployerException();
         }
 
         var jobDto = new JobInfoDto

@@ -152,13 +152,29 @@ public class ApplicationService : IApplicationService
         };
     }
 
-    public CommonDto<List<ApplicationInfoDto>> GetApplications()
+    public CommonDto<List<ApplicationInfoDto>> GetApplications(string search, int pageNumber, int pageSize, string status)
     {
         var applicationInfo = _applicationRepository.GetApplications();
 
+         if (!string.IsNullOrEmpty(search))
+        {
+            var lowerSearch = search.ToLower();
+            applicationInfo = applicationInfo.Where(j => j.JobTitle.ToLower().Contains(lowerSearch) ||
+                                   j.CompanyName.ToLower().Contains(lowerSearch) ||
+                                   j.CandidateName.ToLower().Contains(lowerSearch) ||
+                                   j.CandidateEmail.ToLower().Contains(lowerSearch));
+        }
+        
+        if (!string.IsNullOrEmpty(status))
+        {
+            applicationInfo = applicationInfo.Where(j => j.Status.ToLower() == status.ToLower());
+        }
+
+        applicationInfo = applicationInfo.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
         return new CommonDto<List<ApplicationInfoDto>>
         {
-            Data = applicationInfo,
+            Data = applicationInfo != null ? applicationInfo.ToList() : new List<ApplicationInfoDto>(),
             StatusCode = 200,
             Message = "Applications retrieved successfully."
         };

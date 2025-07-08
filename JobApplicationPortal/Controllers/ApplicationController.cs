@@ -36,9 +36,10 @@ public class ApplicationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Admin")]
-    public IActionResult GetApplications()
+    public IActionResult GetApplications([FromQuery] string search = "", [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 5,
+                                    [FromQuery] string status = "")
     {
-        var result = _applicationService.GetApplications();
+        var result = _applicationService.GetApplications(search, pageNumber, pageSize, status);
         return StatusCode(StatusCodes.Status201Created, result.Data);
     }
 

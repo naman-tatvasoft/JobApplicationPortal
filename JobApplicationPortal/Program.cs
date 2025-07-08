@@ -17,6 +17,8 @@ using FluentValidation.AspNetCore;
 using System.Reflection;
 using JobApplicationPortal.Validators;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text.Json;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -64,7 +66,7 @@ builder.Services.AddControllers()
         {
             config.ImplicitlyValidateChildProperties = true;
             config.ImplicitlyValidateRootCollectionElements = true;
-            
+
             var assemblies = Assembly.GetExecutingAssembly()
             .GetReferencedAssemblies()
             .Select(Assembly.Load)
@@ -152,6 +154,24 @@ builder.Services.AddAuthentication("Bearer")
             NameClaimType = ClaimTypes.Name
         };
 
+        options.Events = new JwtBearerEvents
+        {
+            OnForbidden = context =>
+            {
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                context.Response.ContentType = "application/json";
+
+                var errorResponse = new
+                {
+                    message = "You do not have permission to access this resource.",
+                    details = "Your current role does not grant access."
+                };
+
+                var jsonResponse = JsonSerializer.Serialize(errorResponse);
+                return context.Response.WriteAsync(jsonResponse);
+            }
+        };
+
     }
 );
 
@@ -190,11 +210,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ExceptionMiddleware>();
 
+app.UseCors("AllowFrontend");
+
 app.UseAuthentication();
 
 app.UseAuthorization();
-
-app.UseCors("AllowFrontend");
 
 app.MapControllers();
 

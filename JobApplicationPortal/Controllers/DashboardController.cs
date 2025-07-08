@@ -27,4 +27,16 @@ public class DashboardController : ControllerBase
         var result = _dashboardService.AdminData();
         return Ok(result.Data);
     }
+
+    [HttpGet("candidate")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Candidate")]
+    public IActionResult CandidateData()
+    {
+        var result = _dashboardService.AdminData();
+        return Ok(result.Data);
+    }
 }

@@ -26,7 +26,7 @@ public class ApplicationRepository : IApplicationRepository
         return application;
     }
 
-    public List<ApplicationInfoDto> GetApplications()
+    public IQueryable<ApplicationInfoDto> GetApplications()
     {
         var applicationInfo = _context.Applications
                 .Include(j => j.Job)
@@ -51,7 +51,7 @@ public class ApplicationRepository : IApplicationRepository
                     CandidateEmail = j.Candidate.User.Email,
 
                     Status = _context.Statuses.FirstOrDefault(s => s.Id == j.StatusId).Name,
-                }).ToList();
+                }).AsQueryable();
         return applicationInfo;
     }
 

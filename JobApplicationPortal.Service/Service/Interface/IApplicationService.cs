@@ -7,7 +7,7 @@ namespace JobApplicationPortal.Service.Service.Interface;
 public interface IApplicationService
 {
     public Task<CommonDto<Application>> JobApplication(ApplicationDto applicationDto);
-    public CommonDto<List<ApplicationInfoDto>> GetApplications();
+    public CommonDto<List<ApplicationInfoDto>> GetApplications(string search, int pageNumber, int pageSize, string status);
     public CommonDto<List<ApplicationInfoDto>> GetApplicationsByCandidate();
     public CommonDto<List<ApplicationInfoDto>> GetApplicationsByJob(int jobId);
     public Task<CommonDto<object>> UpdateStatus(int applicationId, int statusId);
