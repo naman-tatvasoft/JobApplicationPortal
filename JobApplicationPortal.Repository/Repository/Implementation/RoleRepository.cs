@@ -22,4 +22,9 @@ public class RoleRepository : IRoleRepository
     {
         return _context.Roles.FirstOrDefault(r => r.Id == roleId);
     }
+    
+    public List<Role> GetRoles()
+    {
+        return _context.Roles.ToList();
+    }
 }

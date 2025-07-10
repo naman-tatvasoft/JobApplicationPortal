@@ -1,5 +1,6 @@
 using JobApplicationPortal.DataModels.Models;
 using JobApplicationPortal.Repository.Repository.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace JobApplicationPortal.Repository.Repository.Implementation;
 
@@ -58,5 +59,8 @@ public class UserRepository : IUserRepository
         return _context.Users.Select(u => u.Role.Name).ToList();
     }
 
-    
+    public List<User> GetUsers()
+    {
+        return _context.Users.Include(u => u.Role).Include(u => u.Employer).Include(u => u.Candidate).OrderBy(u => u.Id).ToList();
+    }
 }

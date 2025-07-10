@@ -12,4 +12,6 @@ public interface IUserRepository
 
     public int GetTotalEmployers();
     public List<string> GetTotalUsers();
+    public List<User> GetUsers();
+
 }

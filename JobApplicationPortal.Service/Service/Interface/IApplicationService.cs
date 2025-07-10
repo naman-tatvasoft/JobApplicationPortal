@@ -14,5 +14,7 @@ public interface IApplicationService
     public CommonDto<List<StatusDto>> GetStatuses();
     public CommonDto<int> GetTotalApplicationByJob(int jobId);
     public Task<CommonDto<object>> WithdrawApplication(int applicationId);
+    public CommonDto<ApplicationInfoDto> GetApplicationById(int applicationId);
+
 
 }

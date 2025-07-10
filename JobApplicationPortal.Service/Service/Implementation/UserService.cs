@@ -14,15 +14,18 @@ public class UserService : IUserService
     private readonly IEmployerRepository _employerRepository;
     private readonly ICandidateRepository _candidateRepository;
     private readonly IUserRepository _userRepository;
+    private readonly IRoleRepository _roleRepository;
     private readonly IHttpContextAccessor _httpContextAccessor;
     public UserService(IEmployerRepository employerRepository,
         ICandidateRepository candidateRepository,
         IUserRepository userRepository,
+        IRoleRepository roleRepository,
             IHttpContextAccessor httpContextAccessor)
     {
         _employerRepository = employerRepository;
         _candidateRepository = candidateRepository;
         _userRepository = userRepository;
+        _roleRepository = roleRepository;
         _httpContextAccessor = httpContextAccessor;
     }
 
@@ -120,7 +123,7 @@ public class UserService : IUserService
                 StatusCode = 200,
                 Message = "Candidate profile retrieved successfully",
                 Data = userProfile
-            };  
+            };
         }
         else
         {
@@ -142,7 +145,8 @@ public class UserService : IUserService
             throw new UnauthorizedAccessException();
         }
 
-        var employerToUpdate = new Employer{
+        var employerToUpdate = new Employer
+        {
             Id = employer.Id,
             Name = updateEmployerProfileDto.Name,
             CompanyName = updateEmployerProfileDto.CompanyName
@@ -150,7 +154,8 @@ public class UserService : IUserService
 
         var result = await _employerRepository.UpdateEmployer(employerToUpdate);
 
-        var userToUpdate = new User{
+        var userToUpdate = new User
+        {
             Id = employer.UserId,
             Email = updateEmployerProfileDto.Email
         };
@@ -173,7 +178,7 @@ public class UserService : IUserService
         };
     }
 
-     public async Task<CommonDto<UserProfileDto>> UpdateCandidateProfile(UpdateCandidateProfileDto updateCandidateProfileDto)
+    public async Task<CommonDto<UserProfileDto>> UpdateCandidateProfile(UpdateCandidateProfileDto updateCandidateProfileDto)
     {
         var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
         if (string.IsNullOrEmpty(email))
@@ -187,14 +192,16 @@ public class UserService : IUserService
             throw new UnauthorizedAccessException();
         }
 
-        var employerToUpdate = new Candidate{
+        var employerToUpdate = new Candidate
+        {
             Id = candidate.Id,
             Name = updateCandidateProfileDto.Name
         };
 
         var result = await _candidateRepository.UpdateCandidate(employerToUpdate);
 
-        var userToUpdate = new User{
+        var userToUpdate = new User
+        {
             Id = result.UserId,
             Email = updateCandidateProfileDto.Email
         };
@@ -213,6 +220,57 @@ public class UserService : IUserService
             StatusCode = 200,
             Message = "Candidate profile updated successfully",
             Data = userProfile
+        };
+    }
+
+    public CommonDto<List<RolesDto>> GetRoles()
+    {
+        var roles = _roleRepository.GetRoles()
+            .Select(role => new RolesDto
+            {
+                Id = role.Id,
+                Name = role.Name
+            })
+            .ToList();
+
+        return new CommonDto<List<RolesDto>>
+        {
+            Data = roles,
+            StatusCode = 200,
+            Message = "Roles retieved successfully."
+        };
+    }
+
+    public CommonDto<List<UserInfoDto>> GetUsers(string search, int pageNumber, int pageSize, string role)
+    {
+        var users = _userRepository.GetUsers()
+            .Select(u => new UserInfoDto
+            {
+                id = u.Id,
+                email = u.Email,
+                name = u.Role.Name == "Employer" ? u.Employer.Name : u.Role.Name == "Candidate" ? u.Candidate.Name : "Admin",
+                roleName = u.Role.Name
+            });
+
+        if (!string.IsNullOrEmpty(search))
+        {
+            var lowerSearch = search.ToLower();
+            users = users.Where(u => u.email.ToLower().Contains(lowerSearch) ||
+                                     u.name.ToLower().Contains(lowerSearch) );
+        }
+
+        if (!string.IsNullOrEmpty(role))
+        {
+            users = users.Where(u => u.roleName.ToLower() == role.ToLower());
+        }
+
+        users = users.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+        return new CommonDto<List<UserInfoDto>>
+        {
+            Data = users.ToList(),
+            StatusCode = 200,
+            Message = "Users retrieved successfully."
         };
     }
 

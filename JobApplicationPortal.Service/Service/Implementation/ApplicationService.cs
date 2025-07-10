@@ -156,7 +156,7 @@ public class ApplicationService : IApplicationService
     {
         var applicationInfo = _applicationRepository.GetApplications();
 
-         if (!string.IsNullOrEmpty(search))
+        if (!string.IsNullOrEmpty(search))
         {
             var lowerSearch = search.ToLower();
             applicationInfo = applicationInfo.Where(j => j.JobTitle.ToLower().Contains(lowerSearch) ||
@@ -164,7 +164,7 @@ public class ApplicationService : IApplicationService
                                    j.CandidateName.ToLower().Contains(lowerSearch) ||
                                    j.CandidateEmail.ToLower().Contains(lowerSearch));
         }
-        
+
         if (!string.IsNullOrEmpty(status))
         {
             applicationInfo = applicationInfo.Where(j => j.Status.ToLower() == status.ToLower());
@@ -398,6 +398,44 @@ public class ApplicationService : IApplicationService
         {
             StatusCode = 200,
             Message = "Application withdrawn successfully."
+        };
+    }
+
+    public CommonDto<ApplicationInfoDto> GetApplicationById(int applicationId)
+    {
+        var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        if (string.IsNullOrEmpty(email))
+        {
+            throw new UnAuthenticatedException();
+        }
+
+        var application = _applicationRepository.GetApplicationById(applicationId);
+        if (application == null)
+        {
+            throw new JobNotFoundException();
+        }
+
+        var applicationDto = new ApplicationInfoDto{
+            Id = application.Id,
+            JobTitle = application.Job.Title,
+            CompanyName = application.Job.Employer.CompanyName,
+            jobLocation = application.Job.Location,
+            CandidateId = application.Candidate.Id,
+            CandidateName = application.Candidate.Name,
+            CandidateEmail = application.Candidate.User.Email,
+            Experience = application.Experience,
+            NoteForEmployer = application.NoteForEmployer,
+            CoverLetterName = application.CoverLetter,
+            ResumeName = application.Resume,
+            Status = application.Status.Name,
+            ApplicationDate = (DateTime)application.AppliedDate
+        };
+
+        return new CommonDto<ApplicationInfoDto>
+        {
+            Data = applicationDto,
+            StatusCode = 200,
+            Message = "Application retrieved successfully."
         };
     }
 

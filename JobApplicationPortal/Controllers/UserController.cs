@@ -73,6 +73,27 @@ public class UserController : ControllerBase
         return Ok(result.Data);
     }
 
+    [HttpGet("roles")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public IActionResult GetRoles()
+    {
+        var result = _userService.GetRoles();
+        return Ok(result.Data);
+    }
 
+    [HttpGet("users")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public IActionResult GetUsers([FromQuery] string search = "", [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 2,
+                                    [FromQuery] string role = "")
+    {
+        var result = _userService.GetUsers(search, pageNumber, pageSize, role);
+        return Ok(result.Data);
+    }
 
 }

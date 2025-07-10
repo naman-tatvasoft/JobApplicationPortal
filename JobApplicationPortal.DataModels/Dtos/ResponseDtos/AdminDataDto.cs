@@ -8,4 +8,5 @@ public class AdminDataDto
     public int TotalApplications { get; set; }
     public List<JobInfoDto> LatestJobs { get; set; } = new List<JobInfoDto>();
     public List<ApplicationInfoDto> LatestApplications { get; set; } = new List<ApplicationInfoDto>();
+    public List<UserInfoDto> LatestUsers { get; set; } = new List<UserInfoDto>();
 }

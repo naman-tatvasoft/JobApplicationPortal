@@ -108,7 +108,12 @@ public class ApplicationRepository : IApplicationRepository
 
     public Application GetApplicationById(int applicationId)
     {
-        return _context.Applications.FirstOrDefault(a => a.Id == applicationId && a.StatusId != 5);
+        return _context.Applications.Include(a => a.Job)
+            .ThenInclude(aj => aj.Employer)
+            .Include(a => a.Candidate)
+            .ThenInclude(c => c.User)
+            .Include(a => a.Status)
+            .FirstOrDefault(a => a.Id == applicationId && a.StatusId != 5);
     }
     
     public async Task<Application> UpdateApplicationStatus(int applicationId, int statusId)

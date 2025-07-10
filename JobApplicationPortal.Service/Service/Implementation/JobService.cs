@@ -178,6 +178,7 @@ public class JobService : IJobService
             ExperienceRequired = job.ExperienceRequired,
             OpenFrom = job.OpenFrom,
             Vacancies = job.Vacancy,
+            IsActive = (bool)job.IsActive,
             CategoryId = job.CategoryId,
             CategoryName = job.Category.Name,
             skillsRequiredList = job.JobSkills.Where(skill => skill.Skill != null).Select(skill => new SkillDto

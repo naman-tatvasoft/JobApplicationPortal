@@ -49,6 +49,14 @@ public class DashboardService : IDashboardService
 
         var latestApplications = _applicationRepository.GetApplications().OrderByDescending(u => u.ApplicationDate).ThenBy(u=>u.Id).Take(3).ToList();
 
+        var LatestUsers = _userRepository.GetUsers().OrderByDescending(u=>u.Id).Take(3).Select(user => new UserInfoDto
+        {
+            id = user.Id,
+            email = user.Email,
+            name = user.Role.Name == "Employer" ?  user.Employer.Name : user.Candidate.Name,
+            roleName = user.Role.Name
+        }).ToList();
+
         var adminData = new AdminDataDto
         {
             TotalEmployers = totalEmployers,
@@ -56,7 +64,8 @@ public class DashboardService : IDashboardService
             TotalCandidates = totalCandidates,
             TotalApplications = totalApplications,
             LatestJobs = latestJobs,
-            LatestApplications = latestApplications
+            LatestApplications = latestApplications,
+            LatestUsers = LatestUsers
         };
 
         return new CommonDto<AdminDataDto>

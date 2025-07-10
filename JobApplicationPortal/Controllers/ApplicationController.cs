@@ -120,4 +120,18 @@ public class ApplicationController : ControllerBase
         return Ok(result.Message);
     }
 
+
+    [HttpGet("application/{applicationId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Employer, Admin")]
+    public IActionResult GetApplicationById(int applicationId)
+    {
+        var result = _applicationService.GetApplicationById(applicationId);
+        return Ok(result.Data);
+    }
+
+
 }

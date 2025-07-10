@@ -10,5 +10,7 @@ public interface IUserService
     public CommonDto<UserProfileDto> GetProfile();
     public Task<CommonDto<UserProfileDto>> UpdateEmployerProfile(UpdateEmployerProfileDto updateEmployerProfileDto);
     public Task<CommonDto<UserProfileDto>> UpdateCandidateProfile(UpdateCandidateProfileDto updateCandidateProfileDto);
+    public CommonDto<List<RolesDto>> GetRoles();
+    public CommonDto<List<UserInfoDto>> GetUsers(string search, int pageNumber, int pageSize, string role);
 
 }

@@ -198,6 +198,8 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
+app.UseStaticFiles();
+
 // Apply rate limiting globally
 app.UseRateLimiter();
 
