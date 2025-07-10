@@ -1,9 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "0c6Kx6xRY9qeKCEQsag44uCtNNv9Y7pssRz+WrpDK/ly6czRNRlAOKQmxSpNJvICAOuDayn6OIpowwm+ZnU+FA==",
+  "dgSpecHash": "8JqRQMm/3/CuV4FB4KYeekCizMS5w1uSXeb/7TtiWyVCusECZ5IIht5RcUB+0kT0/ro040D+OSSqc0pXu8lVng==",
   "success": true,
-  "projectFilePath": "c:\\Users\\pca106\\Desktop\\JobApplicationPortal\\JobApplicationPortal.Repository\\JobApplicationPortal.Repository.csproj",
+  "projectFilePath": "C:\\Users\\pca106\\Desktop\\JobApplication\\JobApplicationPortal\\JobApplicationPortal.Repository\\JobApplicationPortal.Repository.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\pca106\\.nuget\\packages\\fluentvalidation\\11.11.0\\fluentvalidation.11.11.0.nupkg.sha512",
+    "C:\\Users\\pca106\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.3.1\\fluentvalidation.aspnetcore.11.3.1.nupkg.sha512",
+    "C:\\Users\\pca106\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\11.11.0\\fluentvalidation.dependencyinjectionextensions.11.11.0.nupkg.sha512",
     "C:\\Users\\pca106\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\pca106\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\7.0.4\\microsoft.aspnetcore.authentication.jwtbearer.7.0.4.nupkg.sha512",
     "C:\\Users\\pca106\\.nuget\\packages\\microsoft.aspnetcore.jsonpatch\\7.0.4\\microsoft.aspnetcore.jsonpatch.7.0.4.nupkg.sha512",
