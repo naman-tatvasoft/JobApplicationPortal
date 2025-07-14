@@ -415,7 +415,8 @@ public class ApplicationService : IApplicationService
             throw new JobNotFoundException();
         }
 
-        var applicationDto = new ApplicationInfoDto{
+        var applicationDto = new ApplicationInfoDto
+        {
             Id = application.Id,
             JobTitle = application.Job.Title,
             CompanyName = application.Job.Employer.CompanyName,
@@ -439,4 +440,89 @@ public class ApplicationService : IApplicationService
         };
     }
 
+    public async Task<CommonDto<StatusDto>> CreateStatus(StatusDto statusDto)
+    {
+        var statusExists = _statusRepository.GetStatusIdByName(statusDto.Name);
+        if (statusExists != 0)
+        {
+            throw new StatusAlreadyExistsException();
+        }
+
+        var status = new Status
+        {
+            Name = statusDto.Name
+        };
+
+        var createdStatus = await _statusRepository.CreateStatus(status);
+
+        var createdStatusDto = new StatusDto
+        {
+            Id = createdStatus.Id,
+            Name = createdStatus.Name
+        };
+
+        return new CommonDto<StatusDto>
+        {
+            Data = createdStatusDto,
+            StatusCode = 201,
+            Message = "Status created successfully."
+        };
+    }
+
+    public string GetStatusNameById(int statusId)
+    {
+        var statusName = _statusRepository.GetStatusNameById(statusId);
+        if (string.IsNullOrEmpty(statusName))
+        {
+            throw new StatusNotFoundException();
+        }
+        return statusName;
+    }
+
+    public async Task<CommonDto<StatusDto>> UpdateStatus(int statusId, StatusDto statusDto)
+    {
+        var statusIdCheck = _statusRepository.GetStatusNameById(statusId);
+        if (string.IsNullOrEmpty(statusIdCheck))
+        {
+            throw new StatusNotFoundException();
+        }
+
+        var status = new Status
+        {
+            Id = statusId,
+            Name = statusDto.Name
+        };
+
+        var updatedStatus = await _statusRepository.UpdateStatus(status);
+
+        var updatedStatusDto = new StatusDto
+        {
+            Id = updatedStatus.Id,
+            Name = updatedStatus.Name
+        };
+
+        return new CommonDto<StatusDto>
+        {
+            Data = updatedStatusDto,
+            StatusCode = 200,
+            Message = "Status updated successfully."
+        };
+    }
+
+    public async Task<CommonDto<object>> DeleteStatus(int statusId)
+    {
+        var statusExists = _statusRepository.GetStatusNameById(statusId);
+        if (string.IsNullOrEmpty(statusExists))
+        {
+            throw new StatusNotFoundException();
+        }
+
+        await _statusRepository.DeleteStatus(statusId);
+
+        return new CommonDto<object>
+        {
+            StatusCode = 200,
+            Message = "status deleted successfully."
+        };
+    }
 }

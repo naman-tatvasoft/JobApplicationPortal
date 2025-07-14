@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using JobApplicationPortal.Service.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using JobApplicationPortal.DataModels.Dtos.RequestDtos;
+using JobApplicationPortal.DataModels.Dtos.ResponseDtos;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace JobApplicationPortal.Controllers;
 
@@ -120,7 +122,6 @@ public class ApplicationController : ControllerBase
         return Ok(result.Message);
     }
 
-
     [HttpGet("application/{applicationId}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -133,5 +134,61 @@ public class ApplicationController : ControllerBase
         return Ok(result.Data);
     }
 
+    [HttpPost("status")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> CreateStatus([FromBody] StatusDto statusDto)
+    {
+        var result = await _applicationService.CreateStatus(statusDto);
+        return StatusCode(StatusCodes.Status201Created, result.Data);
+    }
 
+    [HttpGet("status/{statusId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Admin")]
+    public IActionResult GetStatusById(int statusId)
+    {
+        var statusName = _applicationService.GetStatusNameById(statusId);
+        if (string.IsNullOrEmpty(statusName))
+        {
+            return NotFound("Status not found.");
+        }
+        return Ok(new { name = statusName });
+    }
+
+    [HttpPut("status/{statusId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> UpdateStatus(int statusId, [FromBody] StatusDto statusDto)
+    {
+        var result = await _applicationService.UpdateStatus(statusId, statusDto);
+        return Ok(result.Data);
+    }
+
+    [HttpDelete("status/{statusId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeleteStatus(int statusId)
+    {
+        var result = await _applicationService.DeleteStatus(statusId);
+        return Ok(result.Message);
+    }
 }
+

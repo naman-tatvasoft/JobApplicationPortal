@@ -1,5 +1,6 @@
 using System.Data;
 using JobApplicationPortal.DataModels.Dtos.RequestDtos;
+using JobApplicationPortal.DataModels.Dtos.ResponseDtos;
 using JobApplicationPortal.Service.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -168,4 +169,117 @@ public class JobController : ControllerBase
         return StatusCode(StatusCodes.Status200OK, result.Message);
     }
 
+    [HttpPost("category")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> CreateCategory([FromBody] CategoriesDto catDto)
+    {
+        var result = await _jobService.CreateCategory(catDto);
+        return StatusCode(StatusCodes.Status201Created, result.Data);
+    }
+
+    [HttpPost("skill")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> CreateSkill([FromBody] SkillDto skillDto)
+    {
+        var result = await _jobService.CreateSkill(skillDto);
+        return StatusCode(StatusCodes.Status201Created, result.Data);
+    }
+
+    [HttpGet("skill/{skillId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Admin")]
+    public IActionResult GetSkillById(int skillId)
+    {
+        var skillName = _jobService.GetSkillNameById(skillId);
+        if (string.IsNullOrEmpty(skillName))
+        {
+            return NotFound("skill not found.");
+        }
+        return Ok(new { name = skillName });
+    }
+
+    [HttpPut("skill/{skillId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> UpdateSkill(int skillId, [FromBody] SkillDto skillDto)
+    {
+        var result = await _jobService.UpdateSkill(skillId, skillDto);
+        return Ok(result.Data);
+    }
+
+    [HttpGet("category/{categoryId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Admin")]
+    public IActionResult GetCategoryById(int categoryId)
+    {
+        var categoryName = _jobService.GetCategoryNameById(categoryId);
+        if (string.IsNullOrEmpty(categoryName))
+        {
+            return NotFound("category not found.");
+        }
+        return Ok(new { name = categoryName });
+    }
+
+    [HttpPut("category/{categoryId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> UpdateCategory(int categoryId, [FromBody] CategoriesDto categoriesDto)
+    {
+        var result = await _jobService.UpdateCategory(categoryId, categoriesDto);
+        return Ok(result.Data);
+    }
+
+    [HttpDelete("category/{categoryId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeleteCategory(int categoryId)
+    {
+        var result = await _jobService.DeleteCategory(categoryId);
+        return Ok(result.Message);
+    }
+
+    [HttpDelete("skill/{skillId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeleteSkill(int skillId)
+    {
+        var result = await _jobService.DeleteSkill(skillId);
+        return Ok(result.Message);
+    }
 }

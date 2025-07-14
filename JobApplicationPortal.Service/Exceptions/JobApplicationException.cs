@@ -42,3 +42,13 @@ public class InvalidFileTypeException : JobApplicationException
 {
     public InvalidFileTypeException() : base("File type should be pdf only.", "invalid_file_type_exception"){}
 }
+
+public class StatusAlreadyExistsException : JobApplicationException
+{
+    public StatusAlreadyExistsException() : base("Status already exists.", "status_already_exists_exception"){}
+}
+
+public class StatusNotFoundException : JobApplicationException
+{
+    public StatusNotFoundException() : base("Status not found.", "status_not_found_exception"){}
+}

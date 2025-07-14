@@ -18,5 +18,13 @@ public interface IJobService
     public Task<CommonDto<JobPreferenceInfoDto>> CreateJobPreference(JobPreferenceDto jobPreferenceDto);
     public Task<CommonDto<JobPreferenceInfoDto>> UpdateJobPreference(int jobPreferenceId, JobPreferenceDto jobPreferenceDto);
     public Task<CommonDto<object>> DeleteJobPreference(int jobPreferenceId);
+    public Task<CommonDto<CategoriesDto>> CreateCategory(CategoriesDto categoriesDto);
+    public Task<CommonDto<SkillDto>> CreateSkill(SkillDto skillDto);
+    public string GetSkillNameById(int skillId);
+    public Task<CommonDto<SkillDto>> UpdateSkill(int skillId, SkillDto skillDto);
+    public string GetCategoryNameById(int categoryId);
+    public Task<CommonDto<CategoriesDto>> UpdateCategory(int categoryId, CategoriesDto categoriesDto);
+    public Task<CommonDto<object>> DeleteCategory(int categoryId);
+    public Task<CommonDto<object>> DeleteSkill(int skillId);
 
 }

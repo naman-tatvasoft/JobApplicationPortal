@@ -70,3 +70,18 @@ public class IdMismatchException : JobException
 {
     public IdMismatchException() : base("Id mismatch, cannot be updated", "id_mismatch_exception"){}
 }
+
+public class CategoryAlreadyExistsException : JobException
+{
+    public CategoryAlreadyExistsException() : base("Category already exists", "category_already_exists_exception"){}
+}
+
+public class SkillAlreadyExistsException : JobException
+{
+    public SkillAlreadyExistsException() : base("Skill already exists", "skill_already_exists_exception"){}
+}
+
+public class SkillNotFoundException : JobException
+{
+    public SkillNotFoundException() : base("Skill not found", "skill_not_found_exception"){}
+}

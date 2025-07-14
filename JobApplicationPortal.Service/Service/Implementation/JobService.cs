@@ -687,4 +687,176 @@ public class JobService : IJobService
         };
     }
 
+    public async Task<CommonDto<CategoriesDto>> CreateCategory(CategoriesDto categoriesDto)
+    {
+        var categoryExists = _categoriesRepository.GetCategoryByName(categoriesDto.Name);
+        if (categoryExists != null)
+        {
+            throw new CategoryAlreadyExistsException();
+        }
+
+        var category = new Category
+        {
+            Name = categoriesDto.Name
+        };
+
+        var createdCategory = await _categoriesRepository.CreateCategory(category);
+
+        var createdCategoryDto = new CategoriesDto
+        {
+            Id = createdCategory.Id,
+            Name = createdCategory.Name
+        };
+
+        return new CommonDto<CategoriesDto>
+        {
+            Data = createdCategoryDto,
+            StatusCode = 201,
+            Message = "Category created successfully."
+        };
+    }
+
+    public async Task<CommonDto<SkillDto>> CreateSkill(SkillDto skillDto)
+    {
+        var skillExists = _skillRepository.GetSkillByName(skillDto.Name);
+        if (skillExists != null)
+        {
+            throw new SkillAlreadyExistsException();
+        }
+
+        var skill = new Skill
+        {
+            Name = skillDto.Name
+        };
+
+        var createdSkill = await _skillRepository.CreateSkill(skill);
+
+        var createdSkillDto = new SkillDto
+        {
+            Id = createdSkill.Id,
+            Name = createdSkill.Name
+        };
+
+        return new CommonDto<SkillDto>
+        {
+            Data = createdSkillDto,
+            StatusCode = 201,
+            Message = "Skill created successfully."
+        };
+    }
+
+    public string GetSkillNameById(int skillId)
+    {
+        var skillName = _skillRepository.GetSkillNameById(skillId);
+        if (string.IsNullOrEmpty(skillName))
+        {
+            throw new SkillNotFoundException();
+        }
+        return skillName;
+    }
+
+    public async Task<CommonDto<SkillDto>> UpdateSkill(int skillId, SkillDto skillDto)
+    {
+        var skillIdCheck = _skillRepository.GetSkillNameById(skillId);
+        if (string.IsNullOrEmpty(skillIdCheck))
+        {
+            throw new SkillNotFoundException();
+        }
+
+        var skill = new Skill
+        {
+            Id = skillId,
+            Name = skillDto.Name
+        };
+
+        var updatedSkill = await _skillRepository.UpdateSkill(skill);
+
+        var updatedSkillDto = new SkillDto
+        {
+            Id = updatedSkill.Id,
+            Name = updatedSkill.Name
+        };
+
+        return new CommonDto<SkillDto>
+        {
+            Data = updatedSkillDto,
+            StatusCode = 200,
+            Message = "Skill updated successfully."
+        };
+    }
+
+    public string GetCategoryNameById(int categoryId)
+    {
+        var categoryName = _categoriesRepository.GetCategoryNameById(categoryId);
+        if (string.IsNullOrEmpty(categoryName))
+        {
+            throw new CategoryNotFoundException();
+        }
+        return categoryName;
+    }
+
+    public async Task<CommonDto<CategoriesDto>> UpdateCategory(int categoryId, CategoriesDto categoriesDto)
+    {
+        var categoryName = _categoriesRepository.GetCategoryNameById(categoryId);
+        if (string.IsNullOrEmpty(categoryName))
+        {
+            throw new CategoryNotFoundException();
+        }
+
+        var category = new Category
+        {
+            Id = categoryId,
+            Name = categoriesDto.Name
+        };
+
+        var updatedCategory = await _categoriesRepository.UpdateCategory(category);
+
+        var updatedCategoryDto = new CategoriesDto
+        {
+            Id = updatedCategory.Id,
+            Name = updatedCategory.Name
+        };
+
+        return new CommonDto<CategoriesDto>
+        {
+            Data = updatedCategoryDto,
+            StatusCode = 200,
+            Message = "Category updated successfully."
+        };
+    }
+
+    public async Task<CommonDto<object>> DeleteCategory(int categoryId)
+    {
+        var categoryExists = _categoriesRepository.GetCategoryNameById(categoryId);
+        if (string.IsNullOrEmpty(categoryExists))
+        {
+            throw new CategoryNotFoundException();
+        }
+
+        await _categoriesRepository.DeleteCategory(categoryId);
+
+        return new CommonDto<object>
+        {
+            StatusCode = 200,
+            Message = "Category deleted successfully."
+        };
+    }
+
+    public async Task<CommonDto<object>> DeleteSkill(int skillId)
+    {
+        var skillExists = _skillRepository.GetSkillNameById(skillId);
+        if (string.IsNullOrEmpty(skillExists))
+        {
+            throw new SkillNotFoundException();
+        }
+
+        await _skillRepository.DeleteSkill(skillId);
+
+        return new CommonDto<object>
+        {
+            StatusCode = 200,
+            Message = "skill deleted successfully."
+        };
+    }
+
 }

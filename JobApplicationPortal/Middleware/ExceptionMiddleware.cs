@@ -134,8 +134,27 @@ public class ExceptionMiddleware
                 code = HttpStatusCode.BadRequest;
                 message = "File type should be pdf only.";
                 break;
-            
-            
+            case CategoryAlreadyExistsException _:
+                code = HttpStatusCode.Conflict;
+                message = "Category already exists.";
+                break;
+            case SkillAlreadyExistsException _:
+                code = HttpStatusCode.Conflict;
+                message = "Skill already exists.";
+                break;
+            case StatusAlreadyExistsException _:
+                code = HttpStatusCode.Conflict;
+                message = "Status already exists.";
+                break;
+            case StatusNotFoundException _:
+                code = HttpStatusCode.NotFound;
+                message = "Status not found.";
+                break;
+            case SkillNotFoundException _:
+                code = HttpStatusCode.NotFound;
+                message = "Skill not found.";
+                break;
+
             case ArgumentNullException _:
                 code = HttpStatusCode.BadRequest;
                 message = "Invalid request. Required data is missing.";
