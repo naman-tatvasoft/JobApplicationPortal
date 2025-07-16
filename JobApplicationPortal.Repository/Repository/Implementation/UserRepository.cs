@@ -26,7 +26,7 @@ public class UserRepository : IUserRepository
 
     public User GetUserByEmail(string email)
     {
-        return _context.Users.FirstOrDefault(u => u.Email == email);
+        return _context.Users.Include(u => u.Employer).Include(u => u.Candidate).FirstOrDefault(u => u.Email == email);
     }
 
     public async Task<User> UpdateUserAsync(User user)

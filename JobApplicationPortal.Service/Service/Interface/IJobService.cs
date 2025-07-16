@@ -9,7 +9,7 @@ public interface IJobService
     public CommonDto<JobInfoDto> GetJobById(int jobId);
     public Task<CommonDto<JobInfoDto>> UpdateJob(int jobId, JobDto updateJobDto);
     public CommonDto<List<JobInfoDto>> GetJobs(string search, int pageNumber, int pageSize, string skill, string location, int experience, string category);
-    public CommonDto<List<JobInfoDto>> GetCreatedJobs();
+    public CommonDto<List<JobInfoDto>> GetCreatedJobs(string search, int pageNumber, int pageSize, string skill, string location, int experience, string category);
     public CommonDto<List<JobInfoDto>> GetJobsByEmployer(int employerId);
     public Task<CommonDto<object>> DeleteJob(int jobId);
     public CommonDto<List<SkillDto>> GetSkills();

@@ -28,15 +28,15 @@ public class DashboardController : ControllerBase
         return Ok(result.Data);
     }
 
-    [HttpGet("candidate")]
+    [HttpGet("employer/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize(Roles = "Candidate")]
-    public IActionResult CandidateData()
+    [Authorize(Roles = "Employer")]
+    public IActionResult EmployerData(int id)
     {
-        var result = _dashboardService.AdminData();
+        var result = _dashboardService.EmployerData(id);
         return Ok(result.Data);
     }
 }

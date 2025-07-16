@@ -115,9 +115,5 @@ public class JobRepository : IJobRepository
         }
     }
 
-    public int GetTotalJobs()
-    {
-        return _context.Jobs.Count(job => (bool)!job.IsDeleted && (bool)job.IsActive);
-    }
     
 }

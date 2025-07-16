@@ -96,4 +96,12 @@ public class UserController : ControllerBase
         return Ok(result.Data);
     }
 
+    [HttpGet("token/user-id")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [Authorize(Roles = "Employer, Candidate")]
+    public async Task<IActionResult> GetId([FromQuery] string token)
+    {
+        var result = await _userService.GetId(token);
+        return Ok(new { data = result.Data });
+    }
 }

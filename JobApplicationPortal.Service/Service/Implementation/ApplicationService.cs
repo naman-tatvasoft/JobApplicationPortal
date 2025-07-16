@@ -154,7 +154,25 @@ public class ApplicationService : IApplicationService
 
     public CommonDto<List<ApplicationInfoDto>> GetApplications(string search, int pageNumber, int pageSize, string status)
     {
-        var applicationInfo = _applicationRepository.GetApplications();
+        var applicationInfo = _applicationRepository.GetApplications().Select(j => new ApplicationInfoDto
+        {
+            Id = j.Id,
+            Experience = j.Experience,
+            NoteForEmployer = j.NoteForEmployer,
+            ResumeName = j.Resume,
+            CoverLetterName = j.CoverLetter,
+            ApplicationDate = (DateTime)j.AppliedDate,
+
+            JobTitle = j.Job.Title,
+            CompanyName = j.Job.Employer.CompanyName,
+            jobLocation = j.Job.Location,
+
+            CandidateId = j.Candidate.Id,
+            CandidateName = j.Candidate.Name,
+            CandidateEmail = j.Candidate.User.Email,
+
+            Status = j.Status.Name,
+        });
 
         if (!string.IsNullOrEmpty(search))
         {

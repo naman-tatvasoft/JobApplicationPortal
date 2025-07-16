@@ -26,32 +26,13 @@ public class ApplicationRepository : IApplicationRepository
         return application;
     }
 
-    public IQueryable<ApplicationInfoDto> GetApplications()
+    public IQueryable<Application> GetApplications()
     {
         var applicationInfo = _context.Applications
                 .Include(j => j.Job)
                 .ThenInclude(js => js.Employer)
                 .Include(j => j.Candidate)
-                .ThenInclude(c => c.User)
-                .Select(j => new ApplicationInfoDto
-                {
-                    Id = j.Id,
-                    Experience = j.Experience,
-                    NoteForEmployer = j.NoteForEmployer,
-                    ResumeName = j.Resume,
-                    CoverLetterName = j.CoverLetter,
-                    ApplicationDate = (DateTime)j.AppliedDate,
-
-                    JobTitle = j.Job.Title,
-                    CompanyName = j.Job.Employer.CompanyName,
-                    jobLocation = j.Job.Location,
-
-                    CandidateId = j.Candidate.Id,
-                    CandidateName = j.Candidate.Name,
-                    CandidateEmail = j.Candidate.User.Email,
-
-                    Status = _context.Statuses.FirstOrDefault(s => s.Id == j.StatusId).Name,
-                }).AsQueryable();
+                .ThenInclude(c => c.User).AsQueryable();
         return applicationInfo;
     }
 
@@ -153,8 +134,4 @@ public class ApplicationRepository : IApplicationRepository
         return false;
     }
 
-    public int GetTotalApplications()
-    {
-        return _context.Applications.Count(a => a.Status.Name != "Withdrawn");
-    }
 }

@@ -73,9 +73,10 @@ public class JobController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Employer")]
-    public IActionResult GetCreatedJobs()
+    public IActionResult GetCreatedJobs([FromQuery] string search = "", [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 2,
+                                    [FromQuery] string skill = "", [FromQuery] string location = "", [FromQuery] int experience = 0, [FromQuery] string category = "")
     {
-        var result = _jobService.GetCreatedJobs();
+        var result = _jobService.GetCreatedJobs(search, pageNumber, pageSize, skill, location, experience, category);
         return Ok(result.Data);
     }
 

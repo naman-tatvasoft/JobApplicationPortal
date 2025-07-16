@@ -12,5 +12,6 @@ public interface IUserService
     public Task<CommonDto<UserProfileDto>> UpdateCandidateProfile(UpdateCandidateProfileDto updateCandidateProfileDto);
     public CommonDto<List<RolesDto>> GetRoles();
     public CommonDto<List<UserInfoDto>> GetUsers(string search, int pageNumber, int pageSize, string role);
+    public Task<CommonDto<object>> GetId(string token);
 
 }

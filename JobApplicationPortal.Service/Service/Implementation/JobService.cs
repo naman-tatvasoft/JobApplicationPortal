@@ -305,6 +305,7 @@ public class JobService : IJobService
             {
                 Id = job.Id,
                 Title = job.Title,
+                CompanyName = job.Employer.CompanyName,
                 Description = job.Description,
                 Location = job.Location,
                 ExperienceRequired = job.ExperienceRequired,
@@ -372,7 +373,7 @@ public class JobService : IJobService
         };
     }
 
-    public CommonDto<List<JobInfoDto>> GetCreatedJobs()
+    public CommonDto<List<JobInfoDto>> GetCreatedJobs(string search, int pageNumber, int pageSize, string skill, string location, int experience, string category)
     {
         var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
@@ -388,12 +389,11 @@ public class JobService : IJobService
             throw new EmployerNotFoundException();
         }
 
-        var jobs = _jobRepository.GetJobsByEmployer(employer.Id);
-
-        var jobDtos = jobs.Select(job => new JobInfoDto
+        var jobs = _jobRepository.GetJobsByEmployer(employer.Id).Select(job => new JobInfoDto
         {
             Id = job.Id,
             Title = job.Title,
+            CompanyName = job.Employer.CompanyName,
             Description = job.Description,
             Location = job.Location,
             ExperienceRequired = job.ExperienceRequired,
@@ -406,11 +406,42 @@ public class JobService : IJobService
                 Id = skill.Id,
                 Name = skill.Skill.Name
             }).ToList()
-        }).ToList();
+        });
+
+        if (!string.IsNullOrEmpty(search))
+        {
+            var lowerSearch = search.ToLower();
+            jobs = jobs.Where(j => j.Title.ToLower().Contains(lowerSearch) ||
+                                   j.Description.ToLower().Contains(lowerSearch) ||
+                                   j.Location.ToLower().Contains(lowerSearch) ||
+                                   j.CategoryName.ToLower().Contains(lowerSearch));
+        }
+
+        if (!string.IsNullOrEmpty(skill))
+        {
+            jobs = jobs.Where(j => j.skillsRequiredList.Any(s => s.Name.ToLower() == skill.ToLower()));
+        }
+
+        if (!string.IsNullOrEmpty(location))
+        {
+            jobs = jobs.Where(j => j.Location.ToLower() == location.ToLower());
+        }
+
+        if (!string.IsNullOrEmpty(category))
+        {
+            jobs = jobs.Where(j => j.CategoryName.ToLower() == category.ToLower());
+        }
+
+        if (experience > 0)
+        {
+            jobs = jobs.Where(u => u.ExperienceRequired <= experience);
+        }
+
+        jobs = jobs.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
         return new CommonDto<List<JobInfoDto>>
         {
-            Data = jobDtos,
+            Data = jobs.ToList(),
             StatusCode = 200,
             Message = "Jobs retrieved successfully."
         };

@@ -4,6 +4,7 @@ using JobApplicationPortal.DataModels.Dtos.ResponseDtos;
 using JobApplicationPortal.DataModels.Models;
 using JobApplicationPortal.Repository.Repository.Interface;
 using JobApplicationPortal.Service.Exceptions;
+using JobApplicationPortal.Service.Helper;
 using JobApplicationPortal.Service.Service.Interface;
 using Microsoft.AspNetCore.Http;
 
@@ -16,16 +17,20 @@ public class UserService : IUserService
     private readonly IUserRepository _userRepository;
     private readonly IRoleRepository _roleRepository;
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly JwtHelper _jwtHelper;
+
     public UserService(IEmployerRepository employerRepository,
         ICandidateRepository candidateRepository,
         IUserRepository userRepository,
         IRoleRepository roleRepository,
+        JwtHelper jwtHelper,
             IHttpContextAccessor httpContextAccessor)
     {
         _employerRepository = employerRepository;
         _candidateRepository = candidateRepository;
         _userRepository = userRepository;
         _roleRepository = roleRepository;
+        _jwtHelper = jwtHelper;
         _httpContextAccessor = httpContextAccessor;
     }
 
@@ -271,6 +276,33 @@ public class UserService : IUserService
             Data = users.ToList(),
             StatusCode = 200,
             Message = "Users retrieved successfully."
+        };
+    }
+
+    
+     public async Task<CommonDto<object>> GetId(string token)
+    {
+        if (string.IsNullOrEmpty(token))
+        {
+            throw new UnAuthenticatedException();
+        }
+
+        var isValid = _jwtHelper.ValidateToken(token);
+        if (!isValid)
+        {
+            throw new UnAuthenticatedException();
+        }
+
+        var roleName = _jwtHelper.GetClaimsFromToken(token)?.FindFirst("role")?.Value;
+        var userEmail = _jwtHelper.GetClaimsFromToken(token)?.FindFirst("email")?.Value;
+        var user = _userRepository.GetUserByEmail(userEmail);
+        var userId = roleName== "Employer" ? user.Employer?.Id :  user.Candidate?.Id;
+
+        return new CommonDto<object>
+        {
+            StatusCode = 200,
+            Message = "Id is Fetched.",
+            Data = userId 
         };
     }
 

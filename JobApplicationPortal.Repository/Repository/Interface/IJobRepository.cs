@@ -18,6 +18,4 @@ public interface IJobRepository
     public bool CheckExperience(int jobId, int experience);
     public string GetEmployerEmailByJobId(int jobId);
     public Task ReduceVacancy(int jobId);
-    public int GetTotalJobs();
-
 }
