@@ -37,7 +37,7 @@ public class ApplicationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin, Employer")]
     public IActionResult GetApplications([FromQuery] string search = "", [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 5,
                                     [FromQuery] string status = "")
     {

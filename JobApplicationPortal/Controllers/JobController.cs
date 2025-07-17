@@ -17,13 +17,13 @@ public class JobController : ControllerBase
         _jobService = jobService;
     }
 
-    [HttpPost("job")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Employer")]
+    [HttpPost("job")]
     public async Task<IActionResult> CreateJob([FromBody] JobDto createJobDto)
     {
         var result = await _jobService.CreateJob(createJobDto);

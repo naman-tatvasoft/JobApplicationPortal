@@ -188,8 +188,20 @@ public class ApplicationService : IApplicationService
             applicationInfo = applicationInfo.Where(j => j.Status.ToLower() == status.ToLower());
         }
 
-        applicationInfo = applicationInfo.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+        var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        if (string.IsNullOrEmpty(email))
+        {
+            throw new UnAuthenticatedException();
+        }
 
+        var employer = _employerRepository.GetEmployerByEmail(email);
+        if (employer != null)
+        {
+            applicationInfo = applicationInfo.Where(j => j.CompanyName == employer.CompanyName);
+        }
+
+        applicationInfo = applicationInfo.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+        
         return new CommonDto<List<ApplicationInfoDto>>
         {
             Data = applicationInfo != null ? applicationInfo.ToList() : new List<ApplicationInfoDto>(),

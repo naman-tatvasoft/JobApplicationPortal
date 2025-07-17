@@ -315,7 +315,7 @@ public class JobService : IJobService
                 CategoryName = job.Category.Name,
                 skillsRequiredList = job.JobSkills.Select(skill => new SkillDto
                 {
-                    Id = skill.Id,
+                    Id = skill.Skill.Id,
                     Name = skill.Skill.Name
                 }).ToList()
             });
@@ -403,7 +403,7 @@ public class JobService : IJobService
             CategoryName = job.Category.Name,
             skillsRequiredList = job.JobSkills.Select(skill => new SkillDto
             {
-                Id = skill.Id,
+                Id = skill.Skill.Id,
                 Name = skill.Skill.Name
             }).ToList()
         });

@@ -14,12 +14,12 @@ public class JobRepository : IJobRepository
 
     public IQueryable<Job> GetJobs()
     {
-        return _context.Jobs.Where(job => (bool)!job.IsDeleted && (bool)job.IsActive).AsQueryable();
+        return _context.Jobs.Where(job => !job.IsDeleted && (bool)job.IsActive).AsQueryable();
     }
 
     public IQueryable<Job> GetJobsByEmployer(int employerId)
     {
-        return _context.Jobs.Where(job => job.EmployerId == employerId).AsQueryable();
+        return _context.Jobs.Where(job => job.EmployerId == employerId && !job.IsDeleted).AsQueryable();
     }
 
     public Job GetJobById(int jobId)
