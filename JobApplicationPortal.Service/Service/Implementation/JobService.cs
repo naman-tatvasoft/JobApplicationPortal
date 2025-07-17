@@ -548,7 +548,6 @@ public class JobService : IJobService
         };
     }
 
-
     public CommonDto<List<CategoriesDto>> GetCategories()
     {
         var categories = _categoriesRepository.GetCategories()
@@ -566,7 +565,6 @@ public class JobService : IJobService
             Message = "categories retieved successfully."
         };
     }
-
 
     public async Task<CommonDto<JobPreferenceInfoDto>> CreateJobPreference(JobPreferenceDto jobPreferenceDto)
     {

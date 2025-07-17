@@ -172,6 +172,7 @@ public class ApplicationService : IApplicationService
             CandidateEmail = j.Candidate.User.Email,
 
             Status = j.Status.Name,
+            StatusId = j.Status.Id
         });
 
         if (!string.IsNullOrEmpty(search))

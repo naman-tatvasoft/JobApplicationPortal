@@ -174,7 +174,7 @@ public class ApplicationController : ControllerBase
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateStatus(int statusId, [FromBody] StatusDto statusDto)
     {
-        var result = await _applicationService.UpdateStatus(statusId, statusDto);
+        var result = await _applicationService.UpdateStatus(statusId, statusDto.Id);
         return Ok(result.Data);
     }
 

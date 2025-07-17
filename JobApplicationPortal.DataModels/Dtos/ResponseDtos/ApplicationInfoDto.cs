@@ -14,5 +14,6 @@ public class ApplicationInfoDto
     public string CoverLetterName { get; set; }
     public string ResumeName { get; set; }
     public string Status {get; set;}
+    public int StatusId {get; set;}
     public DateTime ApplicationDate { get; set; }
 }
