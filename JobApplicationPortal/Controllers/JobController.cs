@@ -35,7 +35,7 @@ public class JobController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize(Roles = "Employer, Admin")]
+    [Authorize(Roles = "Employer, Admin, Candidate")]
     public IActionResult GetJobsById(int jobId)
     {
         var result = _jobService.GetJobById(jobId);

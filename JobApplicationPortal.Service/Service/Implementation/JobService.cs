@@ -9,6 +9,7 @@ using JobApplicationPortal.Service.Exceptions;
 using JobApplicationPortal.Service.Helper;
 using JobApplicationPortal.Service.Service.Interface;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 
 namespace JobApplicationPortal.Service.Service.Implementation;
@@ -300,7 +301,9 @@ public class JobService : IJobService
 
     public CommonDto<List<JobInfoDto>> GetJobs(string search, int pageNumber, int pageSize, string skill, string location, int experience, string category)
     {
-        var jobs = _jobRepository.GetJobs()
+        var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+        var jobs = _jobRepository.GetJobs().Include(job => job.Applications).ThenInclude(a => a.Candidate).ThenInclude(c => c.User)
             .Select(job => new JobInfoDto
             {
                 Id = job.Id,
@@ -317,7 +320,8 @@ public class JobService : IJobService
                 {
                     Id = skill.Skill.Id,
                     Name = skill.Skill.Name
-                }).ToList()
+                }).ToList(),
+                IsApplied = job.Applications.Any(a => a.Candidate.User.Email == email && a.StatusId != 5)
             });
 
         if (!string.IsNullOrEmpty(search))
@@ -349,7 +353,6 @@ public class JobService : IJobService
             jobs = jobs.Where(u => u.ExperienceRequired <= experience);
         }
 
-        var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
         if (string.IsNullOrEmpty(email))
         {
@@ -364,6 +367,7 @@ public class JobService : IJobService
         }
 
         jobs = jobs.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
 
         return new CommonDto<List<JobInfoDto>>
         {

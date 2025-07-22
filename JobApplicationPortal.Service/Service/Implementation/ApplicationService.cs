@@ -202,7 +202,7 @@ public class ApplicationService : IApplicationService
         }
 
         applicationInfo = applicationInfo.Skip((pageNumber - 1) * pageSize).Take(pageSize);
-        
+
         return new CommonDto<List<ApplicationInfoDto>>
         {
             Data = applicationInfo != null ? applicationInfo.ToList() : new List<ApplicationInfoDto>(),
@@ -211,7 +211,7 @@ public class ApplicationService : IApplicationService
         };
     }
 
-    public CommonDto<List<ApplicationInfoDto>> GetApplicationsByCandidate()
+    public CommonDto<List<ApplicationInfoDto>> GetApplicationsByCandidate(string search, int pageNumber, int pageSize, string status)
     {
         var email = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
         if (string.IsNullOrEmpty(email))
@@ -225,11 +225,36 @@ public class ApplicationService : IApplicationService
             throw new CandidateNotFoundException();
         }
 
-        var applicationInfo = _applicationRepository.GetApplicationsByCandidate(candidate.Id);
+        var applicationInfo = _applicationRepository.GetApplicationsByCandidate(candidate.Id).Select(j => new ApplicationInfoDto
+        {
+            Id = j.Id,
+            JobTitle = j.Job.Title,
+            CompanyName = j.Job.Employer.CompanyName,
+            jobLocation = j.Job.Location,
+            Experience = j.Experience,
+            NoteForEmployer = j.NoteForEmployer,
+            ResumeName = j.Resume,
+            CoverLetterName = j.CoverLetter,
+            ApplicationDate = (DateTime)j.AppliedDate,
+            Status = j.Status.Name,
+        });
+
+        if (!string.IsNullOrEmpty(search))
+        {
+            var lowerSearch = search.ToLower();
+            applicationInfo = applicationInfo.Where(j => j.JobTitle.ToLower().Contains(lowerSearch));
+        }
+
+        if (!string.IsNullOrEmpty(status))
+        {
+            applicationInfo = applicationInfo.Where(j => j.Status.ToLower() == status.ToLower());
+        }
+
+        applicationInfo = applicationInfo.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
         return new CommonDto<List<ApplicationInfoDto>>
         {
-            Data = applicationInfo,
+            Data = applicationInfo.ToList(),
             StatusCode = 200,
             Message = "Applications retrieved successfully."
         };
@@ -310,7 +335,6 @@ public class ApplicationService : IApplicationService
 
         var candidateEmail = _applicationRepository.GetCandidateEmailByApplicationId(applicationId);
         var statusName = _statusRepository.GetStatusNameById(statusId);
-
 
         var sub = "Application status updated";
         var body = $@"

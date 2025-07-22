@@ -14,5 +14,6 @@ public class JobInfoDto
     public List<SkillDto> skillsRequiredList { get; set; } = new List<SkillDto>();
     public int CategoryId { get; set; }
     public string CategoryName { get; set; }
+    public bool IsApplied {get; set; } = false;
 
 }

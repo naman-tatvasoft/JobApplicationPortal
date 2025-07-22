@@ -52,9 +52,10 @@ public class ApplicationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Authorize(Roles = "Candidate")]
-    public IActionResult GetApplicationsByCandidate()
+    public IActionResult GetApplicationsByCandidate([FromQuery] string search = "", [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 5,
+                                    [FromQuery] string status = "")
     {
-        var result = _applicationService.GetApplicationsByCandidate();
+        var result = _applicationService.GetApplicationsByCandidate(search, pageNumber, pageSize, status);
         return Ok(result.Data);
     }
 
@@ -89,7 +90,6 @@ public class ApplicationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize(Roles = "Admin, Employer")]
     public IActionResult GetStatuses()
     {
         var result = _applicationService.GetStatuses();
@@ -127,7 +127,7 @@ public class ApplicationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [Authorize(Roles = "Employer, Admin")]
+    [Authorize(Roles = "Employer, Admin, Candidate")]
     public IActionResult GetApplicationById(int applicationId)
     {
         var result = _applicationService.GetApplicationById(applicationId);

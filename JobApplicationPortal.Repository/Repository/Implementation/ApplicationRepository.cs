@@ -36,27 +36,14 @@ public class ApplicationRepository : IApplicationRepository
         return applicationInfo;
     }
 
-    public List<ApplicationInfoDto> GetApplicationsByCandidate(int candidateId)
+    public IQueryable<Application> GetApplicationsByCandidate(int candidateId)
     {
         var applicationInfo = _context.Applications
                 .Include(j => j.Job)
                 .ThenInclude(js => js.Employer)
                 .Include(j => j.Candidate)
                 .ThenInclude(c => c.User)
-                .Where(j => j.CandidateId == candidateId)
-                .Select(j => new ApplicationInfoDto
-                {
-                    Id = j.Id,
-                    JobTitle = j.Job.Title,
-                    CompanyName = j.Job.Employer.CompanyName,
-                    jobLocation = j.Job.Location,
-                    Experience = j.Experience,
-                    NoteForEmployer = j.NoteForEmployer,
-                    ResumeName = j.Resume,
-                    CoverLetterName = j.CoverLetter,
-                    ApplicationDate = (DateTime)j.AppliedDate,
-                    Status = _context.Statuses.FirstOrDefault(s => s.Id == j.StatusId).Name,
-                }).ToList();
+                .Where(j => j.CandidateId == candidateId).AsQueryable();
         return applicationInfo;
     }
 
@@ -94,7 +81,7 @@ public class ApplicationRepository : IApplicationRepository
             .Include(a => a.Candidate)
             .ThenInclude(c => c.User)
             .Include(a => a.Status)
-            .FirstOrDefault(a => a.Id == applicationId && a.StatusId != 5);
+            .FirstOrDefault(a => a.Id == applicationId);
     }
     
     public async Task<Application> UpdateApplicationStatus(int applicationId, int statusId)
